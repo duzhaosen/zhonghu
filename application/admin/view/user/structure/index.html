@@ -1,0 +1,237 @@
+<script  src="/static/ace1.4/assets/js/select-treeview.js"></script>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row">
+            <div class="col-sm-3" style="overflow-x:scroll;overflow-y:scroll">
+                <div class="widget-box widget-color-green2">
+                    <div class="widget-header">
+                        <h4 class="widget-title lighter smaller">
+                            组织结构
+                            <span class="smaller-80">(组织架构总览)</span>
+                        </h4>
+                    </div>
+
+
+                    <div class="widget-body" style="height:700px;">
+                        <div id="dept_tree"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-9">
+                <div class="widget-box">
+                    <div class="widget-header">
+                        <h4 class="widget-title">查询条件</h4>
+                    </div>
+
+                    <div class="widget-body">
+                        <form style="margin-top:2rem" name="interestForm">
+                            <input style="display: none" value= name="status">
+                            <div class="form-inline form-group col-xs-12">
+                                <div class=" search-item-div col-xs-4">
+                                    <label for="username" class="text-center search-item-label">登录名:</label>
+                                    <input type="text" class="form-control" id="username" placeholder="登录名:" name="username" value="{$param.username|default=''}">
+                                </div>
+                                <div class="search-item-div col-xs-4">
+                                    <label for="name" class="text-center search-item-label">&nbsp;&nbsp;&nbsp;姓名:</label>
+                                    <input type="text" class="form-control" id="name" placeholder="姓名" name="name" value="{$param.name|default=''}">
+                                </div>
+                                <div class="search-item-div col-xs-4">
+                                    <label for="identity" class="text-center search-item-label">身份证号:</label>
+                                    <input type="text" class="form-control" id="identity" placeholder="身份证号" name="identity" value="{$param.identity|default=''}">
+                                </div>
+                            </div>
+
+                            <div class="form-inline form-group col-xs-12">
+                                <div class="form-group search-item-div col-xs-4">
+                                    <label class="text-center search-item-label">业务员:</label>
+                                    <select class="form-control" name="salesman" style="width: 172px;">
+                                        {volist name="salesmanList" id="value" key="key"}
+                                        <option value="{$key-1}" {if isset($param.salesman)} {if $param.salesman eq $key-1} selected {/if} {/if}>{$value}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                                <div class="form-group search-item-div col-xs-4">
+                                    <label class="text-center search-item-label">经办人:</label>
+                                    <select class="form-control" name="manager" style="width: 172px;">
+                                        {volist name="managerList" id="value" key="key"}
+                                        <option value="{$key-1}"  {if isset($param.manager)} {if $param.manager eq $key-1} selected {/if} {/if}>{$value}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                                <div class="form-group search-item-div col-xs-4">
+                                    <label class="text-center search-item-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;状态:</label>
+                                    <select class="form-control" name="type" style="width: 172px;">
+                                        {volist name="typeList" id="value" key="key"}
+                                        <option value="{$key-1}" {if isset($param.type)}  {if $param.type eq $key-1} selected {/if} {/if}>{$value}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-inline form-group col-xs-11">
+                                <div class="form-group search-item-div col-xs-8">
+                                    <label class="text-center search-item-label col-xs-1">角色:</label>
+                                    <ul id="roles" class="col-xs-2" style="padding:0px"></ul>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="layui-btn layui-btn-radius layui-btn-normal" style="margin-bottom: 10px;">搜索</button>
+                        </form>
+                    </div>
+                </div>
+                    <table id="simple-table" class="table  table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th class="center">用户id</th>
+                            <th class="center">组织</th>
+                            <th class="center">登录名</th>
+                            <th class="center">姓名</th>
+                            <th class="center">性别</th>
+                            <th class="center">手机号</th>
+                            <th class="center">身份证号</th>
+                            <th class="center">角色</th>
+                            <th class="center">状态</th>
+                            <th class="center">业务员</th>
+                            <th class="center">经办人</th>
+                            <th class="center">添加人</th>
+                            <th class="center">添加时间</th>
+                            <th class="center">修改人</th>
+                            <th class="center">修改时间</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {volist name="userlist" id="value"}
+                        <tr data-id="{$value.id}">
+                            <td class="center">{$value.id}</td>
+                            <td class="center">{$value.structureStr}</td>
+                            <td class="center">{$value.username}</td>
+                            <td class="center">{$value.name}</td>
+                            <td class="center">{$value.sexStr}</td>
+                            <td class="center">{$value.phone}</td>
+                            <td class="center">{$value.identity}</td>
+                            <td class="center">{$value.rolesStr}</td>
+                            <td class="center">{$value.typeStr}</td>
+                            <td class="center">{$value.salesmanStr}</td>
+                            <td class="center">{$value.managerStr}</td>
+                            <td class="center">{$value.create_user}</td>
+                            <td class="center">{$value.create_time}</td>
+                            <td class="center">{$value.op_user}</td>
+                            <td class="center">{$value.op_time}</td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const tree_data = {$list};
+    const role_data = {$rolesList};
+    jQuery(function($) {
+        var options = {
+            data: role_data,
+            id: "id",
+            text: "text",
+            nodes: "nodes",
+            checked: "checked",
+            name: "roles",
+        };
+        /**
+         * 提初始化树结构
+         */
+        $('#roles').AddSelect(options);
+        layui.use(['tree'], function () {
+            var tree = layui.tree;
+            tree.render({
+                elem: '#dept_tree',
+                data: tree_data,
+                id: 'id',
+                edit: ['add','update','del'],
+                showLine: true,
+                onlyIconControl: true,
+                operate: function (obj) {
+                    var type = obj.type; //得到操作类型：add、edit、del
+                    var data = obj.data; //得到当前节点的数据
+                    var elem = obj.elem; //得到当前节点元素
+                    //Ajax 操作
+                    var id = data.id; //得到节点索引
+                    if(type === 'add'){ //增加节点
+                        $.ajax('/admin/ajax/user/structure/addStructure',{
+                            dataType: 'json', // type of response data
+                            timeout: 500,     // timeout milliseconds
+                            method: "post",
+                            data: {pid:id,name:"未命名"},
+                            success: function (data) {
+                                if(data.code == 100000) {
+                                    layer.msg(data.msg);
+                                    return data.data;
+                                }else{
+                                    layer.msg(data.msg);
+                                }
+                            }
+                        });
+                    } else if(type === 'update'){ //修改节点
+                        var name = elem.find('.layui-tree-txt').html();
+                        layer.open({
+                            title: '业务来源',
+                            shadeClose: 'true',
+                            content:'<div class="form-inline form-group col-xs-12">\n' +
+                                '        <label class="text-center search-item-label">业务来源:</label>\n' +
+                                '        <select class="form-control" name="source" id="source" style="width: 172px;">\n' +
+                                '            {volist name="sourceList" id="value" key="key"}\n' +
+                                '            <option value="{$key-1}">{$value}</option>\n' +
+                                '            {/volist}\n' +
+                                '        </select>\n' +
+                                '    </div>',
+                            yes: function(index, layero){
+                                var source = $("#source").val();
+                                $.ajax('/admin/ajax/user/structure/editStructure',{
+                                    dataType: 'json', // type of response data
+                                    timeout: 500,     // timeout milliseconds
+                                    method: "post",
+                                    data: {id:id,source:source,name:name},
+                                    success: function (data,status,xhr) {   // success callback function
+                                        if(data.code == 100000) {
+                                            layer.msg(data.msg);
+                                            setTimeout(function() {
+                                                location.reload();
+                                            },300);
+                                        }else{
+                                            layer.msg(data.msg);
+                                        }
+                                    },
+                                    error: function() {
+                                        layer.msg("系统错误");
+                                    }
+                                });
+                                layer.close(index);
+                            }
+                        });
+                    } else if(type === 'del'){ //删除节点
+                        $.ajax('/admin/ajax/user/structure/delStructure',{
+                            dataType: 'json',
+                            timeout: 500,
+                            method: "post",
+                            data: {id:id},
+                            success: function (data) {
+                                if(data.code == 100000) {
+                                    layer.msg(data.msg);
+                                }else{
+                                    layer.msg(data.msg);
+                                }
+                            }
+                        });
+                    };
+                },
+                click: function(obj) {
+                    window.location.href="/admin/user/structure/index?structure="+obj.data.id;
+                }
+            });
+
+        });
+    });
+</script>

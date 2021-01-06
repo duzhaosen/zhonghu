@@ -1,0 +1,371 @@
+<script src="/static/ace1.4/assets/js/tree.min.js"></script>
+<style>
+    .tree .tree-branch > .tree-branch-header > .tree-branch-name > .icon-item {
+        color: #F9E8CE;
+        width: 13px;
+        height: 13px;
+        line-height: 13px;
+        font-size: 11px;
+        text-align: center;
+        border-radius: 3px;
+        -webkit-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+        background-color: #FAFAFA;
+        border: 1px solid #CCC;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .tree .tree-selected > .tree-branch-header > .tree-branch-name > .icon-item {
+        background-color: #F9A021;
+        border-color: #F9A021;
+        color: #FFF;
+    }
+</style>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li class="active">
+                            <a data-toggle="tab" href="#home">
+                                <i class="green ace-icon fa fa-home bigger-120"></i>
+                                全部
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="home" class="tab-pane fade in active">
+                            <button class="btn btn-success pull-right" id="addRoles">添加</button>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <table id="simple-table" class="table  table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>名称</th>
+                                            <th>权限</th>
+                                            <th>状态</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {volist name="list" id="value"}
+                                            <tr data-id="{$value.id}">
+                                                <td>{$value.name}</td>
+                                                <td>{$value.powerstr}</td>
+                                                <td>{$value.typestr}</td>
+                                                <td>
+                                                    <div class="hidden-sm hidden-xs btn-group">
+                                                        <button class="btn btn-xs btn-info editRoles">
+                                                            <i class="ace-icon fa fa-pencil bigger-120"></i>
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="hidden-md hidden-lg">
+                                                        <div class="inline pos-rel">
+                                                            <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
+                                                                <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
+                                                            </button>
+
+                                                            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                                                <li>
+                                                                    <a href="#" class="tooltip-info editRoles" data-rel="tooltip" title="View">
+                                                                        <span class="blue">
+                                                                            <i class="ace-icon fa fa-pencil bigger-120"></i>
+                                                                        </span>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {/volist}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">权限</h4>
+            </div>
+            <div class="modal-body">
+                <div id="editPower" class="">
+                    <div class="row" id="">
+                        <div class="col-xs-12 col-sm-12">
+                            <div class="widget-box">
+                                <div class="widget-header">
+                                    <h4 class="widget-title">基础信息</h4>
+
+                                    <div class="widget-toolbar">
+                                        <a href="#" data-action="collapse">
+                                            <i class="ace-icon fa fa-chevron-up"></i>
+                                        </a>
+
+                                        <a href="#" data-action="close">
+                                            <i class="ace-icon fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="widget-body">
+                                    <div class="widget-main">
+                                        <form class="form-horizontal" name="rolesform" role="form">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right" for="name">角色名称：</label>
+
+                                                <div class="col-sm-9">
+                                                    <input type="text" id="name" name="name" placeholder="角色名称" class="col-xs-10 col-sm-5" />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right" >角色状态：</label>
+
+                                                <div class="col-xs-3">
+                                                    <label>
+                                                        <input name="type" class="ace ace-switch ace-switch-5" id="type" type="checkbox" checked />
+                                                        <span class="lbl"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right">是否业务归属：</label>
+
+                                                <div class="col-xs-3">
+                                                    <label>
+                                                        <input name="salesman" class="ace ace-switch ace-switch-5" id="salesman" type="checkbox" />
+                                                        <span class="lbl"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label no-padding-right">是否超管权限：</label>
+
+                                                <div class="col-xs-3">
+                                                    <label>
+                                                        <input name="admin" class="ace ace-switch ace-switch-5" id="admin" type="checkbox" />
+                                                        <span class="lbl"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12">
+                            <div class="widget-box">
+                                <div class="widget-header">
+                                    <h4 class="widget-title">权限信息</h4>
+
+                                    <div class="widget-toolbar">
+                                        <a href="#" data-action="collapse">
+                                            <i class="ace-icon fa fa-chevron-up"></i>
+                                        </a>
+
+                                        <a href="#" data-action="close">
+                                            <i class="ace-icon fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="widget-body">
+                                    <div class="widget-main padding-8" id="tree_view_data">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="id" value="">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="addrolesform">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<script>
+    const tree_data = {$menuList};
+    jQuery(function($) {
+        var powers = [];
+        var sampleData = initiateDemoData(tree_data);//see below
+        var divTree = '<ul id="tree1"></ul>';
+        $("#tree_view_data").html(divTree);
+        $('#tree1').ace_tree({
+            dataSource: sampleData['dataSource1'],
+            multiSelect: true,
+            loadingHTML: '<div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>',
+            'open-icon' : 'ace-icon tree-minus hide',
+            'close-icon' : 'ace-icon tree-plus hide',
+            'selectable' : true,
+            'selected-icon' : 'ace-icon fa fa-check',
+            'unselected-icon' : 'ace-icon fa fa-check',
+            'cacheItems': true,
+            'folderSelect': true,
+            'folder-open-icon' : 'ace-icon tree-plus',
+            'folder-close-icon' : 'ace-icon tree-minus'
+        }).on('selected.fu.tree', function(e,data) {
+            var powersArr = [];
+            $.each(data.selected,function(index,value){
+                powersArr.push(value.id);
+            });
+            powers = powersArr;
+        });
+        //提交modal
+        $("#addRoles").on('click', function() {
+            $("#myModal").modal();
+        })
+        //点击修改
+        $(".editRoles").on('click',function() {
+            var but = $(this);
+            but.attr("disabled","disabled");
+            var id = but.parents('tr').attr('data-id');
+            var url = "/admin/ajax/user/roles/getRoles";
+            $("#id").val(id);
+            $.ajax(url,
+                {
+                    dataType: 'json', // type of response data
+                    timeout: 500,     // timeout milliseconds
+                    method: "post",
+                    data: {id:id},
+                    success: function (data,status,xhr) {   // success callback function
+                        but.removeAttr("disabled");
+                        if(data.code == 100000) {
+                            var msg = data.data;
+                            //格式化model框
+                            $("#name").val(msg[0].name);
+                            if(msg[0].type == 2) {
+                                $("#type").prop("checked",false);
+                            }
+                            if(msg[0].salesman == 2) {
+                                $("#salesman").prop("checked",true);
+                            }
+                            if(msg[0].admin == 2) {
+                                $("#admin").prop("checked",true);
+                            }
+                            $("#tree1").html("");
+                            //重新初始化树
+                            var sampleData = initiateDemoData(msg[0].powsermenu);//see below
+                            console.log(msg[0].powsermenu);
+                            $("#tree_view_data").html();
+                            var divTree = '<ul id="tree1"></ul>';
+                            $("#tree_view_data").html(divTree);
+                            $('#tree1').ace_tree({
+                                dataSource: sampleData['dataSource1'],
+                                multiSelect: true,
+                                loadingHTML: '<div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>',
+                                'open-icon' : 'ace-icon tree-minus hide',
+                                'close-icon' : 'ace-icon tree-plus hide',
+                                'selectable' : true,
+                                'selected-icon' : 'ace-icon fa fa-check',
+                                'unselected-icon' : 'ace-icon fa fa-check',
+                                'cacheItems': true,
+                                'folderSelect': true,
+                                'folder-open-icon' : 'ace-icon tree-plus',
+                                'folder-close-icon' : 'ace-icon tree-minus'
+                            }).on('selected.fu.tree', function(e,data) {
+                                var powersArr = [];
+                                $.each(data.selected,function(index,value){
+                                    powersArr.push(value.id);
+                                });
+                                powers = powersArr;
+                            });
+                            $("#myModal").modal();
+                        }else{
+                            layer.msg(data.msg);
+                        }
+                    },
+                    error: function() {
+                        layer.msg("系统错误");
+                    }
+                });
+        })
+        //提交
+        $("#addrolesform").on('click',function() {
+            var but = $(this);
+            but.attr("disabled","disabled");
+            var form = $("form[name=rolesform]").serializeArray();
+            replaceForm(form, 'powers', powers);
+            var id = $("#id").val();
+            if(id) {
+                var url = "/admin/ajax/user/roles/editRoles";
+                replaceForm(form, 'id', id);
+            }else{
+                var url = "/admin/ajax/user/roles/addRoles";
+            }
+            $.ajax(url,
+                {
+                    dataType: 'json', // type of response data
+                    timeout: 500,     // timeout milliseconds
+                    method: "post",
+                    data: form,
+                    success: function (data,status,xhr) {   // success callback function
+                        but.removeAttr("disabled");
+                        if(data.code == 100000) {
+                            layer.msg(data.msg);
+                            setTimeout(function() {
+                                location.reload();
+                            },300);
+                        }else{
+                            layer.msg(data.msg);
+                        }
+                    },
+                    error: function() {
+                        but.removeAttr("disabled");
+                        layer.msg("系统错误");
+                    }
+                });
+        });
+        var replaceForm = function (arr, name, value) {
+            var replace = false;
+            for (i = 0; i < arr.length; i++) {
+                if (arr[i]['name'] == name) {
+                    replace = true;
+                    arr[i]['value'] = value
+                }
+            }
+            if (!replace) {
+                var obj = {"name": name, "value": value};
+                arr.push(obj)
+            }
+        };
+    });
+
+
+    function initiateDemoData(tree_data) {
+        var dataSource1 = function(options , callback){
+            var $data = null
+            if(!("text" in options) && !("type" in options)){
+                $data = tree_data;
+                callback({ data: $data });
+                return;
+            }
+            else if("type" in options && options.type == "folder") {
+                if("additionalParameters" in options && "children" in options.additionalParameters)
+                    $data = options.additionalParameters.children || {};
+                else $data = {}
+            }
+
+            if($data != null)
+                setTimeout(function(){callback({ data: $data });} , parseInt(Math.random() * 500) + 200);
+        }
+        return {'dataSource1': dataSource1}
+    }
+</script>

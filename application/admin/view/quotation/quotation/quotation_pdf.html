@@ -1,0 +1,189 @@
+<style>
+
+    .baojia{
+        width: 750px;
+        margin:20px auto;
+    }
+    .baojia-title{
+        text-align: center;
+        width: 100%;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px 0 0 0;
+    }
+    .baojia-table>table{
+        width: 750px;
+        /*border: 1px solid #ccc;*/
+        margin:20px auto;
+    }
+    .baojia-table>table tr{
+        height: 30px;
+    }
+    .baojia-table>table tr td{
+        width: 75px;
+        border:0.5px solid #636363;
+        height: 30px;
+        text-align: center;
+        font-size: 14px;
+        padding:2px 0;
+
+    }
+    .baojia-table>table,tr,td {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+    /*table tr:nth-child(7) td{
+        border: none;
+    }*/
+    .baojia-table>table tr:nth-child(18) td{
+        border: none;
+    }
+    .baojia-table>table tr:nth-child(19) td{
+        border: none;
+    }
+    .baojia-table{
+        padding: 20px;
+        background: #fff;
+    }
+</style>
+<button id="pdf">下载</button>
+<!--startprint-->
+<div class="baojia-table">
+    <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td>车牌号</td>
+            <td colspan="4" id="plate_image">{$list.plate|default=''}</td>
+            <td>车主</td>
+            <td colspan="4" id="name_image">{$list.car_name|default=''}</td>
+        </tr>
+        <tr>
+            <td colspan="1">厂牌型号</td>
+            <td colspan="9" id="label_signal_image">{$list.label_signal|default=''}</td>
+        </tr>
+        <tr>
+            <td colspan="1">使用性质</td>
+            <td colspan="2" id="use_nature_image">{$list.use_natureStr|default=''}</td>
+            <td colspan="1">车辆种类</td>
+            <td colspan="2" id="species_image">{$list.speciesStr|default=''}</td>
+            <td colspan="2">新车购置价</td>
+            <td colspan="2" id="new_price_image">{$list.new_price|default=''}</td>
+        </tr>
+        <tr>
+            <td>注册日期</td>
+            <td colspan="2" id="registered_time_image">{:date('Y-m-d',$list.registered_time)}</td>
+            <td>使用年限</td>
+            <td colspan="2" id="age_image">{$list.age|default=''}</td>
+            <td colspan="2">实际价值</td>
+            <td colspan="2" id="actual_price_image">{$list.actual_price|default=''}</td>
+
+
+        </tr>
+        <tr>
+            <td>座位数</td>
+            <td colspan="2" id="approved_user_image">{$list.approved_user|default=''}</td>
+            <td colspan="1">吨位(KG)</td>
+            <td colspan="2" id="approved_load_image">{$list.approved_load|default=''}</td>
+            <td colspan="2">上年状态</td>
+            <td colspan="2" id="last_year_status_image">{$list.last_year_status|default=''}</td>
+
+
+        </tr>
+        <tr>
+            <td colspan="1">本年赔款(次)</td>
+            <td id="year_indemnity_image" colspan="1">{$list.year_indemnity|default=''}</td>
+            <td colspan="2">连续*年未出险</td>
+            <td id="continuous_non_risk_image" colspan="1">{$list.continuous_non_risk|default=''}</td>
+            <td colspan="2">连续年数</td>
+            <td id="continuous_year_image" colspan="1">{$list.continuous_year|default=''}</td>
+            <td>连续期间出险次数</td>
+            <td id="danger_total_image">{$list.danger_total|default=''}</td>
+        </tr>
+        <tr>
+            <td >统筹期间</td>
+            <td colspan="2" style="border: none;" id="start_time_image">{:date('Y-m-d',$list.start_time)}</td>
+            <td style="border: none;">0时起至</td>
+            <td colspan="2" style="border: none;" id="end_time_image">{:date('Y-m-d',$list.end_time)}</td>
+            <td style="border: none;">24时止</td>
+            <td style="border: none;">共计</td>
+            <td style="border: none;" id="date_time_image">{$list.date_time|default=''}</td>
+            <td style="border: none;border-right:1px solid black;">天</td>
+        </tr>
+        <tr>
+            <td colspan="4">参统项目</td>
+            <td colspan="3">责任限额</td>
+            <td colspan="3">标准统筹费</td>
+        </tr>
+        <tr>
+            <td colspan="4">机动车损失统筹	</td>
+            <td colspan="3" id="vehicle_loss_money_image">{$list.vehicle_loss_money|default=''}</td>
+            <td colspan="3" id="vehicle_loss_standard_image">{$list.vehicle_loss_standard|default=''}</td>
+        </tr>
+        <tr>
+            <td colspan="4">机动车第三者责任统筹</td>
+            <td colspan="3" id="vehicle_third_money_image">{$list.vehicle_third_money|default=''}</td>
+            <td colspan="3" id="vehicle_third_standard_image">{$list.vehicle_third_standard|default=''}</td>
+        </tr>
+        <tr>
+            <td colspan="4">车上人员责任统筹(司机)</td>
+            <td colspan="3" id="car_driver_money_image">{$list.car_driver_money|default=''}</td>
+            <td colspan="3" id="car_driver_standard_image">{$list.car_driver_standard|default=''}</td>
+        </tr>
+        <tr>
+            <td colspan="4">车上人员责任统筹(乘客)</td>
+            <td colspan="3"><span id="yuan_image">{$list.yuan|default=''}</span>*<span id="seat_image">{$list.seat|default=''}</span></td>
+            <td colspan="3" id="car_passenger_standard_image">{$list.car_passenger_standard|default=''}</td>
+        </tr>
+        <tr>
+            <td colspan="4">合计</td>
+            <td colspan="6" id="benchmarking_image">{$list.benchmarking|default=''}</td>
+        </tr>
+        <tr>
+            <td colspan="4">折扣</td>
+            <td colspan="6" id="total_discount_image">{$list.total_discount|default=''}</td>
+        </tr>
+        <tr>
+            <td colspan="4">应交</td>
+            <td colspan="6" id="total_planning_image">{$list.total_planning|default=''}</td>
+        </tr>
+        <tr>
+            <td colspan="2">备注</td>
+            <td colspan="8" id="remarks_image">{$list.remarks|default=''}</td>
+        </tr>
+        <tr>
+            <td style="font-size: 12px;text-align: left;" colspan="10">
+                尊敬的客户：以上试算统筹费是依据您提供给的资料而做出的估算，仅供参考。最中参统项目及统筹费以统筹单为准。请您详细核对。
+            </td>
+        </tr>
+        <tr>
+            <td>报价人:</td>
+            <td colspan="3" id="create_user_image">{$list.create_user|default=''}</td>
+            <td>业务经办:</td>
+            <td colspan="3" id="manager_image">{$list.managerStr|default=''}</td>
+            <td>报价日期：</td>
+            <td colspan="3" id="create_time_image">{:date('Y-m-d',$list.create_time)}</td>
+        </tr>
+    </table>
+    <!--endprint-->
+</div>
+<script>
+$(function () {
+    $("#pdf").on('click',function() {
+
+// 获取当前页面html代码
+        var currentHtml = window.document.body.innerHTML;
+// 设置打印开始位置
+        var start = '<!--startprint-->';
+// 设置打印结束位置
+        var end = '<!--endprint-->';
+// 获取到要打印部分的代码
+        var printHtml = currentHtml.substring(currentHtml.indexOf(start) + start.length, currentHtml.indexOf(end));
+// 也可以通过id获取
+//var printHtml = document.getElementById('main').innerHTML
+// 打印
+        window.document.body.innerHTML = printHtml;
+        window.print();
+// 返回原界面
+        window.document.body.innerHTML = currentHtml;
+    })
+})
+</script>

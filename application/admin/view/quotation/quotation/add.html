@@ -1,0 +1,1137 @@
+<link rel="stylesheet" href="/static/ace1.4/assets/css/chosen.min.css">
+<script src="/static/ace1.4/assets/js/chosen.jquery.min.js"></script>
+<style>
+    .baojia{
+        width: 750px;
+        margin:20px auto;
+    }
+    .baojia-title{
+        text-align: center;
+        width: 100%;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px 0 0 0;
+    }
+    .baojia-table>table{
+        width: 750px;
+        /*border: 1px solid #ccc;*/
+        margin:20px auto;
+    }
+    .baojia-table>table tr{
+        height: 30px;
+    }
+    .baojia-table>table tr td{
+        width: 75px;
+        border:0.5px solid #636363;
+        height: 30px;
+        text-align: center;
+        font-size: 14px;
+        padding:2px 0;
+
+    }
+    .baojia-table>table,tr,td {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+    /*table tr:nth-child(7) td{
+        border: none;
+    }*/
+    .baojia-table>table tr:nth-child(18) td{
+        border: none;
+    }
+    .baojia-table>table tr:nth-child(19) td{
+        border: none;
+    }
+    .baojia-table{
+        padding: 20px;
+        background: #fff;
+    }
+</style>
+<div class="row">
+    <form style="" name="addQuotationForm">
+        <input type="hidden" id="copy" value="{:input('param.copy')}">
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5 class="widget-title">业务信息</h5>
+            </div>
+            <div class="widget-body">
+                <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="source" class="text-center search-item-label">业务来源:</label>
+                        <select name="source" id="source" style="width:100%">
+                            {volist name="sourceList" id="value" key="key"}
+                            <option value="{$key-1}" {if isset($list.source) } {if $list.source eq $key-1} selected {/if}{/if} >{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="structure" class="text-center search-item-label">归属部门:</label>
+                        <select name="structure" id="structure" style="width:100%">
+                            <option value="0">请选择归属部门</option>
+                            {if isset($list)}
+                                {volist name="$structureList" id="value"}
+                                    <option value="{$value.id}"{if isset($list.structure)}  {if $list.structure eq $value.id} selected {/if}{/if}>{$value.name}</option>
+                                {/volist}
+                            {/if}
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="attribution_user" class="text-center search-item-label">归属人:</label>
+                        <div id="chose_salesman">
+                            <select class="chosen-select form-control" id="attribution_user" name="attribution_user" style="width:100%" data-placeholder="选择归属人">
+                                <option value="0">请选择归属人</option>
+                                {volist name="users" id="value"}
+                                <option value="{$value.id}" {if isset($list.attribution_user)} {if $list.attribution_user eq $value.id} selected {/if} {/if} data-manager="{$value.manager_id}">{$value.all_name}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="manager" class="text-center search-item-label">经办人:</label>
+                        <div id="chose_manager">
+                            <select class="chosen-select form-control" id="manager" name="manager" style="width:100%" data-placeholder="选择经办人">
+                                <option value="0">请选择经办人</option>
+                                {volist name="managerList" id="value"}
+                                <option value="{$value.id}" {if isset($list.manager)}  {if $list.manager eq $value.id} selected {/if}{/if}>{$value.name}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-inline form-group col-xs-11">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="create_time" class="text-center search-item-label">报价日期:</label>
+                        {if isset($list.create_time)}
+                            <input type="text" class="form-control" id="create_time" name="create_time" readonly  style="width:100%" value="{if isset($list.create_time)}{:date('Y-m-d',$list.create_time)}{/if}">
+                        {else}
+                            <input type="text" class="form-control" id="create_time" name="create_time" readonly  style="width:100%" value="{:date('Y-m-d')}">
+                        {/if}
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="create_user" class="text-center search-item-label">录入人:</label>
+                        {if isset($list.create_user)}
+                            <input type="text" class="form-control" id="create_user" readonly name="create_user" style="width:100%" value="{$list.create_user|default=''}">
+                        {else}
+                            <input type="text" class="form-control" id="create_user" readonly name="create_user" style="width:100%" value="{:session('username')}">
+                        {/if}
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="id" class="text-center search-item-label">报价单号:</label>
+                        <input type="text" class="form-control" id="id" name="id" style="width:100%" readonly value="{$list.id|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="city" class="text-center search-item-label">归属区域:</label>
+                        <input type="text" class="form-control" id="city" name="city" style="width:100%" readonly value="{$list.cityStr|default=''}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5 class="widget-title">报价查询</h5>
+            </div>
+            <div class="widget-body">
+                <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
+                    <div class="search-item-div col-xs-3">
+                        <label for="card" class="text-center search-item-label">号码车牌/车架号:</label>
+                        <input type="text" class="form-control" id="card" name="card" style="width:100%"  value="{$param.identity|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="card" class="text-center search-item-label"></label>
+                        <button class="layui-btn layui-btn-radius layui-btn-normal" id="car_search" style="margin-left:10rem;margin-top: 10px;">查询</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5 class="widget-title">车辆信息</h5>
+            </div>
+            <div class="widget-body">
+                <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="plate" class="text-center search-item-label">号码号牌<span style="color:red">*</span></label>
+                        <input type="text" class="form-control" id="plate" placeholder="请输入号码号牌" name="plate" style="width:85%" value="{$list.plate|default=''}">
+                        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" id="new_car">新车</button>
+
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="plate_type" class="text-center search-item-label">号码种类<span style="color:red">*</span>:</label>
+                        <select name="plate_type" id="plate_type" style="width:100%">
+                            {volist name="$plate_typeList" id="value" key="key"}
+                            <option value="{$key-1}" {if isset($list.plate_type)} {if $list.plate_type eq $key-1} checked {/if}{/if}>{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="color" class="text-center search-item-label">号牌底色<span style="color:red">*</span>:</label>
+                        <select name="color" id="color" style="width:100%">
+                            {volist name="$colorList" id="value" key="key"}
+                            <option value="{$key-1}" {if isset($list.color)} {if $list.color eq $key-1} checked {/if}{/if}>{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="car_name" class="text-center search-item-label">车主姓名<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="car_name" placeholder="请输入车主姓名" name="car_name" style="width:100%" value="{$list.car_name|default=''}">
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-11">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="frame" class="text-center search-item-label">车架号<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="frame" name="frame" placeholder="请输入车架号" style="width:100%" value="{$list.frame|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="engine" class="text-center search-item-label">发动机号<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="engine" placeholder="请输入发动机号" name="engine" style="width:100%" value="{$list.engine|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="label_signal" class="text-center search-item-label">厂牌型号<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="label_signal" placeholder="请输入厂牌型号" name="label_signal" style="width:100%" value="{$list.label_signal|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="registered_time" class="text-center search-item-label">注册日期(例:2019-01-01)<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="registered_time" placeholder="请输入注册日期" name="registered_time" style="width:100%" value="{if isset($list.registered_time)}{:date('Y-m-d',$list.registered_time)}{/if}">
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-11">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="age" class="text-center search-item-label">车龄:</label>
+                        <input type="text" class="form-control" id="age" placeholder="请输入车龄" name="age" style="width:100%" value="{$list.age|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="transfer" class="text-center search-item-label">过户:</label>
+                        <select name="transfer" id="transfer" style="width:100%">
+                            {volist name="$transferList" id="value" key="key"}
+                            <option value="{$key-1}" {if isset($list.transfer)} {if $list.transfer eq $key-1} checked {/if}{/if}>{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="new_price" class="text-center search-item-label">新车购置价<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="new_price" name="new_price" placeholder="请输入新车购置价" style="width:100%" value="{$list.new_price|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="actual_price" class="text-center search-item-label">实际价值<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="actual_price" placeholder="请输入实际价值" name="actual_price" style="width:100%" value="{$list.actual_price|default=''}">
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-11">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="use_nature" class="text-center search-item-label">使用性质<span style="color:red">*</span>:</label>
+                        <select name="use_nature" id="use_nature" style="width:100%">
+                            {volist name="$use_natureList" id="value" key="key"}
+                            <option value="{$key-1}"  {if isset($list.use_nature)} {if $list.use_nature eq $key-1} checked {/if}{/if}>{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="species" class="text-center search-item-label">车辆种类<span style="color:red">*</span>:</label>
+                        <select name="species" id="species" style="width:100%">
+                            {volist name="$speciesList" id="value" key="key"}
+                            <option value="{$key-1}" {if isset($list.species)} {if $list.species eq $key-1} checked {/if}{/if}>{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="car_type" class="text-center search-item-label">车辆类型<span style="color:red">*</span>:</label>
+                        <select name="car_type" id="car_type" style="width:100%">
+                            {volist name="$car_typeList" id="value" key="key"}
+                            <option value="{$key-1}" {if isset($list.car_type)} {if $list.car_type eq $key-1} checked {/if}{/if}>{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="approved_user" class="text-center search-item-label">核定载客（人）<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="approved_user" placeholder="请输入核定载客（人）" name="approved_user" style="width:100%" value="{$list.approved_user|default=''}">
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-11">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="approved_load" class="text-center search-item-label">核定载质量/准牵引总质量（kg）<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="approved_load" name="approved_load" placeholder="请输入定载质量/准牵引总质量（kg" style="width:100%" value="{$list.approved_load|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="curb_quality" class="text-center search-item-label">整备质量（kg）:</label>
+                        <input type="text" class="form-control" id="curb_quality" placeholder="请输入整备质量（kg）" name="curb_quality" style="width:100%" value="{$list.curb_quality|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="vehicle_inspection" class="text-center search-item-label">验车情况:</label>
+                        <select name="vehicle_inspection" id="vehicle_inspection" style="width:100%">
+                            {volist name="$vehicle_inspectionList" id="value" key="key"}
+                            <option value="{$key-1}" {if isset($list.vehicle_inspection)} {if $list.vehicle_inspection eq $key-1} checked {/if}{/if}>{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="reason" class="text-center search-item-label">原因<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="reason" placeholder="请输入原因" name="reason" style="width:100%" value="{$list.reason|default=''}">
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-11">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="participate_city" class="text-center search-item-label">参统省份<span style="color:red">*</span>:</label>
+                        <select name="participate_city" id="participate_city" style="width:100%">
+                            {volist name="$participate_cityList" id="value" key="key"}
+                            <option value="{$key-1}" {if isset($list.participate_city)} {if $list.participate_city eq $key-1} checked {/if}{/if}>{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="last_year_status" class="text-center search-item-label">上年状态<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="last_year_status" placeholder="请输入上年状态" name="last_year_status" style="width:100%" value="{$list.last_year_status|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="year_indemnity" class="text-center search-item-label">本年赔款(次)<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="year_indemnity" name="year_indemnity" placeholder="请输入本年赔款(次)" style="width:100%" value="{$list.year_indemnity|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="continuous_non_risk" class="text-center search-item-label">连续未出险<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="continuous_non_risk" placeholder="请输入连续未出险" name="continuous_non_risk" style="width:100%" value="{$list.continuous_non_risk|default=''}">
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-11">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="continuous_year" class="text-center search-item-label">连续年数<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="continuous_year" name="continuous_year" placeholder="请输入连续年数" style="width:100%" value="{$list.continuous_year|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="danger_total" class="text-center search-item-label">连续期间出险次数<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="danger_total" placeholder="请输入连续期间出险次数" name="danger_total" style="width:100%" value="{$list.danger_total|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="discount" class="text-center search-item-label">主体折扣<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="discount" name="discount" placeholder="请输入主体折扣" style="width:100%" value="{$list.discount|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="coefficient" class="text-center search-item-label">无赔优系数<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="coefficient" placeholder="请输入无赔优系数" name="coefficient" style="width:100%" value="{$list.coefficient|default=''}">
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-11">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="remarks" class="text-center search-item-label">备注<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="remarks" name="remarks" placeholder="请输入备注" style="width:100%" value="{$list.remarks|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="rating" class="text-center search-item-label">评分/评级<span style="color:red">*</span>:</label>
+                        <input type="text" class="form-control" id="rating" placeholder="请输入分/评级" name="rating" style="width:100%" value="{$list.rating|default=''}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5 class="widget-title">统筹期间</h5>
+            </div>
+            <div class="widget-body">
+                <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
+                    <div class="search-item-div col-xs-3">
+                        <label for="" class="text-center search-item-label">统筹起期:</label>
+                        <input type="text" class="form-control input-sm" name="start_time" id="start_time"
+                               value="{if isset($list.start_time)}{:date('Y-m-d',$list.start_time)}{/if}" autocomplete="off">（0时）
+
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="" class="text-center search-item-label">统筹止期:</label>
+                        <input type="text" class="form-control input-sm" name="end_time" id="end_time"
+                               value="{if isset($list.end_time)}{:date('Y-m-d',$list.end_time)}{/if}" autocomplete="off">（24时）
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="" class="text-center search-item-label">共（<input type="text" name="date_time" style="width:20%" id="date_time" readonly value="{$list.date_time|default=''}">）天</label>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="short_term_coefficient" class="text-center search-item-label">短期系数</label>
+                        <input type="text" id="short_term_coefficient" name="short_term_coefficient" readonly value="{$list.short_term_coefficient|default=''}">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5 class="widget-title">统筹项目</h5>
+            </div>
+            <div class="widget-body">
+                <table id="simple-table" class="table  table-bordered table-hover">
+                    <thead>
+                    <tr style="background-color: #307ECC;color:white">
+                        <th class="center">
+                            <input type="checkbox" id="all_check" class="all_check" value="all">
+                        </th>
+                        <th class="center" width="30%">主统筹项目</th>
+                        <th class="center" width="20%">统筹金额</th>
+                        <th class="center" width="20%">标准统筹费</th>
+                        <th class="center" width="20%">折扣(%)</th>
+                        <th class="center" width="20%">应缴统筹费</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td class="center"><input type="checkbox" name="vehicle_loss" class="all_check" value="vehicle_loss" {if isset($list.vehicle_loss)} {if $list.vehicle_loss eq 2} checked {/if} {/if}></td>
+                        <td class="center">机动车损失统筹</td>
+                        <td><input type="text" value="{$list.vehicle_loss_money|default=''}" id="vehicle_loss_money" name="vehicle_loss_money"  {if isset($list.vehicle_loss)} {if $list.vehicle_loss eq 1} readonly {/if} {else} readonly {/if}  style="width: 100%"></td>
+                        <td><input type="text" value="{$list.vehicle_loss_standard|default=''}" id="vehicle_loss_standard" name="vehicle_loss_standard" class="standard" data-name="vehicle_loss"   {if isset($list.vehicle_loss)} {if $list.vehicle_loss eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
+                        <td><input type="text" value="{$list.vehicle_loss_discount|default=''}" readonly id="vehicle_loss_discount" name="vehicle_loss_discount" style="width: 100%"></td>
+                        <td><input type="text" value="{$list.vehicle_loss_payable|default=''}" id="vehicle_loss_payable" name="vehicle_loss_payable"  readonly style="width: 100%"></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><input type="checkbox" name="vehicle_third" class="all_check"  value="vehicle_third" {if isset($list.vehicle_third)} {if $list.vehicle_third eq 2} checked {/if} {/if}></td>
+                        <td class="center">机动车第三者责任统筹</td>
+                        <td><input type="text" value="{$list.vehicle_third_money|default=''}" id="vehicle_third_money" name="vehicle_third_money"   {if isset($list.vehicle_third)} {if $list.vehicle_third eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
+                        <td><input type="text" value="{$list.vehicle_third_standarddefault=''}" id="vehicle_third_standard" name="vehicle_third_standard" class="standard" data-name="vehicle_third"  {if isset($list.vehicle_third)} {if $list.vehicle_third eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
+                        <td><input type="text" value="{$list.vehicle_third_discount|default=''}" readonly id="vehicle_third_discount" name="vehicle_third_discount" style="width: 100%"></td>
+                        <td><input type="text" value="{$list.vehicle_third_payable|default=''}" id="vehicle_third_payable" name="vehicle_third_payable" readonly style="width: 100%"></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><input type="checkbox" name="car_driver" class="all_check"  value="car_driver" {if isset($list.car_driver)} {if $list.car_driver eq 2} checked {/if} {/if}></td>
+                        <td class="center">车上人员责任统筹(司机)</td>
+                        <td><input type="text" value="{$list.car_driver_money|default=''}" id="car_driver_money" name="car_driver_money"  {if isset($list.car_driver)} {if $list.car_driver eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
+                        <td><input type="text" value="{$list.car_driver_standard|default=''}" id="car_driver_standard" name="car_driver_standard" class="standard" data-name="car_driver"  {if isset($list.car_driver)} {if $list.car_driver eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
+                        <td><input type="text" value="{$list.car_driver_discount|default=''}" readonly id="car_driver_discount" name="car_driver_discount" style="width: 100%"></td>
+                        <td><input type="text" value="{$list.car_driver_payable|default=''}" id="car_driver_payable" name="car_driver_payable"  readonly style="width: 100%"></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><input type="checkbox" name="car_passenger" class="all_check" value="car_passenger" {if isset($list.car_passenger)} {if $list.car_passenger eq 2} checked {/if} {/if}></td>
+                        <td class="center">车上人员责任统筹(乘客)</td>
+                        <td class="center"><input type="text" name="yuan" id="yuan" value="{$list.yuan|default=''}"  {if isset($lis.car_passengert)} {if $list.car_passenger eq 1} readonly {/if} {else} readonly {/if}  style="width:20%"> 元/座
+                            <input type="text"  {if isset($list.car_passenger)} {if $list.car_passenger eq 1} readonly {/if} {else} readonly {/if} name="seat" style="width:10%" id="seat" value="{$list.seat|default=''}"> 座
+                            <input type="hidden" id="car_passenger_money"  {if isset($list.car_passenger)} {if $list.car_passenger eq 1} readonly {/if} {else} readonly {/if} name="car_passenger_money" value="{$list.car_driver_money|default=''}"></td>
+                        <td><input type="text" value="{$list.car_passenger_standard|default=''}" id="car_passenger_standard" name="car_passenger_standard" class="standard" data-name="car_passenger"  {if isset($list.car_passenger)} {if $list.car_passenger eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
+                        <td><input type="text" value="{$list.car_passenger_discount|default=''}" readonly id="car_passenger_discount" name="car_passenger_discount" style="width: 100%"></td>
+                        <td><input type="text" value="{$list.car_passenger_payable|default=''}" id="car_passenger_payable" name="car_passenger_payable" readonly style="width: 100%"></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><input type="checkbox" name="car_goods" class="all_check" value="car_goods" {if isset($list.car_goods)} {if $list.car_goods eq 2} checked {/if} {/if}></td>
+                        <td class="center">车上货物责任统筹</td>
+                        <td><input type="text" value="{$list.car_goods_money|default=''}" name="car_goods_money" id="car_goods_money"  {if isset($list.car_goods)} {if $list.car_goods eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
+                        <td><input type="text" value="{$list.car_goods_standard|default=''}" name="car_goods_standard" id="car_goods_standard" class="standard" data-name="car_goods"  {if isset($list.car_goods)} {if $list.car_goods eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
+                        <td><input type="text" value="{$list.car_goods_discount|default=''}" readonly name="car_goods_discount" id="car_goods_discount" style="width: 100%"></td>
+                        <td><input type="text" value="{$list.car_goods_payable|default=''}" id="car_goods_payable" name="car_goods_payable" readonly style="width: 100%"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
+                    <div class="search-item-div col-xs-3">
+                        <label for="benchmarking" class="text-center search-item-label">基准统筹费（合计）:</label>
+                        <input type="text" class="form-control" readonly id="benchmarking" placeholder="基准统筹费" name="benchmarking" style="width:100%"  value="{$list.benchmarking|default='0'}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="total_discount" class="text-center search-item-label">合计折扣(%):</label>
+                        <input type="text" class="form-control" id="total_discount" placeholder="合计折扣" name="total_discount" style="width:100%"  value="{$list.total_discount|default=''}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="total_planning" class="text-center search-item-label">统筹费（合计）:</label>
+                        <input type="text" class="form-control" readonly id="total_planning" placeholder="统筹费（合计）" name="total_planning" style="width:100%"  value="{$list.total_planning|default='0'}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="form-inline form-group col-xs-12" style="margin-top:20px;margin-left:40%">
+            <button class="layui-btn layui-btn-normal layui-btn-radius" id="addQuotation">保存</button>
+            <button class="layui-btn layui-btn-normal layui-btn-radius" id="generate" style=""  data-toggle="modal">生成报价单</button>
+        </div>
+
+    </form>
+</div>
+
+<!--生成报价单开始modal-->
+<div class="modal fade" id="quotationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:50%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">报价单</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="baojia-table">
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                            <td>车牌号</td>
+                            <td colspan="4" id="plate_image"></td>
+                            <td>车主</td>
+                            <td colspan="4" id="name_image"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="1">厂牌型号</td>
+                            <td colspan="9" id="label_signal_image"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="1">使用性质</td>
+                            <td colspan="2" id="use_nature_image"></td>
+                            <td colspan="1">车辆种类</td>
+                            <td colspan="2" id="species_image"></td>
+                            <td colspan="2">新车购置价</td>
+                            <td colspan="2" id="new_price_image"></td>
+                        </tr>
+                        <tr>
+                            <td>注册日期</td>
+                            <td colspan="2" id="registered_time_image"></td>
+                            <td>使用年限</td>
+                            <td colspan="2" id="age_image"></td>
+                            <td colspan="2">实际价值</td>
+                            <td colspan="2" id="actual_price_image"></td>
+
+
+                        </tr>
+                        <tr>
+                            <td>座位数</td>
+                            <td colspan="2" id="approved_user_image"></td>
+                            <td colspan="1">吨位(KG)</td>
+                            <td colspan="2" id="approved_load_image"></td>
+                            <td colspan="2">上年状态</td>
+                            <td colspan="2" id="last_year_status_image"></td>
+
+
+                        </tr>
+                        <tr>
+                            <td colspan="1">本年赔款(次)</td>
+                            <td id="year_indemnity_image" colspan="1"></td>
+                            <td colspan="2">连续*年未出险</td>
+                            <td id="continuous_non_risk_image" colspan="1"></td>
+                            <td colspan="2">连续年数</td>
+                            <td id="continuous_year_image" colspan="1">00</td>
+                            <td>连续期间出险次数</td>
+                            <td id="danger_total_image"></td>
+                        </tr>
+                        <tr>
+                            <td >统筹期间</td>
+                            <td colspan="2" style="border: none;" id="start_time_image"></td>
+                            <td style="border: none;">0时起至</td>
+                            <td colspan="2" style="border: none;" id="end_time_image"></td>
+                            <td style="border: none;">24时止</td>
+                            <td style="border: none;">共计</td>
+                            <td style="border: none;" id="date_time_image">365</td>
+                            <td style="border: none;border-right:1px solid black;">天</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">参统项目</td>
+                            <td colspan="3">责任限额</td>
+                            <td colspan="3">标准统筹费</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">机动车损失统筹	</td>
+                            <td colspan="3" id="vehicle_loss_money_image"></td>
+                            <td colspan="3" id="vehicle_loss_standard_image"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">机动车第三者责任统筹</td>
+                            <td colspan="3" id="vehicle_third_money_image"></td>
+                            <td colspan="3" id="vehicle_third_standard_image"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">车上人员责任统筹(司机)</td>
+                            <td colspan="3" id="car_driver_money_image"></td>
+                            <td colspan="3" id="car_driver_standard_image"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">车上人员责任统筹(乘客)</td>
+                            <td colspan="3"><span id="yuan_image"></span>*<span id="seat_image"></span></td>
+                            <td colspan="3" id="car_passenger_standard_image"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">合计</td>
+                            <td colspan="6" id="benchmarking_image"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">折扣</td>
+                            <td colspan="6" id="total_discount_image"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">应交</td>
+                            <td colspan="6" id="total_planning_image"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">备注</td>
+                            <td colspan="8" id="remarks_image"></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 12px;text-align: left;" colspan="10">
+                                尊敬的客户：以上试算统筹费是依据您提供给的资料而做出的估算，仅供参考。最中参统项目及统筹费以统筹单为准。请您详细核对。
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>报价人:</td>
+                            <td colspan="3" id="create_user_image"></td>
+                            <td>业务经办:</td>
+                            <td colspan="3" id="manager_image"></td>
+                            <td>报价日期：</td>
+                            <td colspan="3" id="create_time_image"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--生成报价单结束-->
+
+<!--查询车架号/车牌号modal开始-->
+<div class="modal fade" id="carSearchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:50%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">报价单</h4>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <td>统筹单号</td>
+                            <td>参统年度</td>
+                            <td>车架号</td>
+                            <td>被统筹人</td>
+                            <td>生效日期</td>
+                            <td>到期日期</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--查询车架号/车牌号modal结束-->
+<script>
+
+    jQuery(function($) {
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#start_time' //指定元素
+                ,format: 'yyyy/MM/dd'
+                ,done: function(value, date, endDate){
+                    console.log(endDate);
+                    //计算结束日期
+                    $("#start_time").val(value);
+                    var value = new Date(value);
+                    var next_year = value.setFullYear(value.getFullYear()+1);
+                    var last_value = new Date(next_year).getTime()-86400000;
+                    last_value =  new Date(last_value).format("yyyy/MM/dd");
+                    $("#end_time").val(last_value);
+                    //计算
+                    //统筹天数
+                    var start_time = $("#start_time").val();
+                    next_year =  new Date(next_year);
+                    var take_effect = GetNumberOfDays(start_time,next_year);
+                    $("#date_time").val(take_effect);
+                    //短期系数 = 生效日期/起期+1年
+                    var date = $("#date_time").val();
+                    var num = take_effect/date;
+                    $("#short_term_coefficient").val(num.toFixed(2));
+                }
+            });
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#end_time' //指定元素
+                ,format: 'yyyy/MM/dd'
+                ,done: function(value, date, endDate){
+                    $("#end_time").val(value);
+                    //止期日期加一天
+                    var end_value = new Date(value).getTime()+86400000;
+                    var start_time = $("#start_time").val();
+                    var start_last = new Date(start_time);
+                    start_last.setFullYear(start_last.getFullYear()+1);
+                    var date = GetNumberOfDays(start_time,start_last);
+                    //统筹天数
+                    var take_effect = GetNumberOfDays(start_time,end_value);
+                    $("#date_time").val(take_effect);
+                    //短期系数 = 生效日期/起期+1年
+                    var num = take_effect/date;
+                    $("#short_term_coefficient").val(num.toFixed(2));
+                }
+            });
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#registered_time' //指定元素
+                ,format: 'yyyy-MM-dd'
+                ,done: function(value, date, endDate){
+                    $("#registered_time").val(value);
+                }
+            });
+        });
+        //查询车架
+        $("#car_search").on('click',function() {
+            $("#carSearchModal").modal();
+            return false;
+        });
+        //生成报价单
+        $("#generate").on('click',function () {
+            //填写数据
+            //车牌号
+            $("#plate_image").html($("#plate").val());
+            //车主
+            $("#name_image").html($("#car_name").val());
+            //厂牌型号
+            $("#label_signal_image").html($("#label_signal").val());
+            //使用性质
+            $("#use_nature_image").html($("#use_nature :checked").text());
+            //车辆种类
+            $("#species_image").html($("#species :checked").text());
+            //新车购置价
+            $("#new_price_image").html($("#new_price").val());
+            //注册日期
+            $("#registered_time_image").html($("#registered_time").val());
+            //使用年限
+            $("#age_image").html($("#age").val());
+            //实际价值
+            $("#actual_price_image").html($("#actual_price").val());
+            //座位数
+            $("#approved_user_image").html($("#approved_user").val());
+            //吨位(KG)
+            $("#approved_load_image").html($("#approved_load").val());
+            //上年状态
+            $("#last_year_status_image").html($("#last_year_status").val());
+            //本年赔款（次）
+            $("#year_indemnity_image").html($("#year_indemnity").val());
+            //连续*年未出险
+            $("#continuous_non_risk_image").html($("#continuous_non_risk").val());
+            //连续年数
+            $("#continuous_year_image").html($("#continuous_year").val());
+            //连续期间出险次数
+            $("#danger_total_image").html($("#danger_total").val());
+            //统筹起期
+            $("#start_time_image").html($("#start_time").val());
+            //统筹止期
+            $("#end_time_image").html($("#end_time").val());
+            //共计（天）
+            $("#date_time_image").html($("#date_time").val());
+            //机动车损失统筹责任限额
+            $("#vehicle_loss_money_image").html($("#vehicle_loss_money").val());
+            //机动车损失统筹标准统筹费
+            $("#vehicle_loss_standard_image").html($("#vehicle_loss_standard").val());
+            //机动车第三者责任限额
+            $("#vehicle_third_money_image").html($("#vehicle_third_money").val());
+            //机动车第三者标准统筹费
+            $("#vehicle_third_standard_image").html($("#vehicle_third_standard").val());
+            //车上人员责任统筹(司机)责任统筹
+            $("#car_driver_money_image").html($("#car_driver_money").val());
+            //车上人员责任统筹(司机)标准统筹费
+            $("#car_driver_standard_image").html($("#car_driver_standard").val());
+            //车上人员责任统筹(乘客)责任限额
+            $("#yuan_image").html($("#yuan").val());
+            $("#seat_image").html($("#seat").val());
+            //车上人员责任统筹(乘客)标准统筹费
+            $("#car_passenger_standard_image").html($("#car_passenger_standard").val());
+            //合计
+            $("#benchmarking_image").html($("#benchmarking").val());
+            //折扣
+            $("#total_discount_image").html($("#total_discount").val());
+            //应缴
+            $("#total_planning_image").html($("#total_planning").val());
+            //备注
+            $("#remarks_image").html($("#remarks").val());
+            //报价人
+            $("#create_user_image").html($("#create_user").val());
+            //经办人
+            if($("#manager :checked").text() != '请选择经办人') {
+                $("#manager_image").html($("#manager :checked").text());
+            }
+            //报价日期
+            $("#create_time_image").html($("#create_time").val());
+
+            $("#quotationModal").modal();
+            return false;
+        });
+        $('.chosen-select').chosen({allow_single_deselect:true});
+        //业务来源联动
+        $("#source").on('change',function() {
+           var source = $(this).val();
+            $.ajax('/admin/ajax/user/structure/getStructure',{
+                dataType: 'json',
+                timeout: 500,
+                method: "get",
+                data: {source:source},
+                success: function (data) {
+                    if(data.code == 100000) {
+                        $("#structure").html("");
+                        var html = '<option value="0">请选择归属部门</option>';
+                        var data = data.data;
+                        for (var i=0;i<data.length;i++) {
+                            html += '<option value="'+data[i].id+'">'+data[i].name+"</option>";
+                        }
+                        $("#structure").append(html);
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                }
+            });
+        });
+        //归属部门联动
+        $("#structure").on('change',function() {
+            var structure = $(this).val();
+            $.ajax('/admin/ajax/user/user/getUserInfo',{
+                dataType: 'json',
+                timeout: 500,
+                method: "get",
+                data: {structure:structure},
+                success: function (data) {
+                    if(data.code == 100000) {
+                        var html = '<select class="chosen-select form-control" id="salesman" name="salesman" style="width:100%" data-placeholder="选择归属人">';
+                        html += '<option value="0">请选择归属人</option>';
+                        var data = data.data;
+                        for (var i=0;i<data.length;i++) {
+                            html += '<option value="'+data[i].id+'" data-manager="'+data[i].manager_id+'">'+data[i].all_name+"</option>";
+                        }
+                        html += '<select>';
+                        $("#chose_salesman").html(html);
+                        $('.chosen-select').chosen({allow_single_deselect:true});
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                }
+            });
+        });
+        //归属人联动
+        $("#attribution_user").on('change',function() {
+            var userId = $(this).val();
+            $.ajax('/admin/ajax/user/user/getUserInfo',{
+                dataType: 'json',
+                timeout: 500,
+                method: "get",
+                data: {id:userId},
+                success: function (data) {
+                    if(data.code == 100000) {
+                        //同步经办人
+                        var html = '<select class="chosen-select form-control" id="manager" name="manager" style="width:100%" data-placeholder="选择经办人">';
+                        var data = data.data;
+                        console.log(data);
+                        html += '<option value="'+data[0].managerInfo[0].id+'">'+data[0].managerInfo[0].name+"</option>";
+                        $("#chose_manager").html(html);
+                        $('.chosen-select').chosen({allow_single_deselect:true});
+                        //城市
+                        $("#city").val(data[0].cityName);
+                        //来源
+                        $("#source").html("");
+                        var source = '';
+                        for (var i=0; i<data.sourceList.length; i++) {
+                            var selected = '';
+                            if(data[0].source == i) {
+                                selected = 'selected';
+                            }
+                            source += '<option value="'+i+'" ' +selected+ '>'+data.sourceList[i]+'</option>';
+                        }
+                        $("#source").append(source);
+
+                        //组织
+                        $("#structure").html("");
+                        var structure = '';
+                        for(var i = 0; i<data.structureList.length;i++) {
+                            var selected = '';
+                            if(data[0].structure == data.structureList[i].id) {
+                                selected = 'selected';
+                            }
+                            structure += '<option value="'+data.structureList[i].id+'" '+selected+'>'+data.structureList[i].name+'</option>';
+                        }
+                        console.log(structure);
+                        $("#structure").append(structure);
+
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                }
+            });
+        });
+        //全选、反选
+        $("#all_check").on('click',function(){
+            if(this.checked){
+                $(".all_check").prop("checked", true);
+            }else{
+                $(".all_check").prop("checked", false);
+            }
+        });
+        //统筹项目选择
+        $(".all_check").on('click',function(){
+            var val = $(this).val();
+            if(this.checked) {
+                if(val != 'all') {
+                    if(val == 'car_passenger') {
+                        $("#yuan").attr('readonly',false);
+                        $("#seat").attr('readonly',false);
+                    }
+                    $("#"+val+"_standard").attr('readonly',false);
+                    $("#"+val+"_money").attr('readonly',false);
+                }else{
+                    $("#yuan").attr('readonly',false);
+                    $("#seat").attr('readonly',false);
+                    $(".all_check").each(function() {
+                        var value = $(this).val();
+                        $("#"+value+"_standard").attr('readonly',false);
+                        $("#"+value+"_money").attr('readonly',false);
+                    })
+                }
+            }else{
+                if(val != 'all') {
+                    if(val == 'car_passenger') {
+                        $("#yuan").attr('readonly',true);
+                        $("#yuan").val("");
+                        $("#seat").attr('readonly',true);
+                        $("#seat").val("");
+                    }
+                    var standard = $("#"+val+"_standard").val();
+                    var payable = $("#"+val+"_payable").val();
+                    $("#"+val+"_standard").attr('readonly',true);
+                    $("#"+val+"_money").attr('readonly',true);
+                    //计算基准统筹费
+                    var benchmarking = $("#benchmarking").val();
+                    $("#benchmarking").val(parseInt(benchmarking - standard))
+                    $("#"+val+"_standard").val("");
+                    //计算统筹费
+                    var total_planning = $("#total_planning").val();
+                    $("#total_planning").val(parseInt(total_planning - payable));
+                    $("#"+val+"_payable").val("0.00");
+                }else{
+                    $("#yuan").attr('readonly',true);
+                    $("#yuan").val("");
+                    $("#seat").attr('readonly',true);
+                    $("#seat").val("");
+                    $(".all_check").each(function() {
+                        var value = $(this).val();
+                        $("#"+value+"_standard").val("");
+                        $("#"+value+"_standard").attr('readonly',true);
+                        $("#"+value+"_money").attr('readonly',true);
+                        $("#"+value+"_money").val("");
+                        $("#"+value+"_payable").val("0.00");
+                        $("#total_planning").val("");
+                    })
+
+                    $("#benchmarking").val("");
+                }
+            }
+        });
+        //核定人数联动
+        $("#approved_user").on('keyup',function() {
+            var value = $(this).val();
+            var seat = parseInt(value-1);
+            $("#seat").val(seat);
+            var yuan = $("#yuan").val();
+            if(yuan != '') {
+                $("#car_passenger_money").val(yuan * seat);
+            }
+        })
+        //标准统筹费联动
+        $(".standard").on('keyup',function() {
+            //短期系数
+            var short_term_coefficient = $("#short_term_coefficient").val();
+            if(short_term_coefficient == '') {
+                short_term_coefficient = 1;
+            }
+
+            $("#benchmarking").val(0);
+            $("#total_planning").val(0);
+            $(".all_check").each(function() {
+                if($(this).val() != 'all') {
+                    if(this.checked) {
+                        var value = $(this).val();
+                        var standard = $("#"+value+"_standard").val();
+                        if(standard == '') {
+                            standard = 0;
+                        }
+                        var discount = $("#total_discount").val();
+                        if(discount == '') {
+                            discount = 1;
+                        }else{
+                            discount = discount/100;
+                        }
+                        var payable = standard * short_term_coefficient * discount;
+                        //应缴统筹费
+                        $("#"+value+"_payable").val(payable.toFixed(2));
+                        //基准统筹费
+                        var benchmarking = $("#benchmarking").val();
+                        if(benchmarking == '') {
+                            benchmarking = 0;
+                        }
+                        $("#benchmarking").val(parseInt(benchmarking) + parseInt(standard));
+                        //统筹费（合计）
+                        var total_planning = $("#total_planning").val();
+                        if(total_planning == '') {
+                            total_planning = 0;
+                        }
+                        $("#total_planning").val(parseInt(total_planning) + parseInt(payable));
+                    }
+                }
+            })
+
+        })
+        //元联动
+        $("#yuan").on('keyup',function() {
+            var value = $(this).val();
+            var seat = $("#seat").val();
+            $("#car_passenger_money").val(value * seat);
+        })
+        //座联动
+        $("#seat").on('change',function() {
+            var value = $(this).val();
+            var yuan = $("#yuan").val();
+            $("#car_passenger_money").val(value * seat);
+        });
+        //合计折扣
+        $("#total_discount").keyup(function() {
+            var val = $(this).val();
+            $("#vehicle_loss_discount").val(val);
+            $("#vehicle_third_discount").val(val);
+            $("#car_driver_discount").val(val);
+            $("#car_passenger_discount").val(val);
+            $("#car_goods_discount").val(val);
+
+            //短期系数
+            var short_term_coefficient = $("#short_term_coefficient").val();
+            if(short_term_coefficient == '') {
+                short_term_coefficient = 1;
+            }
+
+            $("#benchmarking").val(0);
+            $("#total_planning").val(0);
+            $(".all_check").each(function() {
+                if($(this).val() != 'all') {
+                    if(this.checked) {
+                        var value = $(this).val();
+                        var standard = $("#"+value+"_standard").val();
+                        if(standard == '') {
+                            standard = 0;
+                        }
+                        var discount = $("#total_discount").val();
+                        if(discount == '') {
+                            discount = 1;
+                        }else{
+                            discount = discount/100;
+                        }
+                        var payable = standard * short_term_coefficient * discount;
+                        //应缴统筹费
+                        $("#"+value+"_payable").val(payable.toFixed(2));
+                        //基准统筹费
+                        var benchmarking = $("#benchmarking").val();
+                        if(benchmarking == '') {
+                            benchmarking = 0;
+                        }
+                        $("#benchmarking").val(parseInt(benchmarking) + parseInt(standard));
+                        //统筹费（合计）
+                        var total_planning = $("#total_planning").val();
+                        if(total_planning == '') {
+                            total_planning = 0;
+                        }
+                        $("#total_planning").val(parseInt(total_planning) + parseInt(payable));
+                    }
+                }
+            })
+        });
+        Date.prototype.format = function(fmt) {
+            var o = {
+                "M+" : this.getMonth()+1,                 //月份
+                "d+" : this.getDate(),                    //日
+                "h+" : this.getHours(),                   //小时
+                "m+" : this.getMinutes(),                 //分
+                "s+" : this.getSeconds(),                 //秒
+                "q+" : Math.floor((this.getMonth()+3)/3), //季度
+                "S"  : this.getMilliseconds()             //毫秒
+            };
+            if(/(y+)/.test(fmt)) {
+                fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+            }
+            for(var k in o) {
+                if(new RegExp("("+ k +")").test(fmt)){
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+                }
+            }
+            return fmt;
+        }
+
+        //新车
+        $("#new_car").on('click',function() {
+            $("#plate").val("暂未上牌");
+            $("#plate").attr("readonly",true);
+            return false;
+        });
+
+        //保存
+        $("#addQuotation").on('click',function() {
+            var but = $(this);
+            but.attr("disabled", "disabled");
+            var form = $("form[name=addQuotationForm]").serializeArray();
+            var id = $("#id").val();
+            var copy = $("#copy").val();
+            if (id != false && copy != 1) {
+                var url = '/admin/ajax/quotation/editQuotation';
+                replaceForm(form, 'id', id);
+            } else {
+                var url = '/admin/ajax/quotation/addQuotation';
+            }
+            $.ajax(url, {
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: form,
+                success: function (data, status, xhr) {   // success callback function
+                    console.log(data);
+                    but.removeAttr("disabled");
+                    if (data.code == 100000) {
+                        layer.msg(data.msg);
+                        setTimeout(function () {
+                            location.reload();
+                        }, 300);
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function () {
+                    but.removeAttr("disabled");
+                    layer.msg("系统错误");
+                }
+            });
+            return false;
+        });
+        var replaceForm = function (arr, name, value) {
+            var replace = false;
+            for (i = 0; i < arr.length; i++) {
+                if (arr[i]['name'] == name) {
+                    replace = true;
+                    arr[i]['value'] = value
+                }
+            }
+            if (!replace) {
+                var obj = {"name": name, "value": value};
+                arr.push(obj)
+            }
+        };
+
+    });
+    function GetNumberOfDays(date1,date2){
+        var a1 = Date.parse(new Date(date1));
+        var a2 = Date.parse(new Date(date2));
+        var day = parseInt((a2-a1)/ (1000 * 60 * 60 * 24));//核心：时间戳相减，然后除以天数
+        return day;
+    }
+</script>
