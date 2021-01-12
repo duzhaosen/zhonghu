@@ -2,6 +2,7 @@
 <div class="col-xs-12">
     <button class="btn btn-success pull-right " onclick="javascript:window.location.href = '/admin/system/Menu/index'">返回列表</button>
     <!-- PAGE CONTENT BEGINS -->
+    <input type="hidden" id="id" value="{$list.id|default=''}" />
     <form class="form-horizontal" role="form" name="addMenuForm" id="addMenuForm">
         <div class="form-group">
             <label class="col-sm-3 control-label no-padding-right">上级菜单</label>
@@ -13,18 +14,17 @@
             <label class="col-sm-3 control-label no-padding-right">菜单名称</label>
 
             <div class="col-sm-9">
-                <input type="text" placeholder="菜单名称" name="name" value="" />
+                <input type="text" placeholder="菜单名称" name="name" value="{$list.name|default=''}" />
             </div>
         </div>
         <div class="space-4"></div>
-
 
         <div class="form-group">
             <label class="col-sm-3 control-label no-padding-right">图标</label>
 
             <div class="col-sm-9">
                 <span class="input-icon">
-                    <input class="input-sm" type="text" name="icon" value="" />
+                    <input class="input-sm" type="text" name="icon" value="{$list.icon|default=''}" />
                     <i class="ace-icon fa fa-leaf blue"></i>
                 </span>
                 <a href="http://www.fontawesome.com.cn/faicons/" target="_blank" class="btn btn-sm btn-primary">查看</a>
@@ -38,7 +38,7 @@
             <label class="col-sm-3 control-label no-padding-right">文件夹</label>
 
             <div class="col-sm-9">
-                <input class="input-sm" type="text" name="folder" placeholder="控制器" value="" />
+                <input class="input-sm" type="text" name="folder" placeholder="控制器" value="{$list.folder|default=''}" />
                 <div class="space-2"></div>
 
                 <div class="help-block" id="input-size-slider"></div>
@@ -50,7 +50,7 @@
 
             <div class="col-sm-9">
                 <div class="clearfix">
-                    <input class="input-sm" type="text" name="action" placeholder="方法" value="" />
+                    <input class="input-sm" type="text" name="action" placeholder="方法" value="{$list.action|default=''}" />
                 </div>
 
                 <div class="space-2"></div>
@@ -64,7 +64,7 @@
 
             <div class="col-sm-9">
                 <div class="inline">
-                    <input type="text" id="form-field-tags" name="param" value="" placeholder="附加参数" value="" />
+                    <input type="text" id="form-field-tags" name="param" value="" placeholder="附加参数" value="{$list.param|default=''}" />
                 </div>
             </div>
         </div>
@@ -74,10 +74,10 @@
 
             <div class="col-sm-9">
                 <label class="radio-inline">
-                    <input type="radio" name="isshow" checked value="1"> 展示
+                    <input type="radio" name="isshow" checked value="1" {if $list.isshow eq 1} checked {/if}> 展示
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="isshow" value="2"> 不展示
+                    <input type="radio" name="isshow" value="2" {if $list.isshow eq 2} checked {/if}> 不展示
                 </label>
             </div>
         </div>
@@ -120,7 +120,9 @@
             var but = $(this);
             but.attr("disabled","disabled");
             var form = $("form[name=addMenuForm]").serializeArray();
-            var url = '/admin/ajax.menu/addMenu';
+            var id = $("#id").val();
+            var url = '/admin/ajax.menu/editMenu';
+            replaceForm(form, 'id', id);
             var pids = $("#tree").GetSelect().split(',');
             var pid_length = pids.length;
             if(pid_length > 1 && pids[pid_length-1] == "") {

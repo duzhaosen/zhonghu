@@ -1,0 +1,535 @@
+{__NOLAYOUT__}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+        .hidden{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<a  style="right: 0;display: block;text-decoration: none;width: 50px;height: 35px; background: #3683D3;color: #fff;text-align: center;line-height: 35px;cursor:pointer" onclick="pdf()">下载</a>
+<!--startprint-->
+<link rel="stylesheet" type="text/css" href="/static/ace1.4/assets/css/biao.css"/>
+<div class="tables right-aside">
+    <div class="tables-title">
+        <div class="tables-title-top">
+            <div class="tables-title-top-logo">
+                <img src="/static/ace1.4/assets/images/logo.png"/>
+            </div>
+            <h4>服务电话:400-681-8811</h4>
+        </div>
+        <div class="titles">
+            <h2>交通安全统筹单<span>（电子统筹单）</span></h2>
+            <img src="/static/ace1.4/assets/images/hao.jpg" style="width: 100px; height: 90px;margin-top: -30px; float: right;"/>
+            <h4 style="float:right;margin:63px -95px 11px 0;font-weight: 500;font-size:12px;">扫&nbsp;&nbsp;&nbsp;&nbsp;码&nbsp;&nbsp;&nbsp;&nbsp;验&nbsp;&nbsp;&nbsp;&nbsp;真</h4>
+
+        </div>
+        <div class="tables-title-bottom">
+            <span class="sp1">统筹单号:<font>{$res.overall_id}</font></span>
+        </div>
+        <p class="tiyi">鉴于参统人已向统筹人提出参统申请，并同意按照约定交付统筹费，统筹人依照承统项目及其对应条款和特别约定，承担补偿责任。</p>
+    </div>
+    <div class="table">
+        <table border="" cellspacing="0" cellpadding="0"  id="sors" >
+            <tr>
+                <td colspan="2">被统筹人</td>
+                <td>{$res.participate_name}</td>
+                <td colspan="2">身份证号/统一社会信用代码</td>
+                <td colspan="2">{$res.participate_number}</td>
+                <span rowspan="15" style="font-size:10px;width:15px;position: absolute;right: -20px;top: 46px;">尊<br>敬<br>的<br>客<br>户<br>您<br>可<br>通<br>过<br>拨<br>打<br>4<br>0<br>0<br>6<br>8<br>1<br>8<br>8<br>1<br>1<br>电<br>话<br>或<br>扫<br>描<br>上<br>方<br>二<br>维<br>码<br>验<br>真<br>统<br>筹<br>单</span>
+            </tr>
+            <tr>
+                <td rowspan="5" style="font-size:16px;width:10px;">统<br>筹<br>车<br>辆<br>情<br>况</td>
+                <td>号码号牌</td>
+                <td>{$res.plate}</td>
+                <td colspan="1">厂牌型号</td>
+                <td colspan="3">{$res.label_signal}</td>
+            </tr>
+            <tr>
+                <td>VIN码/车架号</td>
+                <td colspan="2">{$res.frame}</td>
+                <td>发动机号</td>
+                <td colspan="2">{$res.engine}</td>
+            </tr>
+            <tr>
+                <td>初次登记日期</td>
+                <td>{$res.registered_time|date='Y-m-d',###}</td>
+                <td>排量/功率</td>
+                <td>{$res.displacement}/{$res.power}</td>
+                <td>核定载质量</td>
+                <td>{$res.approved_load}千克</td>
+            </tr>
+            <tr>
+                <td>车辆种类</td>
+                <td>{$res.speciesStr}</td>
+                <td>使用性质</td>
+                <td>{$res.use_natureStr}</td>
+                <td>核定载客</td>
+                <td>{$res.approved_user}人</td>
+            </tr>
+            <tr>
+                <td>新车购置价格</td>
+                <td>{$res.new_price}元</td>
+                <td>行驶区域</td>
+                <td>——</td>
+                <td>已使用年限</td>
+                <td>{$res.age}年</td>
+            </tr>
+            <tr>
+                <td colspan="3">统筹项目</td>
+                <td>不计免赔</td>
+                <td colspan="2">统筹金额/责任限额(元)</td>
+                <td colspan="1">统筹费(元)</td>
+            </tr>
+            {if condition="$res.vehicle_loss eq 2"}
+            <tr data-ids="{$res.vehicle_loss_money}"  class='playerRow' myAttribute='{$res.vehicle_loss_money}'>
+                {else /}
+            <tr data-ids="0"  class='playerRow hidden' myAttribute='0'>
+                {/if}
+                {if condition="$res.vehicle_loss_standard eq null"}
+                <td colspan="3">----</td>
+                <td>----</td>
+                <td colspan="2" style="padding-right: 62px;">----</td>
+                <td  colspan="1">----</td>
+                {else/}
+                <td colspan="3">机动车损失统筹</td>
+
+                {if condition="$res.vehicle_loss_standard eq null"}
+                <td>----</td>
+                {else/}
+                <td>
+                </td>
+                {/if}
+
+                <td colspan="2" style="padding-right: 62px;">{$res.vehicle_loss_money|default="----"}</td>
+
+
+                {if condition="$res.vehicle_loss_standard eq null"}
+                <td  colspan="1">----</td>
+                {else/}
+                <td  colspan="1">{$res.vehicle_loss_payable|default="----"}</td>
+                {/if}
+                {/if}
+            </tr>
+            {if condition="$res.vehicle_third eq 2"}
+            <tr data-ids="{$res.vehicle_third_money}"  class='playerRow' myAttribute='{$res.vehicle_third_money}'>
+                {else /}
+            <tr data-ids="0"  class='playerRow hidden' myAttribute='0'>
+                {/if}
+                {if condition="$res.vehicle_third_standard eq null"}
+                <td colspan="3">----</td>
+                <td>----</td>
+                <td colspan="2" style="padding-right: 62px;">----</td>
+                <td  colspan="1">----</td>
+                {else/}
+                <td colspan="3">机动车第三者责任统筹</td>
+                {if condition="$res.vehicle_third_standard eq null"}
+                <td>----</td>
+                {else/}
+                <td>
+                </td>
+                {/if}
+                <td colspan="2" style="padding-right: 62px;">{$res.vehicle_third_money|default="----"}</td>
+                {if condition="$res.vehicle_third_standard eq null"}
+                <td colspan="1">----</td>
+                {else/}
+                <td colspan="1">{$res.vehicle_third_payable|default="----"}</td>
+                {/if}
+                {/if}
+            </tr>
+            {if condition="$res.car_driver eq 2"}
+            <tr data-ids="{$res.car_driver_money}"  class='playerRow' myAttribute='{$res.car_driver_money}'>
+                {else /}
+            <tr data-ids="0" class='playerRow hidden' myAttribute='0'>
+                {/if}
+                {if condition="$res.car_driver_standard eq null"}
+                <td colspan="3">----</td>
+                <td>----</td>
+                <td colspan="2" style="padding-right: 62px;">----</td>
+                <td  colspan="1">----</td>
+                {else/}
+                <td colspan="3">机动车全车盗抢统筹</td>
+                {if condition="$res.car_driver_standard eq null"}
+                <td>----</td>
+                {else/}
+                <td>
+                </td>
+                {/if}
+                <td colspan="2" style="padding-right: 62px;">{$res.car_driver_money|default="----"}</td>
+                {if condition="$res.car_driver_standard eq null"}
+                <td colspan="1">----</td>
+                {else/}
+                <td colspan="1">{$res.car_driver_payable|default="----"}</td>
+                {/if}
+                {/if}
+            </tr>
+
+            {if condition="$res.car_passenger eq 2"}
+            <tr data-ids="{$res.car_passenger_money}" class='playerRow' myAttribute='{$res.car_passenger_money}'>
+                {else /}
+            <tr data-ids="0" class='playerRow hidden' myAttribute='0'>
+                {/if}
+                {if condition="$res.car_passenger_standard eq null"}
+                <td colspan="3">----</td>
+                <td>----</td>
+                <td colspan="2" style="padding-right: 62px;">----</td>
+                <td  colspan="1">----</td>
+                {else/}
+                <td colspan="3">车上人员责任统筹(司机)</td>
+                {if condition="$res.car_passenger_standard eq null"}
+                <td>----</td>
+                {else/}
+                <td>
+                </td>
+                {/if}
+                <td colspan="2" style="padding-right: 62px;">{$res.car_passenger_money|default="----"}</td>
+                {if condition="$res.car_passenger_standard eq null"}
+                <td colspan="1">----</td>
+                {else/}
+                <td colspan="1">{$res.car_passenger_payable|default="----"}</td>
+                {/if}
+                {/if}
+            </tr>
+
+            {if condition="$res['car_goods'] eq 2"}
+            <tr data-ids="{$res.car_goods_money}" class='playerRow' myAttribute='{$res.car_goods_money}'>
+                {else /}
+            <tr data-ids="0" class='playerRow hidden' myAttribute='0'>
+                {/if}
+                {if condition="$res.car_goods_standard eq null"}
+                <td colspan="3">----</td>
+                <td>----</td>
+                <td colspan="2" style="padding-right: 62px;">----</td>
+                <td  colspan="1">----</td>
+                {else/}
+                <td colspan="3">车上人员责任统筹(乘客)</td>
+                {if condition="$res.car_goods_standard eq null"}
+                <td>----</td>
+                {else/}
+                <td>
+                </td>
+                {/if}
+                <td colspan="2" style="padding-right: 62px;">{$res.car_goods_money|default="----"}</td>
+                {if condition="$res.car_goods_standard eq null"}
+                <td colspan="1">----</td>
+                {else/}
+                <td colspan="1">{$res.car_goods_payable|default="----"}</td>
+                {/if}
+                {/if}
+            </tr>
+
+            {if condition="$res.combustion eq 2"}
+            <tr data-ids="{$res.combustion_money}" class='playerRow' myAttribute='{$res.combustion_money}'>
+                {else /}
+            <tr data-ids="0" class='playerRow hidden' myAttribute='0'>
+                {/if}
+                {if condition="$res.combustion_standard eq null"}
+                <td colspan="3">----</td>
+                <td>----</td>
+                <td colspan="2" style="padding-right: 62px;">----</td>
+                <td  colspan="1">----</td>
+                {else/}
+                <td colspan="3">自燃损失统筹</td>
+                {if condition="$res.combustion_standard eq null"}
+                <td>----</td>
+                {else/}
+                <td>
+                </td>
+                {/if}
+                <td colspan="2" style="padding-right: 62px;">{$res.combustion_money|default="----"}</td>
+                {if condition="$res.combustion_standard eq null"}
+                <td colspan="1">----</td>
+                {else/}
+                <td colspan="1">{$res.combustion_payable|default="----"}</td>
+                {/if}
+                {/if}
+            </tr>
+            {if condition="$res.engine_wading eq 2"}
+            <tr data-ids="{$res.engine_wading_money}" class='playerRow' myAttribute='{$res.engine_wading_money}'>
+                {else /}
+            <tr data-ids="0" class='playerRow hidden' myAttribute='0'>
+                {/if}
+                {if condition="$res.engine_wading_standard eq null"}
+                <td colspan="3">----</td>
+                <td>----</td>
+                <td colspan="2" style="padding-right: 62px;">----</td>
+                <td  colspan="1">----</td>
+                {else/}
+                <td colspan="3">发动机涉水损失统筹</td>
+                {if condition="$res.engine_wading_standard eq null"}
+                <td>----</td>
+                {else/}
+                <td>
+                </td>
+                {/if}
+                <td colspan="2" style="padding-right: 62px;">{$res.engine_wading_money|default="----"}</td>
+                {if condition="$res.engine_wading_standard eq null"}
+                <td colspan="1">----</td>
+                {else/}
+                <td colspan="1">{$res.engine_wading_payable|default="----"}</td>
+                {/if}
+                {/if}
+            </tr>
+            {if condition="$res.designated_repai eq 2"}
+            <tr data-ids="{$res.designated_repai_money}" class='playerRow' myAttribute='{$res.designated_repai_money}'>
+                {else /}
+            <tr data-ids="0" class='playerRow hidden' myAttribute='0'>
+                {/if}
+                {if condition="$res.designated_repai_standard eq null"}
+                <td colspan="3">----</td>
+                <td>----</td>
+                <td colspan="2" style="padding-right: 62px;">----</td>
+                <td  colspan="1">----</td>
+                {else/}
+                <td colspan="3">指定修理厂统筹</td>
+                {if condition="$res.designated_repai_standard eq null"}
+                <td>----</td>
+                {else/}
+                <td>
+                </td>
+                {/if}
+                <td colspan="2" style="padding-right: 62px;">{$res.designated_repai_money|default="----"}</td>
+                {if condition="$res.designated_repai_standard eq null"}
+                <td colspan="1">----</td>
+                {else/}
+                <td colspan="1">{$res.designated_repai_payable|default="----"}</td>
+                {/if}
+                {/if}
+            </tr>
+
+            {if condition="$res.broken_glass eq 2"}
+            <tr data-ids="{$res.broken_glass_money}" class='playerRow' myAttribute='{$res.broken_glass_money}'>
+                {else /}
+            <tr data-ids="0" class='playerRow hidden' myAttribute='0'>
+                {/if}
+                {if condition="$res.broken_glass_standard eq null"}
+                <td colspan="3">----</td>
+                <td>----</td>
+                <td colspan="2" style="padding-right: 62px;">----</td>
+                <td  colspan="1">----</td>
+                {else/}
+                <td colspan="3">车上货物责任统筹</td>
+                {if condition="$res.broken_glass_standard eq null"}
+                <td>----</td>
+                {else/}
+                <td>
+                </td>
+                {/if}
+                <td colspan="2" style="padding-right: 62px;">{$res.broken_glass_money|default="----"}</td>
+                {if condition="$res.broken_glass_standard eq null"}
+                <td colspan="3">----</td>
+                {else/}
+                <td colspan="1">{$res.broken_glass_payable|default="----"}</td>
+                {/if}
+                {/if}
+            </tr>
+            <tr>
+                <td colspan="7" style="text-align: left;">
+                    统筹费合计(人民币)：<font id="daxie"></font>
+                    <span style="width: 200px;display: block;float: right;display: flex;">
+								(￥：<font style="width: 180px;margin: 0 10px;display: block;" id="money">{$res.total_planning}</font>元)
+							</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="7" >
+						  <span style="display: flex;width: 100%;font-size:14px;">
+							统筹期间
+							<font style="width:9.5%;display: block;">{$res.start_time|date='Y',###}</font>年
+							<font style="width:9.5%;display: block;">{$res.start_time|date='m',###}</font>月
+							<font style="width:9.5%;display: block;">{$res.start_time|date='d',###}</font>日零时起至
+							<font style="width:9.5%;display: block;">{$res.end_time|date='Y',###}</font>年
+							<font style="width:9.5%;display: block;">{$res.end_time|date='m',###}</font>月
+							<font style="width:9.5%;display: block;">{$res.end_time|date='d',###}</font>日二十四时止</td>
+                </span>
+            </tr>
+            <tr>
+                <td style="width:10px;">特<br>别<br>约<br>定</td>
+                <td colspan="6" style="text-align: left;">
+                    {$res.agreement}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="7" style="text-align: left;">统筹合同争议解决方式:<font>{if  condition="$res.dispute_resolution eq 1"}
+                    诉讼
+                    {elseif condition="$res.dispute_resolution eq 2"/}
+                    仲裁
+                    {/if}</font></td>
+            </tr>
+            <tr>
+                <td style="width:10px;">重<br>要<br>提<br>示</td>
+                <td colspan="6" style="text-align: left;">
+                    1、本统筹合同有统筹条款、参统提示、统筹单、统筹批单和特别约定组成。<br />
+                    2、收到本统筹单、统筹项目对应的统筹条款后，请立即核对。如有不符或疏漏，请及时通知统筹人并办理变更或补充手续。<br />
+                    3、请详细阅读统筹项目对应的统筹条款，特别是责任免除和责任处理。<br />
+                    4、参统车辆因改装、加装、改变使用性质等导致危险程度显著增加以及转卖、转让、赠送他人的，应通知统筹人并办理变更手续。<br />
+                    5、参统车辆发生交通事故后应立即通知统筹人。<br />
+
+                </td>
+            </tr>
+            <tr class="img">
+                <td>统<br>筹<br>人</td>
+                <td colspan="6" style="width: 45.7px;height: 16px;">
+                    <span style="text-align: left !important;height: 20px;display: block;width: 50%;float: left;line-height: 20px;"> <span>公司名称：</span>中互交通运输有限公司</span>
+                    <span style="text-align: left !important;;height: 20px;display: block;width: 50%;float: left;line-height: 20px;"><span>客服电话：</span>400-681-8811</span>
+                    <span style="text-align: left !important;;height: 20px;display: block;line-height: 20px;float: left;width: 50%;"><span>地址:</span>河北省石家庄市太行南大街197号A座10层</span>
+                    <span style="text-align: left !important;height: 20px;display: block;width:50%;float: left;line-height: 20px;"> <span>邮局：</span> 050000</span>
+                    <span style="text-align: left !important;;height: 20px;display: block;width:50%;float: left;"> <span>签单日期：</span>{$res.create_time|date='Y-m-d',###}</span>
+                    <span style="text-align: left !important;;height: 20px;display: block;width:50%;float: left;line-height: 20px;"> <span>统筹人盖章：</span></span>
+                </td>
+            </tr>
+            <tr style="border: none;">
+                <td colspan="7" style="overflow: hidden;border: none;">
+			                <span style="text-align: center;display: block;width: 33%;float: left;">
+			                 <span> 审核：</span>  {$res.financial_review_user}</span>
+                    <span style="text-align: center;display: block;width: 33%;float: left;">
+			                 <span>制单：</span>   {$res.create_user}</span>
+                    <span style="text-align: center;display: block;width: 33%;float: left;">
+			                 <span style="padding-top: 10px;">经办：</span>   {$res.managerStr}</span>
+                </td>
+            </tr>
+        </table>
+        <img src="/static/ace1.4/assets/images/zhang.png"/>
+    </div>
+</div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    //排序 @author刘远航
+    $(function() {
+        SortTb();
+    });
+    function SortTb() {
+        var $table=$('#sors');
+        // var $table=document.getElementById('sors');
+        var rows = $table.find('tr').get();
+        rows.sort(function(a, b) {
+            var keyA = $(a).attr('myAttribute');
+            var keyB = $(b).attr('myAttribute');
+            if (keyA < keyB) return 1;
+            if (keyA > keyB) return -1;
+            return 0;
+        });
+        // rows[12].style.display = 'none';
+        $.each(rows, function(index, row) {
+            $table.children('tbody').append(row);
+        });
+        $('')
+    }
+    //js  转换大写金额
+    //小写转大写
+    function cmycurd(num) {  //转成人民币大写金额形式
+        var str1 = '零壹贰叁肆伍陆柒捌玖';  //0-9所对应的汉字
+        var str2 = '万仟佰拾亿仟佰拾万仟佰拾元角分'; //数字位所对应的汉字
+        var str3;    //从原num值中取出的值
+        var str4;    //数字的字符串形式
+        var str5 = '';  //人民币大写金额形式
+        var i;    //循环变量
+        var j;    //num的值乘以100的字符串长度
+        var ch1;    //数字的汉语读法
+        var ch2;    //数字位的汉字读法
+        var nzero = 0;  //用来计算连续的零值是几个
+        num = Math.abs(num).toFixed(2);  //将num取绝对值并四舍五入取2位小数
+        str4 = (num * 100).toFixed(0).toString();  //将num乘100并转换成字符串形式
+        j = str4.length;      //找出最高位
+        if (j > 15) { return '溢出'; }
+        str2 = str2.substr(15 - j);    //取出对应位数的str2的值。如：200.55,j为5所以str2=佰拾元角分
+        //循环取出每一位需要转换的值
+        for (i = 0; i < j; i++) {
+            str3 = str4.substr(i, 1);   //取出需转换的某一位的值
+            if (i != (j - 3) && i != (j - 7) && i != (j - 11) && i != (j - 15)) {    //当所取位数不为元、万、亿、万亿上的数字时
+                if (str3 == '0') {
+                    ch1 = '';
+                    ch2 = '';
+                    nzero = nzero + 1;
+                }
+                else {
+                    if (str3 != '0' && nzero != 0) {
+                        ch1 = '零' + str1.substr(str3 * 1, 1);
+                        ch2 = str2.substr(i, 1);
+                        nzero = 0;
+                    }
+                    else {
+                        ch1 = str1.substr(str3 * 1, 1);
+                        ch2 = str2.substr(i, 1);
+                        nzero = 0;
+                    }
+                }
+            }
+            else { //该位是万亿，亿，万，元位等关键位
+                if (str3 != '0' && nzero != 0) {
+                    ch1 = "零" + str1.substr(str3 * 1, 1);
+                    ch2 = str2.substr(i, 1);
+                    nzero = 0;
+                }
+                else {
+                    if (str3 != '0' && nzero == 0) {
+                        ch1 = str1.substr(str3 * 1, 1);
+                        ch2 = str2.substr(i, 1);
+                        nzero = 0;
+                    }
+                    else {
+                        if (str3 == '0' && nzero >= 3) {
+                            ch1 = '';
+                            ch2 = '';
+                            nzero = nzero + 1;
+                        }
+                        else {
+                            if (j >= 11) {
+                                ch1 = '';
+                                nzero = nzero + 1;
+                            }
+                            else {
+                                ch1 = '';
+                                ch2 = str2.substr(i, 1);
+                                nzero = nzero + 1;
+                            }
+                        }
+                    }
+                }
+            }
+            if (i == (j - 11) || i == (j - 3)) {  //如果该位是亿位或元位，则必须写上
+                ch2 = str2.substr(i, 1);
+            }
+            str5 = str5 + ch1 + ch2;
+
+            if (i == j - 1 && str3 == '0') {   //最后一位（分）为0时，加上"整"
+                str5 = str5 + '整';
+            }
+        }
+        if (num == 0) {
+            str5 = '零元整';
+        }
+        return str5;
+    }
+    var nums = $('#money').html();
+    var daxie = cmycurd(nums);
+    $('#daxie').text(daxie);
+</script>
+<!--endprint-->
+<script>
+    function pdf() {
+
+// 获取当前页面html代码
+        var currentHtml = window.document.body.innerHTML;
+// 设置打印开始位置
+        var start = '<!--startprint-->';
+// 设置打印结束位置
+        var end = '<!--endprint-->';
+// 获取到要打印部分的代码
+        var printHtml = currentHtml.substring(currentHtml.indexOf(start) + start.length, currentHtml.indexOf(end));
+// 也可以通过id获取
+//var printHtml = document.getElementById('main').innerHTML
+// 打印
+        window.document.body.innerHTML = printHtml;
+        window.print();
+// 返回原界面
+        window.document.body.innerHTML = currentHtml;
+    }
+</script>
+</html>

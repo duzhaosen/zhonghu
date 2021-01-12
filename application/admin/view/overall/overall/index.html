@@ -1,5 +1,5 @@
-<link rel="stylesheet" href="/static/ace1.4/assets/layui/css/layui.css">
-<script  src="/static/ace1.4/assets/layui/layui.all.js"></script>
+<link rel="stylesheet" href="/static/ace1.4/assets/css/chosen.min.css">
+<script src="/static/ace1.4/assets/js/chosen.jquery.min.js"></script>
 <div class="row">
     <form style="" name="addQuotationForm">
         <div class="col-xs-12 col-sm-12">
@@ -10,32 +10,37 @@
                 <div class="widget-body">
                     <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
                         <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">暂存单号:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
+                            <label for="temporary_id" class="text-center search-item-label">暂存单号:</label>
+                            <input type="text" class="form-control" id="temporary_id" name="temporary_id" style="width:100%" value="{:input('param.temporary_id')}">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="car_name" class="text-center search-item-label">统筹单号:</label>
-                            <input type="text" class="form-control" id="car_name" name="car_name" style="width:100%" value="{:input('param.car_name')}">
+                            <label for="overall_id" class="text-center search-item-label">统筹单号:</label>
+                            <input type="text" class="form-control" id="overall_id" name="overall_id" style="width:100%" value="{:input('param.overall_id')}">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="plate" class="text-center search-item-label">单证号:</label>
-                            <input type="text" class="form-control" id="plate" name="plate" style="width:100%" value="{:input('param.plate')}">
+                            <label for="documents_id" class="text-center search-item-label">单证号:</label>
+                            <input type="text" class="form-control" id="documents_id" name="documents_id" style="width:100%" value="{:input('param.documents_id')}">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="frame" class="text-center search-item-label">参统人:</label>
-                            <input type="text" class="form-control" id="frame" name="frame" style="width:100%" value="{:input('param.frame')}">
+                            <label for="participate_name" class="text-center search-item-label">参统人:</label>
+                            <input type="text" class="form-control" id="participate_name" name="participate_name" style="width:100%" value="{:input('param.participate_name')}">
                         </div>
                     </div>
 
 
                     <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
                         <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">被统筹人:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
+                            <label for="coordinated_name" class="text-center search-item-label">被统筹人:</label>
+                            <input type="text" class="form-control" id="coordinated_name" name="coordinated_name" style="width:100%" value="{:input('param.coordinated_name')}">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="car_name" class="text-center search-item-label">业务归属:</label>
-                            <input type="text" class="form-control" id="car_name" name="car_name" style="width:100%" value="{:input('param.car_name')}">
+                            <label for="attribution_user" class="text-center search-item-label">业务归属:</label>
+                            <select class="chosen-select form-control" id="attribution_user" name="attribution_user" style="width:100%" data-placeholder="选择归属人">
+                                <option value="0">请选择归属人</option>
+                                {volist name="users" id="value"}
+                                <option value="{$value.id}" {if input('param.plate') eq $value.id} selected {/if} data-manager="{$value.manager_id}">{$value.all_name}</option>
+                                {/volist}
+                            </select>
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="plate" class="text-center search-item-label">车牌号:</label>
@@ -50,20 +55,20 @@
 
                     <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
                         <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">核统起期:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
+                            <label for="start_time_start" class="text-center search-item-label">核统起期:</label>
+                            <input type="text" class="form-control" id="start_time_start" name="start_time_start" style="width:100%" value="{:input('param.start_time_start')}">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="car_name" class="text-center search-item-label">核统止期:</label>
-                            <input type="text" class="form-control" id="car_name" name="car_name" style="width:100%" value="{:input('param.car_name')}">
+                            <label for="end_time_end" class="text-center search-item-label">核统止期:</label>
+                            <input type="text" class="form-control" id="end_time_end" name="end_time_end" style="width:100%" value="{:input('param.end_time_end')}">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="plate" class="text-center search-item-label">财务审核（起期）:</label>
-                            <input type="text" class="form-control" id="plate" name="plate" style="width:100%" value="{:input('param.plate')}">
+                            <label for="financial_review_time_start" class="text-center search-item-label">财务审核（起期）:</label>
+                            <input type="text" class="form-control" id="financial_review_time_start" name="financial_review_time_start" style="width:100%" value="{:input('param.financial_review_time_start')}">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="frame" class="text-center search-item-label">财务审核（止期）:</label>
-                            <input type="text" class="form-control" id="frame" name="frame" style="width:100%" value="{:input('param.frame')}">
+                            <label for="financial_review_time_end" class="text-center search-item-label">财务审核（止期）:</label>
+                            <input type="text" class="form-control" id="financial_review_time_end" name="financial_review_time_end" style="width:100%" value="{:input('param.financial_review_time_end')}">
                         </div>
                     </div>
 
@@ -71,11 +76,16 @@
                     <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
                         <div class=" search-item-div col-xs-3">
                             <label for="id" class="text-center search-item-label">统筹单状态:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
+                            <select name="status" id="status" style="width:100%">
+                                <option value="-1">请选择</option>
+                                {volist name="$status" id="value" key="key"}
+                                <option value="{$key}">{$value}</option>
+                                {/volist}
+                            </select>
                         </div>
-                        <div class=" search-item-div col-xs-3 ">
+                        <div class=" search-item-div col-xs-3 " style="margin-top:2rem;">
                             <button class="layui-btn layui-btn-radius layui-btn-normal" id="search">查询</button>
-                            <button class="layui-btn layui-btn-radius layui-btn-normal" id="search">重置</button>
+                            <button class="layui-btn layui-btn-radius layui-btn-normal" id="reset" value="reset">重置</button>
                         </div>
                     </div>
                 </div>
@@ -94,8 +104,8 @@
                 <table id="dynamic-table" class="table table-striped table-bordered table-hover center">
                     <thead>
                     <tr>
-                        <th class="center"><input type="checkbox"></th>
-                        <th class="center">暂存单号</th>
+                        <th class="center"><input type="checkbox" name="overall_check" value="all"></th>
+                        <th class="center"><a href="">暂存单号</a></th>
                         <th class="hidden-480 center">统筹单号</th>
                         <th class="hidden-480 center">单证号</th>
                         <th class="hidden-480 center">车牌号</th>
@@ -113,14 +123,136 @@
                     </tr>
                     </thead>
                     <tbody>
+                    {volist name="$list" id="value" key="key"}
+                    <tr data-id="{$value.id}}" data-type="{$value.type}">
+                        <td><input type="checkbox" name="overall_check" class="overall_check" value="{$value.id}"></td>
+                        <td><a href="/admin/Overall/overall/view?id={$value.id}" target="_blank">{$value.temporary_id}</a></td>
+                        <td>{$value.overall_id}</td>
+                        <td>{$value.documents_id}</td>
+                        <td>{$value.plate}</td>
+                        <td>{$value.frame}</td>
+                        <td>{$value.participate_name}</td>
+                        <td>{$value.coordinated_name}</td>
+                        <td>{:date('Y-m-d',$value.create_time)}</td>
+                        <td>{:date('Y-m-d',$value.start_time)}</td>
+                        <td>{$value.total_planning}</td>
+                        <td>{$value.attribution_userStr}</td>
+                        <td>{$value.financial_review_user}</td>
+                        <td>{$value.statusStr}</td>
+                        <td>{:date('Y-m-d',$value.financial_review_time)}</td>
+                        <td>
+                            <div class="hidden-sm hidden-xs action-buttons">
+                                <a class="green" href="/admin/Overall/overall/add?id={$value.id}" target="_blank">
+                                    <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                </a>
+
+                                <a class="red delOverall" href="">
+                                    <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                </a>
+                                <a class="blue" href="/admin/Overall/overall/add?id={$value.id}&copy=1">
+                                    <i class="ace-icon fa fa-copy bigger-110 bigger-130"></i>
+                                </a>
+                            </div>
+                            <div class="hidden-md hidden-lg">
+                                <div class="inline pos-rel">
+                                    <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">
+                                        <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                        <li>
+                                            <a class="green" href="/admin/Overall/overall/add?id={$value.id}">
+                                                <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="red delOverall" href="#">
+                                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="blue" href="/admin/Overall/overall/add?id={$value.id}&copy=1">
+                                                <i class="ace-icon fa sort bigger-130"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {/volist}
                     </tbody>
                 </table>
                 <div style="margin-left:40%" class="second">
-                    <button class="layui-btn layui-btn-radius layui-btn-normal">转出单</button>
-                    <button class="layui-btn layui-btn-radius layui-btn-normal quotationPdf">报价单</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal">取消通过</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal overallPdf">打印</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal overallPdf">电子统筹单</button>
                     <button class="layui-btn layui-btn-radius layui-btn-normal">导出</button>
                 </div>
+                {$list->render()}
             </div>
         </div>
     </div>
 </div>
+<script>
+    jQuery(function($) {
+        $('.chosen-select').chosen({allow_single_deselect:true});
+        //删除
+        $(".delOverall").on('click',function() {
+            var overall = $(this).parents('tr').attr("data-id");
+            var but = $(this);
+            but.attr("disabled","disabled");
+            layer.confirm('是否确认删除?', function(index){
+                var id = but.parents('tr').attr("data-id");
+                $.ajax('/admin/ajax/Overall/overall/delOverall',{
+                    dataType: 'json', // type of response data
+                    timeout: 500,     // timeout milliseconds
+                    method: "post",
+                    data: {id:overall},
+                    success: function (data,status,xhr) {   // success callback function
+                        but.removeAttr("disabled");
+                        if(data.code == 100000) {
+                            layer.msg(data.msg);
+                            setTimeout(function() {
+                                location.reload();
+                            },300);
+                        }else{
+                            layer.msg(data.msg);
+                        }
+                    },
+                    error: function() {
+                        layer.msg("系统错误");
+                    }
+                });
+                layer.close(index);
+            });
+            return false;
+        });
+        //生成统筹单跳转
+        $(".overallPdf").on('click',function() {
+            var total = 0;
+            var value = '';
+            $(".overall_check").each(function() {
+                if(this.checked){
+                    total ++;
+                    value = $(this).val();
+                }
+            })
+            var type = $(this).parents('tr').attr("data-type");
+            if(type != 7) {
+                layer.msg("审核未通过禁止生成统筹单");
+                return false;
+            }
+            if(total > 1) {
+                layer.msg("只能选择一项");
+                return false;
+            }else if(total == 0) {
+                layer.msg("请选择一项");
+                return false;
+            }else{
+                window.location.href="/admin/Overall/overall/overallPdf?temporary_id="+value;
+            }
+            return false;
+        })
+    });
+</script>

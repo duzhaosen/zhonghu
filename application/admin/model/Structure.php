@@ -10,6 +10,7 @@ namespace app\admin\model;
 
 use \think\Model;
 use think\Db;
+use think\Session;
 
 class Structure extends Model {
     private $db = "zh_structure";
@@ -38,11 +39,54 @@ class Structure extends Model {
      */
     public function getList($condition=array(), $field='*') {
         $condition['type'] = 1;
+        if(!isset($condition['id'])) {
+            $admin = Session::get('user_admin');
+            if($admin == false) {
+                $structure = Session::get('structure');
+                $ReverseIds = $this->getStructureList([],['pid'=>$structure]);
+                if($ReverseIds) {
+                    $condition['id'] = ['in',$ReverseIds];
+                }
+            }
+        }else{
+            $admin = Session::get('user_admin');
+            if($admin == false) {
+                $structure = Session::get('structure');
+                if($structure) {
+                    $ReverseIds = $this->getStructureList([],['pid'=>$structure]);
+//                    print_r($ReverseIds);die;
+                    if(!in_array($condition['id'],$ReverseIds)) {
+                        return [];
+                    }
+                }
+            }
+        }
         $res = db($this->db)->field($field)->where($condition)->select();
         if(!empty($res)) {
             return $res;
         }
         return [];
+    }
+
+    /**
+     *
+     */
+    public function getStructureList($ids=[],$condition,$field='*') {
+        $condition['type'] = 1;
+        $res = db($this->db)->field($field)->where($condition)->select();
+        if(isset($res[0])) {
+            foreach ($res as $key => $value) {
+                $ids[] = $condition['pid'];
+                $ids[] = $value['id'];
+                if(isset($value['id'])) {
+                    $this->getStructureList($ids,['pid'=>$value['id']]);
+                }
+            }
+        }else{
+            $ids[] = $condition['pid'];
+        }
+        $ids = array_unique($ids);
+        return $ids;
     }
 
     /**格式化组织

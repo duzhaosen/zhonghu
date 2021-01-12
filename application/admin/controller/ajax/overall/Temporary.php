@@ -6,33 +6,34 @@
  * @createTime: 16:04
  * @company: 中互交通运输有限公司 https://zhonghujiaotong.com
  */
-namespace app\admin\controller\Ajax;
+namespace app\admin\controller\Ajax\overall;
 
 use think\Model;
 use think\Request;
 use app\admin\controller\Common;
 use think\Config;
 
-class Quotation extends Common {
+class Temporary extends Common {
     private $param;
-    /** 报价单添加
-     *
+
+    /** 暂存单添加
+     * $request array()
      */
-    public function addQuotation(Request $request) {
-        $res = Config::parse(APP_PATH.'/admin/config/formValidator/addQuotation.ini','ini');
-        foreach($res['addquotation'] as $key => $value) {
+    public function addTemporary(Request $request) {
+        $res = Config::parse(APP_PATH.'/admin/config/formValidator/addOverall.ini','ini');
+        foreach($res['addoverall'] as $key => $value) {
             $request->param($key) ? $this->param[$key] = $request->param($key) : "";
-            if($value && empty($this->param[$key])) {
-                $data = array();
-                $data['code'] = 100001;
-                $data['msg'] = $res['addquotationcomment'][$key].'不可为空';
-                return json($data);
-            }
+//            if($value && empty($this->param[$key])) {
+//                $data = array();
+//                $data['code'] = 100001;
+//                $data['msg'] = $res['addoverallcomment'][$key].'不可为空';
+//                return json($data);
+//            }
         }
 
         //验证车架号/车牌号是否在系统内且在统筹期间内
         $car_frame = $this->param['frame'];
-        $car_list = Model('Quotation')->getList(['quotation.frame'=>$car_frame,'quotation.type'=>1]);
+        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1,'overall.temporary_id'=>['<>',$this->param['temporary_id']]]);
         if($car_list->total() > 0) {
             $list = $car_list->all();
             foreach($list as $key => $value) {
@@ -45,23 +46,24 @@ class Quotation extends Common {
             }
         }
         //格式化数据
-        $res = Model('Quotation')->addQuotation($this->param);
+        $this->param['status'] = 1;
+        $res = Model('Overall')->addOverall($this->param);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
-            $data['msg'] = '报价单添加成功';
+            $data['msg'] = '统筹单添加成功';
             return json($data);
         }
         $data = array();
         $data['code'] = 100001;
-        $data['msg'] = '报价单添加失败';
+        $data['msg'] = '统筹单添加失败';
         return json($data);
     }
 
-    /** 删除报价单
+    /** 删除暂存单
      *
      */
-    public function delQuotation(Request $request) {
+    public function delTemporary(Request $request) {
         $id = $request->param('id');
         if($id == false) {
             $data = array();
@@ -81,28 +83,28 @@ class Quotation extends Common {
         return json($data);
     }
 
-    /** 报价单修改
+    /** 暂存单修改
      *
      */
-    public function editQuotation(Request $request) {
-        $res = Config::parse(APP_PATH.'/admin/config/formValidator/addQuotation.ini','ini');
-        foreach($res['addquotation'] as $key => $value) {
+    public function editTemporary(Request $request) {
+        $res = Config::parse(APP_PATH.'/admin/config/formValidator/addOverall.ini','ini');
+        foreach($res['addoverall'] as $key => $value) {
             $request->param($key) ? $this->param[$key] = $request->param($key) : "";
-            if($value && empty($this->param[$key])) {
-                $data = array();
-                $data['code'] = 100001;
-                $data['msg'] = $res['addquotationcomment'][$key].'不可为空';
-                return json($data);
-            }
+//            if($value && empty($this->param[$key])) {
+//                $data = array();
+//                $data['code'] = 100001;
+//                $data['msg'] = $res['addquotationcomment'][$key].'不可为空';
+//                return json($data);
+//            }
         }
 
         //验证车架号/车牌号是否在系统内且在统筹期间内
         $car_frame = $this->param['frame'];
-        $car_list = Model('Quotation')->getList(['quotation.frame'=>$car_frame,'quotation.type'=>1,'quotation.id'=>['<>',$this->param['id']]]);
+        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1]);
         if($car_list->total() > 0) {
             $list = $car_list->all();
             foreach($list as $key => $value) {
-                if($value['end_time'] < strtotime($this->param['start_time'])) {
+                if($value['end_time']+86400 > strtotime($this->param['start_time'])) {
                     $data = array();
                     $data['code'] = 100001;
                     $data['msg'] = '车架号已在其他单子的统筹期内'.$value['id'];
@@ -111,15 +113,17 @@ class Quotation extends Common {
             }
         }
         //格式化数据
-        $res = Model('Quotation')->editQuotation($this->param);
-        if($res == false) {
+        $this->param['status'] = 1;
+        $res = Model('Overall')->editOverall($this->param);
+        if($res == true) {
             $data = array();
-            $data['code'] = 100001;
-            $data['msg'] = '报价单修改失败';
+            $data['code'] = 100000;
+            $data['msg'] = '统筹单修改成功';
             return json($data);
         }
-        $data['code'] = 100000;
-        $data['msg'] = '报价单修改成功';
+        $data = array();
+        $data['code'] = 100001;
+        $data['msg'] = '统筹单修改失败';
         return json($data);
     }
 }

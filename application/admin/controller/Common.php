@@ -24,18 +24,18 @@ class Common extends Controller
         }else if($user_id == true &&$request->path() == 'admin/user/login/login') {
             $this->redirect('/admin/index/index');
         }
-
+//
         parent::__construct($request);
-        //验证菜单权限
-        if($this->power) {
-            $admin = Session::get('user_admin');
-            if($admin == false) {
-                $powerIds = Session::get('user_powers');
-                if(!in_array($this->power, $powerIds)) {
-                    $this->redirect('/admin/power/nopower');
-                }
-            }
-        }
+//        //验证菜单权限
+//        if($this->power) {
+//            $admin = Session::get('user_admin');
+//            if($admin == false) {
+//                $powerIds = Session::get('user_powers');
+//                if(!in_array($this->power, $powerIds)) {
+//                    $this->redirect('/admin/power/nopower');
+//                }
+//            }
+//        }
     }
 
     /**当前位置展示

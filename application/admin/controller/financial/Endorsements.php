@@ -12,6 +12,7 @@ namespace app\admin\controller\financial;
 use app\admin\controller\Common;
 
 class Endorsements extends Common {
+    private $param;
     public function index() {
         $this->fetch();
     }

@@ -29,7 +29,37 @@ class Quotation extends Common {
     /** 报价单添加
      *
      */
-    public function add(Request $request) {
+    public function add() {
+        $res = Config::parse(APP_PATH.'/admin/config/structure.ini','ini');
+        $this->assign('sourceList',$res['source']);
+        //归属人查询
+        $users = Model('User')->getList(['salesman'=>1]);
+        $this->assign('users',$users);
+        //经办人查询
+        $users = Model('User')->getList(['manager'=>1]);
+        $this->assign('managerList',$users);
+        //组织
+        $structureList = Model('Structure')->getList();
+        $this->assign('structureList', $structureList);
+
+        //车辆配置文件
+        $res = Config::parse(APP_PATH.'/admin/config/car.ini','ini');
+        $this->assign('plate_typeList',$res['plate_type']);
+        $this->assign('colorList',$res['color']);
+        $this->assign('use_natureList',$res['use_nature']);
+        $this->assign('speciesList',$res['species']);
+        $this->assign('car_typeList',$res['car_type']);
+        $this->assign('vehicle_inspectionList',$res['vehicle_inspection']);
+        $this->assign('transferList',$res['transfer']);
+        $this->assign('participate_cityList', json_decode($res['city']['province'], true));
+
+        $this->fetch();
+    }
+
+    /** 报价单修改
+     *
+     */
+    public function edit(Request $request) {
         $res = Config::parse(APP_PATH.'/admin/config/structure.ini','ini');
         $this->assign('sourceList',$res['source']);
         //归属人查询
@@ -57,11 +87,50 @@ class Quotation extends Common {
         $id = $request->param('id');
         $quotationInfo = [];
         if(isset($id)) {
-            $quotationInfo = Model('Quotation')->getList(['id'=>$id]);
+            $quotationInfo = Model('Quotation')->getList(['quotation.id'=>$id],'quotation.id as quotation_id,quotation.*,car.*,overall.*');
             $quotationInfo = $quotationInfo->all();
             $quotationInfo = $quotationInfo[0];
         }
-//        print_r($quotationInfo);die;
+        $this->assign('list',$quotationInfo);
+
+        $this->fetch();
+    }
+
+    /** 报价单复制
+     *
+     */
+    public function copy(Request $request) {
+        $res = Config::parse(APP_PATH.'/admin/config/structure.ini','ini');
+        $this->assign('sourceList',$res['source']);
+        //归属人查询
+        $users = Model('User')->getList(['salesman'=>1]);
+        $this->assign('users',$users);
+        //经办人查询
+        $users = Model('User')->getList(['manager'=>1]);
+        $this->assign('managerList',$users);
+        //组织
+        $structureList = Model('Structure')->getList();
+        $this->assign('structureList', $structureList);
+
+        //车辆配置文件
+        $res = Config::parse(APP_PATH.'/admin/config/car.ini','ini');
+        $this->assign('plate_typeList',$res['plate_type']);
+        $this->assign('colorList',$res['color']);
+        $this->assign('use_natureList',$res['use_nature']);
+        $this->assign('speciesList',$res['species']);
+        $this->assign('car_typeList',$res['car_type']);
+        $this->assign('vehicle_inspectionList',$res['vehicle_inspection']);
+        $this->assign('transferList',$res['transfer']);
+        $this->assign('participate_cityList', json_decode($res['city']['province'], true));
+
+        //报价单查询
+        $id = $request->param('id');
+        $quotationInfo = [];
+        if(isset($id)) {
+            $quotationInfo = Model('Quotation')->getList(['quotation.id'=>$id]);
+            $quotationInfo = $quotationInfo->all();
+            $quotationInfo = $quotationInfo[0];
+        }
         $this->assign('list',$quotationInfo);
 
         $this->fetch();
@@ -105,7 +174,7 @@ class Quotation extends Common {
             $param['quotation.remarks'] = $param['remarks'];
             unset($param['remarks']);
         }
-        $quotationList = Model('Quotation')->getList($param,'*',$this->page);
+        $quotationList = Model('Quotation')->getList($param,'quotation.id as quotation_id,quotation.*,car.*,overall.*',$this->page);
         $this->assign('quotationList',$quotationList);
         $this->fetch();
     }
@@ -125,7 +194,13 @@ class Quotation extends Common {
      */
     public function quotationPdf() {
         $param = input('get.');
-        $quotationList = Model('Quotation')->getList($param,'*',$this->page);
+        if($param['id']) {
+            $param['quotation.id'] = $param['id'];
+            unset($param['id']);
+        }else{
+            $this->error("报价单id不可为空");exit;
+        }
+        $quotationList = Model('Quotation')->getList($param,'quotation.id as quotation_id,quotation.*,car.*,overall.*',$this->page);
         if(empty($quotationList)) {
             $this->error("查询失败");exit;
         }

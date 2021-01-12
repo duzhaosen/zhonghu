@@ -10,6 +10,7 @@ namespace app\admin\model;
 
 use \think\Model;
 use think\Db;
+use think\Session;
 
 class User extends Model {
     private $db = 'zh_user';
@@ -23,17 +24,54 @@ class User extends Model {
         if($type == 1) {
             $condition['type'] = 1;
         }
+
+        if(!isset($condition['structure'])) {
+            $admin = Session::get('user_admin');
+            if($admin == false) {
+                $structure = Session::get('structure');
+                if($structure) {
+                    $ReverseIds = Model('Structure')->getStructureList([],['pid'=>$structure]);
+                    if(!empty($ReverseIds)) {
+                        $condition['structure'] = ['in',$ReverseIds];
+                    }
+                }
+            }
+        }else{
+            $admin = Session::get('user_admin');
+            if($admin == false) {
+                $structure = Session::get('structure');
+                $ReverseIds = Model('Structure')->getStructureList([],['pid'=>$structure]);
+                if(!in_array($condition['structure'],$ReverseIds)) {
+                    return [];
+                }
+            }
+        }
+//        print_r($condition);die;
         $res = Db($this->db)->field($field)->where($condition)->select();
         if(!empty($res)) {
             foreach($res as $key => $value) {
                 //组织
-                $structure = Model('Structure')->getList(['id'=>$value['structure']],'*');
-                $res[$key]['structureStr'] = $structure[0]['name'];
-                //来源
-                $res[$key]['source'] = $structure[0]['source'];
-                    //角色
-                $roles = Model('Roles')->getRoles(['id'=>$value['roles']],'*');
-                $res[$key]['rolesStr'] = $roles[0]['name'];
+                if(!empty($value['structure'])) {
+                    $structure = Model('Structure')->getList(['id'=>$value['structure']],'*');
+                    $res[$key]['structureStr'] = $structure[0]['name'];
+                    //来源
+                    $res[$key]['sourceStr'] = $structure[0]['source'];
+                    $all_structure = '&nbsp('.$res[$key]['structureStr'].')';
+                    $res[$key]['source'] = $structure[0]['source'];
+                }else{
+                    $res[$key]['structureStr'] = '';
+                    $all_structure = '';
+                }
+                //角色
+                if(!empty($value['roles'])) {
+                    $roles = Model('Roles')->getRoles(['id'=>$value['roles']],'*');
+                    $res[$key]['rolesStr'] = $roles[0]['name'];
+                    $all_roles = '&nbsp('.$res[$key]['rolesStr'].')';
+                }else{
+//                    $res[$key]['roles'] = '';
+                    $res[$key]['rolesStr'] = '';
+                    $all_roles = '';
+                }
 
                 $res[$key]['typeStr'] = $value['type'] == 1 ? '启用' : '禁用';
                 $res[$key]['salesmanStr'] = $value['salesman'] == 1 ? '业务员' : '非业务员';
@@ -43,10 +81,11 @@ class User extends Model {
                 $res[$key]['op_time'] = $value['op_time'] == 0 ? '' : date('Y-m-d H:i:s', $value['op_time']);
 
                 //详细信息字段
-                $res[$key]['all_name'] = $value['name'].'&nbsp('.$value['username'].')'.'&nbsp('.$res[$key]['structureStr'].')'.'&nbsp('.$res[$key]['rolesStr'].')';
+
+                $res[$key]['all_name'] = $value['name'].'&nbsp('.$value['username'].')'.$all_structure.$all_roles;
 
                 //经办人信息
-                $res[$key]['managerInfo'] = $value['manager'] == 1 ? Db($this->db)->where(['id'=>$value['manager_id']])->select() : [];
+                $res[$key]['managerInfo'] = $value['manager'] == 2 ? Db($this->db)->where(['id'=>$value['manager_id']])->select() : [];
 
                 //用户地区
                 $res[$key]['cityName'] = cityName($value['city']);
@@ -63,7 +102,16 @@ class User extends Model {
     public function addUser($param) {
         $param['create_time'] = time();
         $param['create_user'] = getAdminInfo();
+        $param['id'] = $this->getUserId();
         return Db($this->db)->insert($param);
+    }
+
+    /** 生成工号
+     *
+     */
+    public function getUserId() {
+        $res = Db($this->db)->field('id')->order('id desc')->select();
+        return $res[0]['id'] + 1;
     }
 
     /** 修改用户
@@ -74,5 +122,17 @@ class User extends Model {
         $param['op_time'] = time();
         $param['op_user'] = getAdminInfo();
         return Db($this->db)->update($param);
+    }
+
+    /** 查看当前用户只能查看哪些用户
+     *
+     */
+    public function getLoginUserid() {
+        $list = $this->getList(['salesman'=>1]);
+        $userIds = array();
+        foreach ($list as $key => $value) {
+            $userIds[] = $value['id'];
+        }
+        return $userIds;
     }
 }

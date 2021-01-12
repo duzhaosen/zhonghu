@@ -106,9 +106,9 @@
 
                     <tbody>
                     {volist name="quotationList" id="value"}
-                    <tr data-id="{$value.id}">
-                        <td><input type="checkbox" class="quotation_check" value="{$value.id}"></td>
-                        <td><a href="/admin/Quotation/quotation/view?id={$value.id}" target="_blank">{$value.id}</a></td>
+                    <tr data-id="{$value.quotation_id}">
+                        <td><input type="checkbox" class="quotation_check" value="{$value.quotation_id}"></td>
+                        <td><a href="/admin/Quotation/quotation/view?id={$value.id}" target="_blank">{$value.quotation_id}</a></td>
                         <td class="hidden-480 col-xs-1">{:date('Y-m-d',$value.create_time)}</td>
                         <td class="hidden-480">{$value.car_name}</td>
                         <td class="hidden-480">{$value.plate}</td>
@@ -125,14 +125,14 @@
                         <td>{$value.remarks}</td>
                         <td>
                             <div class="hidden-sm hidden-xs action-buttons">
-                                <a class="green" href="/admin/Quotation/quotation/add?id={$value.id}" target="_blank">
+                                <a class="green" href="/admin/Quotation/quotation/edit?id={$value.quotation_id}">
                                     <i class="ace-icon fa fa-pencil bigger-130"></i>
                                 </a>
 
                                 <a class="red delQuotation" href="">
                                     <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                 </a>
-                                <a class="blue" href="/admin/Quotation/quotation/add?id={$value.id}&copy=1">
+                                <a class="blue" href="/admin/Quotation/quotation/copy?id={$value.quotation_id}">
                                     <i class="ace-icon fa fa-copy bigger-110 bigger-130"></i>
                                 </a>
                             </div>
@@ -144,7 +144,7 @@
 
                                     <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
                                         <li>
-                                            <a class="green" href="/admin/Quotation/quotation/add?id={$value.id}">
+                                            <a class="green" href="/admin/Quotation/quotation/edit?id={$value.quotation_id}">
                                                 <i class="ace-icon fa fa-pencil bigger-130"></i>
                                             </a>
                                         </li>
@@ -154,7 +154,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="blue" href="/admin/Quotation/quotation/add?id={$value.id}&copy=1">
+                                            <a class="blue" href="/admin/Quotation/quotation/copy?id={$value.quotation_id}">
                                                 <i class="ace-icon fa sort bigger-130"></i>
                                             </a>
                                         </li>
@@ -167,7 +167,7 @@
                     </tbody>
                 </table>
                 <div style="margin-left:40%" class="second">
-                    <button class="layui-btn layui-btn-radius layui-btn-normal">转出单</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal overall">转出单</button>
                     <button class="layui-btn layui-btn-radius layui-btn-normal quotationPdf">报价单</button>
                     <button class="layui-btn layui-btn-radius layui-btn-normal">导出</button>
                 </div>
@@ -203,6 +203,25 @@
                 ,format: 'yyyy-MM-dd'
             });
         });
+        //转出单
+        $(".overall").on('click',function () {
+            var total = 0;
+            var value = '';
+            $(".quotation_check").each(function() {
+                if(this.checked){
+                    total ++;
+                    value = $(this).val();
+                }
+            })
+            if(total > 1) {
+                layer.msg("只能选择一项");
+            }else if(total == 0) {
+                layer.msg("请选择一项");
+            }else{
+                window.location.href="/admin/Overall/overall/add?quotation_id="+value;
+            }
+            return false;
+        })
         //生成报价单跳转
         $(".quotationPdf").on('click',function() {
             var total = 0;

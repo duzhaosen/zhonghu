@@ -49,7 +49,6 @@
 </style>
 <div class="row">
     <form style="" name="addQuotationForm">
-        <input type="hidden" id="copy" value="{:input('param.copy')}">
     <div class="col-xs-12 col-sm-12">
         <div class="widget-box">
             <div class="widget-header">
@@ -120,7 +119,7 @@
                     </div>
                     <div class="search-item-div col-xs-3">
                         <label for="id" class="text-center search-item-label">报价单号:</label>
-                        <input type="text" class="form-control" id="id" name="id" style="width:100%" readonly value="{$list.id|default=''}">
+                        <input type="text" class="form-control" id="id" name="id" style="width:100%" readonly value="">
                     </div>
                     <div class="search-item-div col-xs-3">
                         <label for="city" class="text-center search-item-label">归属区域:</label>
@@ -1195,14 +1194,7 @@
             var but = $(this);
             but.attr("disabled", "disabled");
             var form = $("form[name=addQuotationForm]").serializeArray();
-            var id = $("#id").val();
-            var copy = $("#copy").val();
-            if (id != false && copy != 1) {
-                var url = '/admin/ajax/quotation/editQuotation';
-                replaceForm(form, 'id', id);
-            } else {
-                var url = '/admin/ajax/quotation/addQuotation';
-            }
+            var url = '/admin/ajax/quotation/addQuotation';
             $.ajax(url, {
                 dataType: 'json', // type of response data
                 timeout: 500,     // timeout milliseconds

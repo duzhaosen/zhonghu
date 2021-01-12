@@ -19,10 +19,6 @@ class Structure extends Common
     public function index(Request $request) {
         $admin = Session::get('user_admin');
         $condition = array();
-        if($admin == false) {
-            $structureIds = Session::get('user_structure');
-            $condition['id'] = ['in',$structureIds];
-        }
         $list = Model('Structure')->getList($condition);
         $format = Model('Structure')->formatTree($list);
         $this->assign('list',json_encode($format));
@@ -34,8 +30,7 @@ class Structure extends Common
             }
         }
         $this->assign('param',$this->param);
-
-        $user = Model('user')->getList($this->param);
+        $user = Model('User')->getList($this->param,'*',0);
         $this->assign('userlist',$user);
 
 

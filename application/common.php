@@ -49,24 +49,6 @@ function getTreeId($ids=[], $model, $id, $action) {
     }
     return $ids;
 }
-/**逆向获取id的每一层id
- * $id int 最底层菜单id
- * @return array(
- */
-function getReverseTreeId($ids=[], $model, $id, $action) {
-    $res = Model($model)->$action(['pid'=>$id],'id');
-    if(isset($res[0])) {
-        foreach ($res as $key => $value) {
-            $ids[] = $value['id'];
-            if(isset($value['id'])) {
-                $ids = getTreeId($ids, $model, $value['id'], $action);
-            }
-        }
-    }else{
-        $ids[] = $id;
-    }
-    return $ids;
-}
 
 function getAcrTree($list, $ids=[]) {
     //第一步 构造数据
@@ -200,7 +182,7 @@ function cityName($id) {
  *
  */
 function getAdminInfo() {
-    $admin = Session::get('username');
+    $admin = Session::get('name');
     return $admin;
 }
 

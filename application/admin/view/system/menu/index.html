@@ -10,24 +10,24 @@
                 <div>
                     <button class="btn btn-success pull-right " onclick="javascript:window.location.href = '/admin/system/Menu/add'">添加</button>
 
-                    <table id="dynamic-table" class="table table-striped table-bordered table-hover">
+                    <table id="dynamic-table" class="table table-striped table-bordered table-hover center">
                         <thead>
                         <tr>
-                            <th>菜单ID</th>
-                            <th>菜单名称</th>
-                            <th class="hidden-480">排序</th>
-                            <th class="hidden-480">
+                            <th class="center">菜单ID</th>
+                            <th class="center" width="15%">菜单名称</th>
+                            <th class="hidden-480 center">排序</th>
+                            <th class="hidden-480 center">
                                 <i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
                                 图标
                             </th>
-                            <th class="hidden-480">菜单层级</th>
-                            <th>url</th>
-                            <th>是否展示</th>
-                            <th>添加人</th>
-                            <th>添加时间</th>
-                            <th class="hidden-480">修改人</th>
-                            <th class="hidden-480">修改时间</th>
-                            <th>操作</th>
+                            <th class="hidden-480 center">菜单层级</th>
+                            <th class="center">url</th>
+                            <th class="center">是否展示</th>
+                            <th class="center">添加人</th>
+                            <th class="center">添加时间</th>
+                            <th class="hidden-480 center">修改人</th>
+                            <th class="hidden-480 center">修改时间</th>
+                            <th class="center">操作</th>
                         </tr>
                         </thead>
 
@@ -115,7 +115,7 @@
         //修改
         $(".editMenu").on('click',function() {
             var id = $(this).parents('tr').attr("data-id");
-            window.location.href="/admin/system/Menu/add?id=" +id;
+            window.location.href="/admin/system/Menu/edit?id=" +id;
         });
         //删除
         $(".delMenu").on('click',function() {

@@ -18,10 +18,10 @@ class Login extends Controller {
      */
     public function Login(Request $request) {
         $this->param = $request->param();
-        if(empty($this->param['username'])) {
+        if(empty($this->param['id'])) {
             $data = array();
             $data['code'] = 100001;
-            $data['msg'] = '角色名称不可为空';
+            $data['msg'] = '工号不可为空';
             return json($data);
         }
         if(empty($this->param['passwd'])) {
@@ -46,6 +46,13 @@ class Login extends Controller {
                 $data['msg'] = '该用户已经禁用';
                 return json($data);
             }
+            //判断状态是否只是经办人
+            if($res[0]['salesman'] == 2 && $res[0]['manager'] == 1) {
+                $data = array();
+                $data['code'] = 100001;
+                $data['msg'] = '经办人不可登陆';
+                return json($data);
+            }
             $this->getSession($res);
 
             $data = array();
@@ -59,7 +66,7 @@ class Login extends Controller {
         if(empty($res)) {
             $data = array();
             $data['code'] = 100001;
-            $data['msg'] = '用户名错误';
+            $data['msg'] = '工号错误';
             return json($data);
         }
         $data = array();
@@ -76,19 +83,13 @@ class Login extends Controller {
         session('user_id', $res[0]['id']);
         session('username', $res[0]['username']);
         session('name', $res[0]['name']);
-        session('structure', $res[0]['structureStr']);
-        session('roles', $res[0]['rolesStr']);
+        session('structure', $res[0]['structure']);
+        session('structureStr', $res[0]['structureStr']);
+        session('rolesStr', $res[0]['rolesStr']);
         //管理员
         $roles = Model('Roles')->getRoles(['id' => $res[0]['roles']]);
         session('user_admin', $roles[0]['admin'] == 1 ? false : true);
         //菜单权限
         session('user_powers',explode(",",$roles[0]['powers']));
-        //组织权限
-
-        $ReverseIds = [];
-        if($res[0]['structure']) {
-            $ReverseIds = getReverseTreeId([], 'Structure', $res[0]['structure'], 'getList');
-        }
-        session('user_structure',$ReverseIds);
     }
 }

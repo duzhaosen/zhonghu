@@ -27,17 +27,6 @@ class User extends Common
         }
         $this->assign('param',$this->param);
 
-        //用户信息权限
-        $admin = Session::get('user_admin');
-        if($admin == false) {
-            //不是管理员，则按权限拆分
-            $structureIds = Session::get('user_structure');
-            if(isset($this->param['structure']) && !in_array($this->param['structure'], $structureIds)) {
-                $this->param['structure'] = '-1';
-            }else if(!isset($this->param['structure'])){
-                $this->param['structure'] = ['in',$structureIds];
-            }
-        }
         $user = Model('user')->getList($this->param);
         $this->assign('userlist',$user);
 
@@ -56,10 +45,6 @@ class User extends Common
         $this->assign('rolesList',json_encode($list));
 
         $condition = array();
-        if($admin == false) {
-            $structureIds = Session::get('user_structure');
-            $condition['id'] = ['in',$structureIds];
-        }
         $structureList = Model('Structure')->getList($condition);
         $this->assign('structureList', json_encode(getTree($structureList, $structureIds)));
 
@@ -77,7 +62,7 @@ class User extends Common
     public function addUser(Request $request) {
         $this->param = $request->param();
         if(!empty($this->param)) {
-            $user = Model('user')->getList($this->param);
+            $user = Model('User')->getList($this->param);
         }else{
             $user[0] = [];
         }

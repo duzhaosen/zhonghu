@@ -10,9 +10,14 @@
 namespace app\admin\controller\endorsements;
 
 use app\admin\controller\Common;
+use think\Request;
 
 class Endorsements extends Common {
-    public function index() {
+    private $param;
+    public function index(Request $request) {
+        $this->param = $request->param();
+        $res = Model('Endorsements')->getList($this->param);
+        $this->Assign('list',$res);
         $this->fetch();
     }
 }

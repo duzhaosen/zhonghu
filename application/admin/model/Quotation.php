@@ -26,8 +26,8 @@ class Quotation extends Model {
         Config::parse(APP_PATH.'/admin/config/car.ini','ini');
         $commont = Config::parse(APP_PATH.'/admin/config/Structure.ini','ini');
         $result = Db($this->db)->field($field)->where($condition)->alias('quotation')
-            ->join($this->car_db.' car','quotation.id=car.quotation_id')
-            ->join($this->overall_db." overall",'quotation.id=overall.quotation_id')
+            ->join($this->car_db.' car','quotation.id=car.related_id')
+            ->join($this->overall_db." overall",'quotation.id=overall.related_id')
             ->paginate($page)->each(function($item,$key) use($commont) {
                 $item['plate_typeStr'] = $commont['plate_type'][$item['plate_type']];
                 $manager = Model('User')->getList(['id'=>$item['manager']]);
@@ -56,18 +56,6 @@ class Quotation extends Model {
                 return $item;
         });
         return $result;
-    }
-
-    /** 获取报价单总条数
-     *
-     */
-    public function getTotal($condition) {
-        $condition['type'] = 1;
-        $result = Db($this->db)->field('*')->where($condition)->alias('quotation')
-            ->join($this->car_db.' car','quotation.id=car.quotation_id')
-            ->join($this->overall_db." overall",'quotation.id=overall.quotation_id')
-            ->select();
-
     }
 
     /**添加报价单
@@ -99,11 +87,11 @@ class Quotation extends Model {
             db($this->db)->insert($param);
             //车辆信息
             $car = array();
-            $car['quotation_id'] = $param['id'];
+            $car['related_id'] = $param['id'];
             $car['plate'] = $condition['plate'];
             $car['plate_type'] = $condition['plate_type'];
             $car['color'] = $condition['color'];
-            $car['name'] = $condition['car_name'];
+            $car['car_name'] = $condition['car_name'];
             $car['frame'] = $condition['frame'];
             $car['engine'] = $condition['engine'];
             $car['label_signal'] = $condition['label_signal'];
@@ -209,24 +197,25 @@ class Quotation extends Model {
             }
             if(isset($condition['total_discount'])) {
                 $overall['total_discount'] = $condition['total_discount'];
+                $overall['vehicle_loss_discount'] = $condition['vehicle_loss_discount'];
+                $overall['vehicle_third_discount'] = $condition['vehicle_third_discount'];
+                $overall['car_driver_discount'] = $condition['car_driver_discount'];
+                $overall['car_passenger_discount'] = $condition['car_passenger_discount'];
+                $overall['car_goods_discount'] = $condition['car_goods_discount'];
             }
             if(isset($condition['total_planning'])) {
                 $overall['total_planning'] = $condition['total_planning'];
-                $overall['vehicle_loss_discount'] = $condition['total_planning'];
-                $overall['vehicle_third_discount'] = $condition['total_planning'];
-                $overall['car_driver_discount'] = $condition['total_planning'];
-                $overall['car_passenger_discount'] = $condition['total_planning'];
-                $overall['car_goods_discount'] = $condition['total_planning'];
             }
             $overall['create_user'] = $condition['create_user'];
             $overall['create_time'] = strtotime(($condition['create_time']));
-            $overall['quotation_id'] = $quotationId;
+            $overall['related_id'] = $quotationId;
             db($this->overall_db)->insert($overall);
             // 提交事务
             Db::commit();
         } catch (\Exception $e) {
             // 回滚事务
             Db::rollback();
+            print_r($e);die;
             return false;
         }
         return true;
@@ -265,7 +254,7 @@ class Quotation extends Model {
             $car['plate'] = $condition['plate'];
             $car['plate_type'] = $condition['plate_type'];
             $car['color'] = $condition['color'];
-            $car['name'] = $condition['car_name'];
+            $car['car_name'] = $condition['car_name'];
             $car['frame'] = $condition['frame'];
             $car['engine'] = $condition['engine'];
             $car['label_signal'] = $condition['label_signal'];
@@ -298,7 +287,7 @@ class Quotation extends Model {
             $car['remarks'] = $condition['remarks'];
             $car['rating'] = $condition['rating'];
             $car_where = array();
-            $car_where['quotation_id'] = $condition['id'];
+            $car_where['related_id'] = $condition['id'];
             $car_where['plate'] = $param['plate'];
             db($this->car_db)->where($car_where)->update($car);
             //统筹项目
@@ -374,24 +363,23 @@ class Quotation extends Model {
             }
             if(isset($condition['total_discount'])) {
                 $overall['total_discount'] = $condition['total_discount'];
-                $overall['vehicle_loss_discount'] = $condition['total_discount'];
-                $overall['vehicle_third_discount'] = $condition['total_discount'];
-                $overall['car_driver_discount'] = $condition['total_discount'];
-                $overall['car_passenger_discount'] = $condition['total_discount'];
-                $overall['car_goods_discount'] = $condition['total_discount'];
+                $overall['vehicle_loss_discount'] = $condition['vehicle_loss_discount'];
+                $overall['vehicle_third_discount'] = $condition['vehicle_third_discount'];
+                $overall['car_driver_discount'] = $condition['car_driver_discount'];
+                $overall['car_passenger_discount'] = $condition['car_passenger_discount'];
+                $overall['car_goods_discount'] = $condition['car_goods_discount'];
             }
             if(isset($condition['total_planning'])) {
                 $overall['total_planning'] = $condition['total_planning'];
             }
             $overall_where = array();
-            $overall_where['quotation_id'] = $condition['id'];
+            $overall_where['related_id'] = $condition['id'];
             db($this->overall_db)->where($overall_where)->update($overall);
             // 提交事务
             Db::commit();
         } catch (\Exception $e) {
             // 回滚事务
             Db::rollback();
-            print_r($e);die;
             return false;
         }
         return true;

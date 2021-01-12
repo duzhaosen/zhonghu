@@ -8,15 +8,15 @@
                 <div class="widget-body">
                     <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
                         <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">统筹单号:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
+                            <label for="overall_id" class="text-center search-item-label">统筹单号:</label>
+                            <input type="text" class="form-control" id="overall_id" name="overall_id" style="width:100%" value="">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="car_name" class="text-center search-item-label">修改日期:</label>
-                            <input type="text" class="form-control" id="car_name" name="car_name" style="width:100%" value="{:input('param.car_name')}">
+                            <label for="op_time" class="text-center search-item-label">修改日期:</label>
+                            <input type="text" class="form-control" id="op_time" disabled name="op_time" style="width:100%" value="{:date('Y-m-d')}">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <button class="layui-btn layui-btn-radius layui-btn-normal" id="search" style="margin-top:2rem;">下一步</button>
+                            <button class="layui-btn layui-btn-radius layui-btn-normal" id="next" style="margin-top:2rem;">下一步</button>
                         </div>
                     </div>
                 </div>
@@ -24,3 +24,16 @@
         </div>
     </form>
 </div>
+<script>
+    jQuery(function($) {
+        $("#next").on('click',function() {
+            var id = $("#overall_id").val();
+            if(id == "") {
+                layer.msg("请输入统筹单号");
+                return false;
+            }
+            window.location.href="/admin/Endorsements/fullorder/endorsements?overall_id="+id;
+            return false;
+        })
+    })
+</script>

@@ -58,6 +58,30 @@ class Menu extends Common {
         return $this->fetch();
     }
 
+    /**
+     * 修改菜单
+     */
+    public function edit(Request $request) {
+        $where = array();
+        $ids = [];
+        if($request->param('id')) {
+            $where['id'] = $request->param('id');
+        }else{
+            $this->error("ID不可为空");
+        }
+        $list = Model('Menu')->search($where);
+        if(empty($list)) {
+            $this->error("ID未查询到信息");
+        }
+        if($request->param('id')) {
+            $ids = getTreeId([], 'Menu', $list[0]['pid'], 'search');
+        }
+        !empty($where) ? $this->assign('list',$list[0]) : $this->assign('list',['isshow'=>1]);
+        $menuList = Model('Menu')->search();
+        $this->assign('menuList', json_encode(getTree($menuList, $ids)));
+        return $this->fetch();
+    }
+
 
     /**菜单查勘html
      * @return string

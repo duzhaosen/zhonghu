@@ -10,9 +10,12 @@
                             <span class="smaller-80">(组织架构总览)</span>
                         </h4>
                     </div>
-
+                    <input type="hidden" id="pid" value="{:session('structure_pid')}">
 
                     <div class="widget-body" style="height:700px;">
+                        {if session('user_admin')}
+                        <button id="addStructureOne" class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" style="margin-top:1rem">新增一级</button>
+                        {/if}
                         <div id="dept_tree"></div>
                     </div>
                 </div>
@@ -80,53 +83,84 @@
                         </form>
                     </div>
                 </div>
-                    <table id="simple-table" class="table  table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th class="center">用户id</th>
-                            <th class="center">组织</th>
-                            <th class="center">登录名</th>
-                            <th class="center">姓名</th>
-                            <th class="center">性别</th>
-                            <th class="center">手机号</th>
-                            <th class="center">身份证号</th>
-                            <th class="center">角色</th>
-                            <th class="center">状态</th>
-                            <th class="center">业务员</th>
-                            <th class="center">经办人</th>
-                            <th class="center">添加人</th>
-                            <th class="center">添加时间</th>
-                            <th class="center">修改人</th>
-                            <th class="center">修改时间</th>
-                        </tr>
-                        </thead>
+                <table id="simple-table" class="table  table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th class="center">用户id</th>
+                        <th class="center">组织</th>
+                        <th class="center">登录名</th>
+                        <th class="center">姓名</th>
+                        <th class="center">性别</th>
+                        <th class="center">手机号</th>
+                        <th class="center">身份证号</th>
+                        <th class="center">角色</th>
+                        <th class="center">状态</th>
+                        <th class="center">业务员</th>
+                        <th class="center">经办人</th>
+                        <th class="center">添加人</th>
+                        <th class="center">添加时间</th>
+                        <th class="center">修改人</th>
+                        <th class="center">修改时间</th>
+                    </tr>
+                    </thead>
 
-                        <tbody>
-                        {volist name="userlist" id="value"}
-                        <tr data-id="{$value.id}">
-                            <td class="center">{$value.id}</td>
-                            <td class="center">{$value.structureStr}</td>
-                            <td class="center">{$value.username}</td>
-                            <td class="center">{$value.name}</td>
-                            <td class="center">{$value.sexStr}</td>
-                            <td class="center">{$value.phone}</td>
-                            <td class="center">{$value.identity}</td>
-                            <td class="center">{$value.rolesStr}</td>
-                            <td class="center">{$value.typeStr}</td>
-                            <td class="center">{$value.salesmanStr}</td>
-                            <td class="center">{$value.managerStr}</td>
-                            <td class="center">{$value.create_user}</td>
-                            <td class="center">{$value.create_time}</td>
-                            <td class="center">{$value.op_user}</td>
-                            <td class="center">{$value.op_time}</td>
-                        </tr>
-                        {/volist}
-                        </tbody>
-                    </table>
-
+                    <tbody>
+                    {volist name="userlist" id="value"}
+                    <tr data-id="{$value.id}">
+                        <td class="center">{$value.id}</td>
+                        <td class="center">{$value.structureStr}</td>
+                        <td class="center">{$value.username}</td>
+                        <td class="center">{$value.name}</td>
+                        <td class="center">{$value.sexStr}</td>
+                        <td class="center">{$value.phone}</td>
+                        <td class="center">{$value.identity}</td>
+                        <td class="center">{$value.rolesStr}</td>
+                        <td class="center">{$value.typeStr}</td>
+                        <td class="center">{$value.salesmanStr}</td>
+                        <td class="center">{$value.managerStr}</td>
+                        <td class="center">{$value.create_user}</td>
+                        <td class="center">{$value.create_time}</td>
+                        <td class="center">{$value.op_user}</td>
+                        <td class="center">{$value.op_time}</td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
+<div class="modal fade" id="addStructureOneModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">增加一级分类</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" name="rolesform" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="name">分类名称：</label>
+                        <input type="text" id="one_name" name="one_name" placeholder="分类名称" class="col-xs-10 col-sm-5" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" >业务来源：</label>
+                        <select name="one_source" id="one_source">
+                            {volist name="sourceList" id="value" key="key"}
+                            <option value="{$key-1}">{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <input type="hidden" id="id" value="">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="addOneStructure">提交更改</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 <script>
     const tree_data = {$list};
@@ -168,6 +202,9 @@
                             success: function (data) {
                                 if(data.code == 100000) {
                                     layer.msg(data.msg);
+                                    setTimeout(function() {
+                                        location.reload();
+                                    },300);
                                     return data.data;
                                 }else{
                                     layer.msg(data.msg);
@@ -220,6 +257,9 @@
                             success: function (data) {
                                 if(data.code == 100000) {
                                     layer.msg(data.msg);
+                                    setTimeout(function() {
+                                        location.reload();
+                                    },300);
                                 }else{
                                     layer.msg(data.msg);
                                 }
@@ -233,5 +273,43 @@
             });
 
         });
+        /** 添加组织一级分类
+         *
+         */
+        $("#addStructureOne").on('click',function() {
+            $("#addStructureOneModal").modal();
+        })
+
+        //提交增加一级组织
+        $("#addOneStructure").on('click',function() {
+            var one_name = $("#one_name").val();
+            var one_source = $("#one_source").val();
+            var pid = $("#pid").val();
+            if(one_name == "") {
+                layer.msg("一级分类名称为空");
+                return false;
+            }
+            if(one_source == 0) {
+                layer.msg("请选择业务来源");
+                return false;
+            }
+            $.ajax('/admin/ajax/user/structure/addStructure',{
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: {pid:pid,name:one_name,source:one_source},
+                success: function (data) {
+                    if(data.code == 100000) {
+                        layer.msg(data.msg);
+                        setTimeout(function() {
+                            location.reload();
+                        },300);
+                        return data.data;
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                }
+            });
+        })
     });
 </script>

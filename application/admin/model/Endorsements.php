@@ -11,10 +11,9 @@ namespace app\admin\model;
 use think\Config;
 use \think\Model;
 use think\Db;
-use think\Session;
 
-class Overall extends Model {
-    private $db = "zh_overall";
+class Endorsements extends Model {
+    private $db = "zh_endorsements";
     private $car_db = "zh_car";
     private $overall_db = "zh_overall_planning";
     private $traffic_db = "zh_traffic";
@@ -25,36 +24,22 @@ class Overall extends Model {
     private $attach_db = "zh_attach";
 
 
-    /** 查询统筹单单查询
+    /** 查询批单单查询
      * $condition array()
      */
     public function getList($condition,$field='*',$page=10) {
-        $condition['overall.type'] = 1;
-        $admin = Session::get('user_admin');
-        if(!isset($condition['overall.attribution_user'])) {
-            if($admin == false) {
-                $users = Model('User')->getLoginUserid();
-                $condition['overall.attribution_user'] = $users;
-            }
-        }else{
-            if($admin == false) {
-                $users = Model('User')->getLoginUserid();
-                if(!in_array($condition['overall.attribution_user'],$users)) {
-                    return [];
-                }
-            }
-        }
+        $condition['endorsements.type'] = 1;
         //车辆配置文件
         Config::parse(APP_PATH.'/admin/config/car.ini','ini');
         Config::parse(APP_PATH.'/admin/config/overall.ini','ini');
         $commont = Config::parse(APP_PATH.'/admin/config/Structure.ini','ini');
-        $result = Db($this->db)->field($field)->where($condition)->alias('overall')
-            ->join($this->car_db.' car','overall.temporary_id=car.related_id')
-            ->join($this->overall_db." overall_planning",'overall.temporary_id=overall_planning.related_id')
-            ->join($this->traffic_db." traffic", "overall.temporary_id=traffic.related_id")
-            ->join($this->participate_db." participate", "overall.temporary_id=participate.related_id")
-            ->join($this->coordinator_db." coordinator", "overall.temporary_id=coordinator.related_id")
-            ->join($this->pay_db." pay", "overall.temporary_id=pay.related_id")
+        $result = Db($this->db)->field($field)->where($condition)->alias('endorsements')
+            ->join($this->car_db.' car','endorsements.p_temporary_id=car.related_id')
+            ->join($this->overall_db." overall_planning",'endorsements.p_temporary_id=overall_planning.related_id')
+            ->join($this->traffic_db." traffic", "endorsements.p_temporary_id=traffic.related_id")
+            ->join($this->participate_db." participate", "endorsements.p_temporary_id=participate.related_id")
+            ->join($this->coordinator_db." coordinator", "endorsements.p_temporary_id=coordinator.related_id")
+            ->join($this->pay_db." pay", "endorsements.p_temporary_id=pay.related_id")
             ->paginate($page)->each(function($item,$key) use($commont) {
                 $item['plate_typeStr'] = $commont['plate_type'][$item['plate_type']];
                 $manager = Model('User')->getList(['id'=>$item['manager']]);
@@ -76,19 +61,19 @@ class Overall extends Model {
                 $item['coordinated_license_typeStr'] = $commont['license_type'][$item['coordinated_license_type']];
 
                 //影响资料
-                $item['attach'] = Model('Upload')->getlist(['related_id'=>$item['temporary_id']]);
+                $item['attach'] = Model('Upload')->getlist(['related_id'=>$item['p_temporary_id']]);
 
-                //发票
-                $item['invoice'] = Model('Invoice')->getlist(['related_id'=>$item['id']]);
+                //影响资料
+//                $item['invoice'] = Model('Invoice')->getlist(['related_id'=>$item['id']]);
                 //组织
-                $users = Model('User')->getList(['id'=> $item['attribution_user']]);
-                $item['structure'] = $users[0]['structure'];
-                $item['structureStr'] = $users[0]['structureStr'];
-//                来源
-                $item['source'] = $users[0]['source'];
-                $item['sourceStr'] = $commont['source'][$users[0]['source']];
-//                用户地区
-                $item['cityStr'] = $users[0]['cityName'];
+//                $users = Model('User')->getList(['id'=> $item['attribution_user']]);
+//                $item['structure'] = $users[0]['structure'];
+//                $item['structureStr'] = $users[0]['structureStr'];
+                //来源
+//                $item['source'] = $users[0]['source'];
+//                $item['sourceStr'] = $commont['source'][$users[0]['source']];
+                //用户地区
+//                $item['cityStr'] = $users[0]['cityName'];
 
 
                 return $item;
@@ -96,19 +81,19 @@ class Overall extends Model {
         return $result;
     }
 
-    /**添加统筹单
+    /**添加批单
      * $condition array() 添加条件
      * @return bool
      */
-    public function addOverall($condition) {
+    public function addEndorsements($condition) {
         Db::startTrans();
         try{
             //统筹单
             $param = array();
-            if(isset($condition['overall_id'])) {
-                $param['overall_id'] = $condition['overall_id'];
+            if(isset($condition['endorsements_id'])) {
+                $param['endorsements_id'] = $condition['endorsements_id'];
             }
-            $param['temporary_id'] = $condition['temporary_id'];
+            $param['p_temporary_id'] = $condition['p_temporary_id'];
             if(isset($condition['attribution_user'])) {
                 $param['attribution_user'] = $condition['attribution_user'];
             }
@@ -124,6 +109,8 @@ class Overall extends Model {
             }
             $param['plate'] = $condition['plate'];
             $param['frame'] = $condition['frame'];
+            $param['endorsements_time'] = time();
+            $param['overall_id'] = $condition['overall_id'];
             $param['start_time'] = strtotime($condition['start_time']);
             $param['end_time'] = strtotime($condition['end_time']);
             $param['car_name'] = $condition['car_name'];
@@ -145,7 +132,7 @@ class Overall extends Model {
             db($this->db)->insert($param);
             //车辆信息
             $car = array();
-            $car['related_id'] = $condition['temporary_id'];
+            $car['related_id'] = $condition['p_temporary_id'];
             $car['plate'] = $condition['plate'];
             $car['plate_type'] = $condition['plate_type'];
             $car['color'] = $condition['color'];
@@ -308,11 +295,11 @@ class Overall extends Model {
             }
             if(isset($condition['total_discount'])) {
                 $overall['total_discount'] = $condition['total_discount'];
-                $overall['vehicle_loss_discount'] = $condition['vehicle_loss_discount'];
-                $overall['vehicle_third_discount'] = $condition['vehicle_third_discount'];
-                $overall['car_driver_discount'] = $condition['car_driver_discount'];
-                $overall['car_passenger_discount'] = $condition['car_passenger_discount'];
-                $overall['car_goods_discount'] = $condition['car_goods_discount'];
+                $overall['vehicle_loss_discount'] = $condition['total_planning'];
+                $overall['vehicle_third_discount'] = $condition['total_planning'];
+                $overall['car_driver_discount'] = $condition['total_planning'];
+                $overall['car_passenger_discount'] = $condition['total_planning'];
+                $overall['car_goods_discount'] = $condition['total_planning'];
                 $overall['combustion_discount'] = $condition['combustion_discount'];
                 $overall['engine_wading_discount'] = $condition['engine_wading_discount'];
                 $overall['designated_repai_discount'] = $condition['designated_repai_discount'];
@@ -325,14 +312,14 @@ class Overall extends Model {
                 $overall['create_user'] = $condition['create_user'];
             }
             $overall['create_time'] = time();
-            $overall['related_id'] = $condition['temporary_id'];
+            $overall['related_id'] = $condition['p_temporary_id'];
             db($this->overall_db)->insert($overall);
             //交强险公司
             $traffic = array();
             $traffic['traffic_company'] = $condition['traffic_company'];
             $traffic['traffic_start_time'] = strtotime($condition['traffic_start_time']);
             $traffic['traffic_end_time'] = strtotime($condition['traffic_end_time']);
-            $traffic['temporary_id'] = $condition['temporary_id'];
+            $traffic['related_id'] = $condition['p_temporary_id'];
             $traffic['traffic_company'] = $condition['traffic_company'];
             if(isset($condition['create_user'])) {
                 $traffic['create_user'] = $condition['create_user'];
@@ -356,7 +343,7 @@ class Overall extends Model {
             if(isset($condition['participate_address'])) {
                 $participate['participate_address'] = $condition['participate_address'];
             }
-            $participate['related_id'] = $condition['temporary_id'];
+            $participate['related_id'] = $condition['p_temporary_id'];
             if(isset($condition['create_user'])) {
                 $participate['create_user'] = $condition['create_user'];
             }
@@ -381,7 +368,7 @@ class Overall extends Model {
             if(isset($condition['coordinated_address'])) {
                 $coordinated['coordinated_address'] = $condition['coordinated_address'];
             }
-            $coordinated['related_id'] = $condition['temporary_id'];
+            $coordinated['related_id'] = $condition['p_temporary_id'];
             if(isset($condition['create_user'])) {
                 $coordinated['create_user'] = $condition['create_user'];
             }
@@ -392,7 +379,7 @@ class Overall extends Model {
             $pay['overall_type'] = 1;
             $pay['pay_money'] = $condition['total_planning'];
             $pay['pay_time'] = strtotime($condition['create_time']);
-            $pay['related_id'] = $condition['temporary_id'];
+            $pay['related_id'] = $condition['p_temporary_id'];
             if(isset($condition['create_user'])) {
                 $pay['create_user'] = $condition['create_user'];
             }
@@ -423,12 +410,41 @@ class Overall extends Model {
                 if(isset($condition['invoice_remarks'])) {
                     $invoice['invoice_remarks'] = $condition['invoice_remarks'];
                 }
-                $invoice['related_id'] = $condition['temporary_id'];
+                $invoice['related_id'] = $condition['p_temporary_id'];
                 if(isset($condition['create_user'])) {
                     $invoice['create_user'] = $condition['create_user'];
                 }
                 $invoice['create_time'] = time();
                 db($this->invoice_db)->insert($invoice);
+            }
+            //影像资料
+            $attach = Model('Upload')->getlist(['related_id'=>$condition['temporary_id']]);
+            if(!empty($attach)) {
+                $path = Config::parse(APP_PATH.'/admin/config/upload.ini','ini');
+                foreach($attach as $key=>$value) {
+                    foreach($value as $item) {
+                        //复制图片
+                        $old_url = substr($item['attach_url'],9);
+                        $new_url = date('Ymd').'/'.$old_url;
+                        //判断 文件夹
+                        if(!is_dir(ROOT_PATH.'public'.$path['url']['path'].$item['folder'])) {
+                            mkdir(ROOT_PATH.'public'.$path['url']['path'].$item['folder'],0755,true);
+                        }
+                        //判断 文件夹
+                        if(!is_dir(ROOT_PATH.'public'.$path['url']['path'].$item['folder'].DS.date('Ymd'))) {
+                            mkdir(ROOT_PATH.'public'.$path['url']['path'].$item['folder'].DS.date('Ymd'),0755,true);
+                        }
+                        $result = copy(ROOT_PATH.'public'.$item['url'],ROOT_PATH.'public'.$path['url']['path'].$item['folder'].DS.$new_url);
+                        if($result) {
+                            $upload = array();
+                            $upload['related_id'] = $condition['p_temporary_id'];
+                            $upload['attach_url'] = $new_url;
+                            $upload['folder'] = $item['folder'];
+                            $upload['name'] = $key;
+                            Model('Upload')->addUpload($upload);
+                        }
+                    }
+                }
             }
             // 提交事务
             Db::commit();
@@ -441,10 +457,10 @@ class Overall extends Model {
         return true;
     }
 
-    /**修改统筹单
+    /**修改批单
      *
      */
-    public function editOverall($condition) {
+    public function editEndorsements($condition) {
         $condition['op_user'] = getAdminInfo();
         $condition['op_time'] = time();
         Db::startTrans();
@@ -493,6 +509,7 @@ class Overall extends Model {
             db($this->db)->where(['id' => $condition['id']])->update($param);
             //车辆信息
             $car = array();
+//            $car['quotation_id'] = $condition['temporary_id'];
             $car['plate'] = $condition['plate'];
             $car['plate_type'] = $condition['plate_type'];
             $car['color'] = $condition['color'];
@@ -534,7 +551,7 @@ class Overall extends Model {
             $car['create_time'] = time();
             $car['op_user'] = getAdminInfo();
             $car['op_time'] = time();
-            db($this->car_db)->where(['related_id' => $condition['temporary_id']])->update($car);
+            db($this->car_db)->where(['related_id' => $condition['id']])->update($car);
             //统筹项目
             $overall = array();
             if(isset($condition['vehicle_loss'])) {
@@ -657,11 +674,11 @@ class Overall extends Model {
             }
             if(isset($condition['total_discount'])) {
                 $overall['total_discount'] = $condition['total_discount'];
-                $overall['vehicle_loss_discount'] = $condition['vehicle_loss_discount'];
-                $overall['vehicle_third_discount'] = $condition['vehicle_third_discount'];
-                $overall['car_driver_discount'] = $condition['car_driver_discount'];
-                $overall['car_passenger_discount'] = $condition['car_passenger_discount'];
-                $overall['car_goods_discount'] = $condition['car_goods_discount'];
+                $overall['vehicle_loss_discount'] = $condition['total_planning'];
+                $overall['vehicle_third_discount'] = $condition['total_planning'];
+                $overall['car_driver_discount'] = $condition['total_planning'];
+                $overall['car_passenger_discount'] = $condition['total_planning'];
+                $overall['car_goods_discount'] = $condition['total_planning'];
                 $overall['combustion_discount'] = $condition['combustion_discount'];
                 $overall['engine_wading_discount'] = $condition['engine_wading_discount'];
                 $overall['designated_repai_discount'] = $condition['designated_repai_discount'];
@@ -676,7 +693,7 @@ class Overall extends Model {
             $overall['create_time'] = time();
             $overall['op_user'] = getAdminInfo();
             $overall['op_time'] = time();
-            db($this->overall_db)->where(['related_id'=>$condition['temporary_id']])->update($overall);
+            db($this->overall_db)->where(['related_id'=>$condition['id']])->update($overall);
             //交强险公司
             $traffic = array();
             $traffic['traffic_company'] = $condition['traffic_company'];
@@ -689,7 +706,7 @@ class Overall extends Model {
             $traffic['create_time'] = time();
             $traffic['op_user'] = getAdminInfo();
             $traffic['op_time'] = time();
-            db($this->traffic_db)->where(['related_id'=>$condition['temporary_id']])->update($traffic);
+            db($this->traffic_db)->where(['related_id'=>$condition['id']])->update($traffic);
             //参统人信息
             $participate = array();
             $participate['participate_name'] = $condition['participate_name'];
@@ -713,7 +730,7 @@ class Overall extends Model {
             $participate['create_time'] = time();
             $participate['op_user'] = getAdminInfo();
             $participate['op_time'] = time();
-            db($this->participate_db)->where(['related_id'=>$condition['temporary_id']])->update($participate);
+            db($this->participate_db)->where(['related_id'=>$condition['id']])->update($participate);
             //被统筹人信息
             $coordinated = array();
             if(isset($condition['coordinated_same'])) {
@@ -739,7 +756,7 @@ class Overall extends Model {
             $coordinated['create_time'] = time();
             $coordinated['op_time'] = time();
             $coordinated['op_user'] = getAdminInfo();
-            db($this->coordinator_db)->where(['related_id'=>$condition['temporary_id']])->update($coordinated);
+            db($this->coordinator_db)->where(['related_id'=>$condition['id']])->update($coordinated);
             //缴费信息
             $pay = array();
             $pay['overall_type'] = 1;
@@ -751,7 +768,7 @@ class Overall extends Model {
             $pay['create_time'] = time();
             $pay['op_user'] = getAdminInfo();
             $pay['op_time'] = time();
-            db($this->pay_db)->where(['related_id' => $condition['temporary_id']])->update($pay);
+            db($this->pay_db)->where(['related_id' => $condition['id']])->update($pay);
             //开票信息
             if(isset($condition['invoice_type'])) {
                 $invoice = array();
@@ -784,7 +801,7 @@ class Overall extends Model {
                 $invoice['create_time'] = time();
                 $invoice['op_user'] = getAdminInfo();
                 $invoice['op_time'] = time();
-                db($this->invoice_db)->where(['related_id'=>$invoice['temporary_id']])->update($invoice);
+                db($this->invoice_db)->where(['related_id'=>$invoice['id']])->update($invoice);
             }
             // 提交事务
             Db::commit();
@@ -798,23 +815,23 @@ class Overall extends Model {
     }
 
 
-    /** 删除统筹单
+    /** 删除批单
      *
      */
-    public function delOverall($condition)
+    public function delEndorsements($condition)
     {
         $condition['op_user'] = getAdminInfo();
         $condition['op_time'] = time();
         return db($this->db)->update($condition);
     }
 
-    /** 生成统筹单号禁止跳号
+    /** 生成统批单号禁止跳号
      * @return $str string
      */
-    public function generateOverallId() {
-        $result = 'ZH'.date('Y');
+    public function generatePId() {
+        $result = 'PZH'.date('Y');
         $condition = array();
-        $condition['overall_id'] = ['like',$result."%"];
+        $condition['endorsements_id'] = ['like',$result."%"];
         $condition['type'] = 2;
         $condition['new_id'] = 1;
         $res = db($this->db)->where($condition)->select();
@@ -822,13 +839,13 @@ class Overall extends Model {
             return $res[0]['id'];
         }else{
             $condition = array();
-            $condition['overall_id'] = ['like',$result."%"];
+            $condition['endorsements_id'] = ['like',$result."%"];
             $condition['type'] = 1;
             $res = db($this->db)->where($condition)->order('id','desc')->select();
             if(empty($res)) {
                return $result.'000000001';
             }else{
-                $str = substr($res[0]['overall_id'],-13) + 1;
+                $str = substr($res[0]['id'],-13) + 1;
                 return 'ZH'.$str;
             }
         }
@@ -836,19 +853,19 @@ class Overall extends Model {
 
     }
 
-    /** 生成统筹单暂存号
+    /** 生成批单暂存号
      *
      */
-    public function generateTemporaryId() {
-        $result = date('Ymd');
+    public function generatePTemporaryId() {
+        $result = 'P'.date('Ymd');
         $condition = array();
-        $condition['temporary_id'] = ['like',$result."%"];
+        $condition['p_temporary_id'] = ['like',$result."%"];
         $condition['type'] = 1;
         $res = db($this->db)->where($condition)->order('id','desc')->select();
         if(empty($res)) {
             return $result.'00001';
         }else{
-            return $res[0]['temporary_id'] + 1;
+            return $res[0]['p_temporary_id'] + 1;
         }
         return false;
 

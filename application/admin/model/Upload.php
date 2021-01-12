@@ -8,6 +8,7 @@
  */
 namespace app\admin\model;
 
+use think\Config;
 use \think\Model;
 use think\Db;
 
@@ -20,6 +21,30 @@ class Upload extends Model {
     public function addUpload($condition) {
         $condition['create_user'] = getAdminInfo();
         $condition['create_time'] = time();
-        return db($this->db)->insert($condition);
+        return db($this->db)->insertGetId($condition);
+    }
+
+    /** 删除图片
+     *
+     */
+    public function editUpload($condition) {
+        $condition['op_user'] = getAdminInfo();
+        $condition['op_time'] = time();
+        return db($this->db)->update($condition);
+    }
+    /** 查询图片内容
+     * $condition array()
+     */
+    public function getlist($condition,$field='*') {
+        $result = array();
+        $res = db($this->db)->field($field)->where($condition)->select();
+        if(!empty($res)) {
+            $path = Config::parse(APP_PATH.'/admin/config/upload.ini','ini');
+            foreach ($res as $key=>$value) {
+                $value['url'] = $path['url']['path'].$value['folder'].'/'.$value['attach_url'];
+                $result[$value['name']][] = $value;
+            }
+        }
+        return $result;
     }
 }

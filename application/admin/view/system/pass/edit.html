@@ -1,0 +1,72 @@
+<div class="col-xs-12" style="margin-top:1rem;">
+    <form class="form-horizontal" role="form" name="editUserPass" id="editUserPass">
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">用户名</label>
+            <div class="col-sm-9">
+                <input type="text" disabled name="username" value="{:session('username')}" />
+            </div>
+        </div>
+        <div class="space-4"></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">密码</label>
+
+            <div class="col-sm-9">
+                <input type="password" placeholder="密码" name="password" value="" />
+            </div>
+        </div>
+        <div class="space-4"></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">确认密码</label>
+
+            <div class="col-sm-9">
+                <input type="password" placeholder="确认密码" name="confirm_pass" value="" />
+            </div>
+        </div>
+
+        <div class="clearfix form-actions">
+            <div class="col-md-offset-3 col-md-9">
+                <button class="btn btn-info" type="button" id="editPass">
+                    <i class="ace-icon fa fa-check bigger-110"></i>
+                    提交
+                </button>
+
+                <button class="btn" type="reset" value="reset">
+                    <i class="ace-icon fa fa-undo bigger-110"></i>
+                    重置
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    jQuery(function($) {
+        $("#editPass").on('click',function() {
+            var but = $(this);
+            but.attr("disabled", "disabled");
+            var form = $("form[name=editUserPass]").serializeArray();
+            var url = '/admin/ajax/User/user/editPass';
+            $.ajax(url,
+                {
+                    dataType: 'json', // type of response data
+                    timeout: 500,     // timeout milliseconds
+                    method: "post",
+                    data: form,
+                    success: function (data, status, xhr) {   // success callback function
+                        but.removeAttr("disabled");
+                        if (data.code == 100000) {
+                            layer.msg(data.msg);
+                            setTimeout(function () {
+                                location.reload();
+                            }, 300);
+                        } else {
+                            layer.msg(data.msg);
+                        }
+                    },
+                    error: function () {
+                        layer.msg("系统错误");
+                    }
+                });
+            return false;
+        })
+    })
+</script>

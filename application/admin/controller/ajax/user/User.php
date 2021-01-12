@@ -11,6 +11,7 @@ namespace app\admin\controller\Ajax\User;
 use think\Request;
 use app\admin\controller\Common;
 use think\Config;
+use think\Session;
 
 class User extends Common {
     private $param;
@@ -18,7 +19,12 @@ class User extends Common {
      *
      */
     public function addUser(Request $request) {
-        $verify = $this->verification($request);
+        $salesman = $request->param('salesman');
+        if($salesman == 2) {
+            $verify = $this->verification($request, 'addusermanager', 'addusercomment');
+        }else{
+            $verify = $this->verification($request);
+        }
         if($verify != false) {
             return $verify;
         }
@@ -41,7 +47,12 @@ class User extends Common {
      *
      */
     public function editUser(Request $request) {
-        $verify = $this->verification($request, 'edituser', 'editusercomment', $request->param('id'));
+        $salesman = $request->param('salesman');
+        if($salesman == 2) {
+            $verify = $this->verification($request, 'editusermanager', 'editusercomment', $request->param('id'));
+        }else{
+            $verify = $this->verification($request, 'edituser', 'editusercomment', $request->param('id'));
+        }
         if($verify != false) {
             return $verify;
         }
@@ -97,7 +108,7 @@ class User extends Common {
         }
         //验证各个字段
         //密码
-        if($type == 'adduser') {
+        if($type == 'adduser' || $type == 'addusermanager') {
             if($this->param['passwd'] != $this->param['confirmPasswd']) {
                 $data = array();
                 $data['code'] = 100001;
@@ -138,6 +149,15 @@ class User extends Common {
             $data['msg'] = '身份证已有重复';
             return json($data);
         }
+
+        //如果是不是经办人，经办人必填
+        if($this->param['manager'] == 2) {
+            if(!isset($this->param['manager_id']) || empty($this->param['manager_id'])) {
+                $data['code'] = 100001;
+                $data['msg'] = '经办人为必填项';
+                return json($data);
+            }
+        }
         return false;
     }
 
@@ -157,6 +177,42 @@ class User extends Common {
         $data['code'] = 100000;
         $data['msg'] = '查询成功';
         $data['data'] = $res;
+        return json($data);
+    }
+
+    /** 修改用户密码
+     *
+     */
+    public function editPass(Request $request) {
+        $this->param = $request->param();
+        if(!isset($this->param['password'] )) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '密码不可为空';
+            return json($data);
+        }
+        if($this->param['password'] != $this->param['confirm_pass']) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '2次密码不一致';
+            return json($data);
+
+        }
+
+        $user_id = Session::get('user_id');
+        $condition = array();
+        $condition['id'] = $user_id;
+        $condition['passwd'] = md5($this->param['password']);
+        $res = Model('User')->editUser($condition);
+        if($res == false) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '密码修改失败';
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100000;
+        $data['msg'] = '密码修改成功';
         return json($data);
     }
 }

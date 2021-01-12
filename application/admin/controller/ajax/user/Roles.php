@@ -27,8 +27,8 @@ class Roles extends Common {
         }
         //格式化数据
         $this->param['type'] = isset($this->param['type']) ? 1 : 2;
-        $this->param['admin'] = isset($this->param['admin']) ? 1 : 2;
-        $this->param['salesman'] = isset($this->param['salesman']) ? 1 : 2;
+        $this->param['admin'] = isset($this->param['admin']) ? 2 : 1;
+        $this->param['salesman'] = isset($this->param['salesman']) ? 2 : 1;
         $res = Model('Roles')->addRoles($this->param);
         if($res == true) {
             $data = array();
