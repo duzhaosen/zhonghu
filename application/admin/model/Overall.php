@@ -22,7 +22,7 @@ class Overall extends Model {
     private $coordinator_db = "zh_coordinator";
     private $pay_db = "zh_pay";
     private $invoice_db = "zh_invoice";
-    private $attach_db = "zh_attach";
+    private $log_db = "zh_review_log";
 
 
     /** 查询统筹单单查询
@@ -76,10 +76,14 @@ class Overall extends Model {
                 $item['coordinated_license_typeStr'] = $commont['license_type'][$item['coordinated_license_type']];
 
                 //影响资料
-                $item['attach'] = Model('Upload')->getlist(['related_id'=>$item['temporary_id']]);
+                $item['attach'] = Model('Upload')->getlist(['related_id'=>$item['temporary_id'],'type'=>1]);
 
                 //发票
                 $item['invoice'] = Model('Invoice')->getlist(['related_id'=>$item['id']]);
+
+                //审核
+                $item['review_log'] = Model('ReviewLog')->getList(['related_id'=>$item['temporary_id']]);
+
                 //组织
                 $users = Model('User')->getList(['id'=> $item['attribution_user']]);
                 $item['structure'] = $users[0]['structure'];
@@ -461,7 +465,9 @@ class Overall extends Model {
             if(isset($condition['manager'])) {
                 $param['manager'] = $condition['manager'];
             }
-            $param['status'] = $condition['status'];
+            if(isset($condition['status'])) {
+                $param['status'] = $condition['status'];
+            }
             if(isset($condition['create_user'])) {
                 $param['create_user'] = $condition['create_user'];
             }
@@ -490,7 +496,7 @@ class Overall extends Model {
             }
             $param['op_user'] = getAdminInfo();
             $param['op_time'] = time();
-            db($this->db)->where(['id' => $condition['id']])->update($param);
+            db($this->db)->where(['temporary_id' => $condition['temporary_id']])->update($param);
             //车辆信息
             $car = array();
             $car['plate'] = $condition['plate'];
@@ -852,5 +858,28 @@ class Overall extends Model {
         }
         return false;
 
+    }
+
+    /** 新车上牌
+     *
+     */
+    public function editPlate($condition) {
+        Db::startTrans();
+        try{
+            $condition['op_user'] = getAdminInfo();
+            $condition['op_time'] = time();
+            $temporary_id = $condition['temporary_id'];
+            unset($condition['overall_id']);
+            db($this->db)->where(['temporary_id'=>$temporary_id])->update($condition);
+            db($this->car_db)->where(['related_id'=>$temporary_id])->update($condition);
+            // 提交事务
+            Db::commit();
+        } catch (\Exception $e) {
+            // 回滚事务
+            Db::rollback();
+            print_r($e);die;
+            return false;
+        }
+        return true;
     }
 }

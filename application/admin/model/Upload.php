@@ -37,6 +37,7 @@ class Upload extends Model {
      */
     public function getlist($condition,$field='*') {
         $result = array();
+        $condition['type'] = 1;
         $res = db($this->db)->field($field)->where($condition)->select();
         if(!empty($res)) {
             $path = Config::parse(APP_PATH.'/admin/config/upload.ini','ini');

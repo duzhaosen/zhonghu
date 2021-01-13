@@ -83,7 +83,7 @@ class Overall extends Common {
 
         //验证车架号/车牌号是否在系统内且在统筹期间内
         $car_frame = $this->param['frame'];
-        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1,'overall.id'=>['<>',$this->param['id']]]);
+        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1,'overall.id'=>['<>',$this->param['overall_id']]]);
         if($car_list->total() > 0) {
             $list = $car_list->all();
             foreach($list as $key => $value) {
@@ -96,6 +96,7 @@ class Overall extends Common {
             }
         }
         //格式化数据
+        $this->param['status'] = 3;
         $res = Model('Overall')->editOverall($this->param);
         if($res == false) {
             $data = array();
@@ -181,5 +182,59 @@ class Overall extends Common {
         $data['code'] = 100000;
         $data['data'] = $res[0];
         return json($data);
+    }
+
+    /** 新车上牌
+     *
+     */
+    public function editPlate(Request $request) {
+        $this->param = $request->param();
+        if(!isset($this->param['overall_id']) || empty($this->param['overall_id'])) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = "统筹单号不可为空";
+            return json($data);
+        }
+        //判断统筹单是否没有上车牌
+        $list = Model('Overall')->getList(['overall.overall_id'=>$this->param['overall_id'],'overall.type'=>1]);
+        if($list->total() > 0) {
+            if($list->all()[0]['plate'] != "暂未上牌"){
+                $data = array();
+                $data['code'] = 100001;
+                $data['msg'] = "请勿重复上牌";
+                return json($data);
+            }
+        }else{
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = "未查询到该统筹单号";
+            return json($data);
+        }
+        //验证车架号/车牌号是否在系统内且在统筹期间内
+        $plate = $this->param['plate'];
+        $car_list = Model('Overall')->getList(['overall.plate'=>$plate,'overall.type'=>1]);
+        if($car_list->total() > 0) {
+            $list = $car_list->all();
+            foreach($list as $key => $value) {
+                if($value['end_time']+86400 > strtotime($this->param['start_time'])) {
+                    $data = array();
+                    $data['code'] = 100001;
+                    $data['msg'] = '车牌号已在其他单子的统筹期内：统筹单号：'.$value['overall_id'];
+                    return json($data);
+                }
+            }
+        }
+        $res = Model('Overall')->editPlate($this->param);
+        if($res) {
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = "上牌成功";
+            return json($data);
+        }else{
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = "上牌失败";
+            return json($data);
+        }
     }
 }

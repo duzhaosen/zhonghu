@@ -880,4 +880,78 @@
             </div>
         </div>
     </div>
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5 class="widget-title">
+                    <div class="search-item-div col-xs-3">
+                        <label class="text-center search-item-label">操作</label>
+                    </div>
+
+                </h5>
+            </div>
+            <div class="widget-body">
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;margin-left:40%">
+                    <button class="layui-btn layui-btn-radius layui-btn-normal" id="edit" data-id="{$list.p_temporary_id}">返回修改</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal" id="review" data-id="{$list.p_temporary_id}">提交审核</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<script>
+    jQuery(function($) {
+        //返回修改
+        $("#edit").on('click',function() {
+            var but = $(this);
+            but.attr("disabled","disabled");
+            var id = $(this).attr("data-id");
+            $.ajax('/admin/ajax/review/primary/review',{
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: {related_id:id,type:2,status:1,log_type:2},
+                success: function (data,status,xhr) {   // success callback function
+                    but.removeAttr("disabled");
+                    if(data.code == 100000) {
+                        layer.msg(data.msg);
+                        setTimeout(function() {
+                            location.reload();
+                        },300);
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function() {
+                    layer.msg("系统错误");
+                }
+            });
+        })
+        //审核通过
+        $("#review").on('click',function() {
+            var but = $(this);
+            but.attr("disabled","disabled");
+            var id = $(this).attr("data-id");
+            $.ajax('/admin/ajax/review/primary/review',{
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: {related_id:id,type:2,status:3,log_type:5},
+                success: function (data,status,xhr) {   // success callback function
+                    but.removeAttr("disabled");
+                    if(data.code == 100000) {
+                        layer.msg(data.msg);
+                        setTimeout(function() {
+                            window.location.href="/admin/Review/secondary/endorsements";
+                        },300);
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function() {
+                    layer.msg("系统错误");
+                }
+            });
+        })
+    })
+</script>

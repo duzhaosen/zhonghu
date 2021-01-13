@@ -8,12 +8,12 @@
                 <div class="widget-body">
                     <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
                         <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">统筹单号:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
+                            <label class="text-center search-item-label">统筹单号:</label>
+                            <input type="text" class="form-control" id="overall_id" name="overall_id" style="width:100%" value="{:input('param.id')}">
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="car_name" class="text-center search-item-label">修改日期:</label>
-                            <input type="text" class="form-control" id="car_name" name="car_name" style="width:100%" value="{:input('param.car_name')}">
+                            <input type="text" class="form-control" id="car_name" name="car_name" style="width:100%" disabled value="{:date('Y-m-d')}">
                         </div>
                         <div class="search-item-div col-xs-3">
                             <button class="layui-btn layui-btn-radius layui-btn-normal" id="search" style="margin-top:2rem;">下一步</button>
@@ -24,3 +24,57 @@
         </div>
     </form>
 </div>
+
+<!--新车上牌modal开始-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">车牌号</h4>
+            </div>
+            <div class="modal-body">
+                <div style="margin-left:30%" class="search-item-div">
+                    <label class="text-center search-item-label">车牌号:</label>
+                    <input type="text" id="plate" name="plate" style="" value="">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="editPlate">提交</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--新车上牌modal结束-->
+
+<script>
+    jQuery(function($){
+        //下一步
+        $("#search").on('click',function() {
+            $("#editModal").modal();
+            return false;
+        })
+        //提交
+        $("#editPlate").on('click',function() {
+            var overall_id = $("#overall_id").val();
+            var plate = $("#plate").val();
+            $.ajax('/admin/ajax/Overall/overall/editPlate',{
+                dataType: 'json',
+                timeout: 500,
+                method: "get",
+                data: {overall_id:overall_id,plate:plate},
+                success: function (data) {
+                    if(data.code == 100000) {
+                        layer.msg(data.msg);
+                        setTimeout(function () {
+                            location.reload();
+                        }, 300);
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                }
+            });
+        })
+    })
+</script>

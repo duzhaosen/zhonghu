@@ -37,7 +37,7 @@ class Upload extends Common {
             if($info){
                 $url =  $info->getSaveName();
                 $param = array();
-                $param['temporary_id'] = $result['temporary_id'];
+                $param['related_id'] = $result['temporary_id'];
                 $param['attach_url'] = $url;
                 $param['folder'] = $result['folder'];
                 $param['name'] = $result['name'];

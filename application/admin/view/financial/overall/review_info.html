@@ -534,7 +534,7 @@
                     </div>
                     <div class="search-item-div col-xs-3">
                         <label for="total_discount" class="text-center search-item-label">合计折扣(%):</label>
-                        <input type="text" class="form-control" id="total_discount" placeholder="合计折扣" name="total_discount" style="width:100%"  value="{$list.total_discount|default=''}">
+                        <input type="text" class="form-control" id="total_discount" readonly placeholder="合计折扣" name="total_discount" style="width:100%"  value="{$list.total_discount|default=''}">
                     </div>
                     <div class="search-item-div col-xs-3">
                         <label for="total_planning" class="text-center search-item-label">统筹费（合计）:</label>
@@ -610,7 +610,7 @@
                         <input type="radio" readonly name="coordinated_same" value="2" {if isset($list.coordinated_same) && $list.coordinated_same eq 2} checked{/if}>
                     </div>
 
-                    </h5>
+                </h5>
             </div>
             <div class="widget-body">
                 <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
@@ -710,12 +710,12 @@
             <div class="widget-body">
                 <table class="table  table-bordered table-hover center">
                     <thead>
-                        <tr>
-                            <td>序号</td>
-                            <td>统筹单类型</td>
-                            <td>缴费金额</td>
-                            <td>缴费时间</td>
-                        </tr>
+                    <tr>
+                        <td>序号</td>
+                        <td>统筹单类型</td>
+                        <td>缴费金额</td>
+                        <td>缴费时间</td>
+                    </tr>
                     </thead>
                     <tbody>
 
@@ -826,6 +826,24 @@
         </div>
     </div>
 
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5 class="widget-title">
+                    <div class="search-item-div col-xs-3">
+                        <label class="text-center search-item-label">参统说明</label>
+                    </div>
+
+                </h5>
+            </div>
+            <div class="widget-body">
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                    <textarea style="width:100%" readonly rows="10">{$list.description|default=''}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="col-xs-12 col-sm-12">
         <div class="widget-box">
@@ -848,15 +866,13 @@
                     </thead>
 
                     <tbody>
-                    {if isset($list.review_log)}
-                        {volist name="$list.review_log" id="value"}
-                        <tr>
-                            <td class="center">{:date('Y-m-d H:i:s',$value.create_time)}</td>
-                            <td class="center">{$value.create_user}</td>
-                            <td class="center">{$value.typeStr}</td>
-                        </tr>
-                        {/volist}
-                    {/if}
+                    {volist name="$list.review_log" id="value"}
+                    <tr>
+                        <td class="center">{:date('Y-m-d H:i:s',$value.create_time)}</td>
+                        <td class="center">{$value.create_user}</td>
+                        <td class="center">{$value.typeStr}</td>
+                    </tr>
+                    {/volist}
                     </tbody>
                 </table>
             </div>
@@ -868,16 +884,73 @@
             <div class="widget-header">
                 <h5 class="widget-title">
                     <div class="search-item-div col-xs-3">
-                        <label class="text-center search-item-label">参统说明</label>
+                        <label class="text-center search-item-label">操作</label>
                     </div>
 
                 </h5>
             </div>
             <div class="widget-body">
-                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
-                    <textarea style="width:100%" readonly rows="10">{$list.description|default=''}</textarea>
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;margin-left:40%">
+                    <button class="layui-btn layui-btn-radius layui-btn-normal" id="edit" data-id="{$list.temporary_id}">返回修改</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal" id="review" data-id="{$list.temporary_id}">提交审核</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    jQuery(function($) {
+        //返回修改
+        $("#edit").on('click',function() {
+            var but = $(this);
+            but.attr("disabled","disabled");
+            var id = $(this).attr("data-id");
+            $.ajax('/admin/ajax/review/primary/review',{
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: {related_id:id,type:1,status:2,log_type:2},
+                success: function (data,status,xhr) {   // success callback function
+                    but.removeAttr("disabled");
+                    if(data.code == 100000) {
+                        layer.msg(data.msg);
+                        setTimeout(function() {
+                            location.reload();
+                        },300);
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function() {
+                    layer.msg("系统错误");
+                }
+            });
+        })
+        //审核通过
+        $("#review").on('click',function() {
+            var but = $(this);
+            but.attr("disabled","disabled");
+            var id = $(this).attr("data-id");
+            $.ajax('/admin/ajax/review/primary/review',{
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: {related_id:id,type:1,status:6,log_type:4},
+                success: function (data,status,xhr) {   // success callback function
+                    but.removeAttr("disabled");
+                    if(data.code == 100000) {
+                        layer.msg(data.msg);
+                        setTimeout(function() {
+                            window.location.href="/admin/Financial/overall/review";
+                        },300);
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function() {
+                    layer.msg("系统错误");
+                }
+            });
+        })
+    })
+</script>

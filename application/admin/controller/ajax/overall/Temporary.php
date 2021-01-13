@@ -23,12 +23,12 @@ class Temporary extends Common {
         $res = Config::parse(APP_PATH.'/admin/config/formValidator/addOverall.ini','ini');
         foreach($res['addoverall'] as $key => $value) {
             $request->param($key) ? $this->param[$key] = $request->param($key) : "";
-//            if($value && empty($this->param[$key])) {
-//                $data = array();
-//                $data['code'] = 100001;
-//                $data['msg'] = $res['addoverallcomment'][$key].'不可为空';
-//                return json($data);
-//            }
+            if($value && empty($this->param[$key])) {
+                $data = array();
+                $data['code'] = 100001;
+                $data['msg'] = $res['addoverallcomment'][$key].'不可为空';
+                return json($data);
+            }
         }
 
         //验证车架号/车牌号是否在系统内且在统筹期间内
@@ -90,17 +90,17 @@ class Temporary extends Common {
         $res = Config::parse(APP_PATH.'/admin/config/formValidator/addOverall.ini','ini');
         foreach($res['addoverall'] as $key => $value) {
             $request->param($key) ? $this->param[$key] = $request->param($key) : "";
-//            if($value && empty($this->param[$key])) {
-//                $data = array();
-//                $data['code'] = 100001;
-//                $data['msg'] = $res['addquotationcomment'][$key].'不可为空';
-//                return json($data);
-//            }
+            if($value && empty($this->param[$key])) {
+                $data = array();
+                $data['code'] = 100001;
+                $data['msg'] = $res['addquotationcomment'][$key].'不可为空';
+                return json($data);
+            }
         }
 
         //验证车架号/车牌号是否在系统内且在统筹期间内
         $car_frame = $this->param['frame'];
-        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1]);
+        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1,'overall.temporary_id'=>['<>',$this->param['temporary_id']]]);
         if($car_list->total() > 0) {
             $list = $car_list->all();
             foreach($list as $key => $value) {

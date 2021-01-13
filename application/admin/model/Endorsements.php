@@ -21,7 +21,6 @@ class Endorsements extends Model {
     private $coordinator_db = "zh_coordinator";
     private $pay_db = "zh_pay";
     private $invoice_db = "zh_invoice";
-    private $attach_db = "zh_attach";
 
 
     /** 查询批单单查询
@@ -31,7 +30,7 @@ class Endorsements extends Model {
         $condition['endorsements.type'] = 1;
         //车辆配置文件
         Config::parse(APP_PATH.'/admin/config/car.ini','ini');
-        Config::parse(APP_PATH.'/admin/config/overall.ini','ini');
+        Config::parse(APP_PATH.'/admin/config/endorsements.ini','ini');
         $commont = Config::parse(APP_PATH.'/admin/config/Structure.ini','ini');
         $result = Db($this->db)->field($field)->where($condition)->alias('endorsements')
             ->join($this->car_db.' car','endorsements.p_temporary_id=car.related_id')
@@ -63,17 +62,26 @@ class Endorsements extends Model {
                 //影响资料
                 $item['attach'] = Model('Upload')->getlist(['related_id'=>$item['p_temporary_id']]);
 
-                //影响资料
-//                $item['invoice'] = Model('Invoice')->getlist(['related_id'=>$item['id']]);
+                //开票
+                $item['invoice'] = Model('Invoice')->getlist(['related_id'=>$item['id']]);
+
+                //统筹单暂存号
+                $overall = Model('Overall')->getList(['overall.overall_id'=>$item['overall_id']]);;
+                $item['temporary_id'] = $overall[0]['temporary_id'];
+
+
+                //审核
+                $item['review_log'] = Model('ReviewLog')->getList(['related_id'=>$item['temporary_id']]);
+
                 //组织
-//                $users = Model('User')->getList(['id'=> $item['attribution_user']]);
-//                $item['structure'] = $users[0]['structure'];
-//                $item['structureStr'] = $users[0]['structureStr'];
+                $users = Model('User')->getList(['id'=> $item['attribution_user']]);
+                $item['structure'] = $users[0]['structure'];
+                $item['structureStr'] = $users[0]['structureStr'];
                 //来源
-//                $item['source'] = $users[0]['source'];
-//                $item['sourceStr'] = $commont['source'][$users[0]['source']];
+                $item['source'] = $users[0]['source'];
+                $item['sourceStr'] = $commont['source'][$users[0]['source']];
                 //用户地区
-//                $item['cityStr'] = $users[0]['cityName'];
+                $item['cityStr'] = $users[0]['cityName'];
 
 
                 return $item;
@@ -465,12 +473,11 @@ class Endorsements extends Model {
         $condition['op_time'] = time();
         Db::startTrans();
         try{
-            //统筹单
+            //批单
             $param = array();
             if(isset($condition['overall_id'])) {
                 $param['overall_id'] = $condition['overall_id'];
             }
-            $param['temporary_id'] = $condition['temporary_id'];
             if(isset($condition['attribution_user'])) {
                 $param['attribution_user'] = $condition['attribution_user'];
             }
@@ -506,10 +513,9 @@ class Endorsements extends Model {
             }
             $param['op_user'] = getAdminInfo();
             $param['op_time'] = time();
-            db($this->db)->where(['id' => $condition['id']])->update($param);
+            db($this->db)->where(['p_temporary_id' => $condition['p_temporary_id']])->update($param);
             //车辆信息
             $car = array();
-//            $car['quotation_id'] = $condition['temporary_id'];
             $car['plate'] = $condition['plate'];
             $car['plate_type'] = $condition['plate_type'];
             $car['color'] = $condition['color'];
@@ -551,7 +557,7 @@ class Endorsements extends Model {
             $car['create_time'] = time();
             $car['op_user'] = getAdminInfo();
             $car['op_time'] = time();
-            db($this->car_db)->where(['related_id' => $condition['id']])->update($car);
+            db($this->car_db)->where(['related_id' => $condition['p_temporary_id']])->update($car);
             //统筹项目
             $overall = array();
             if(isset($condition['vehicle_loss'])) {
@@ -693,7 +699,7 @@ class Endorsements extends Model {
             $overall['create_time'] = time();
             $overall['op_user'] = getAdminInfo();
             $overall['op_time'] = time();
-            db($this->overall_db)->where(['related_id'=>$condition['id']])->update($overall);
+            db($this->overall_db)->where(['related_id'=>$condition['p_temporary_id']])->update($overall);
             //交强险公司
             $traffic = array();
             $traffic['traffic_company'] = $condition['traffic_company'];
@@ -706,7 +712,7 @@ class Endorsements extends Model {
             $traffic['create_time'] = time();
             $traffic['op_user'] = getAdminInfo();
             $traffic['op_time'] = time();
-            db($this->traffic_db)->where(['related_id'=>$condition['id']])->update($traffic);
+            db($this->traffic_db)->where(['related_id'=>$condition['p_temporary_id']])->update($traffic);
             //参统人信息
             $participate = array();
             $participate['participate_name'] = $condition['participate_name'];
@@ -730,7 +736,7 @@ class Endorsements extends Model {
             $participate['create_time'] = time();
             $participate['op_user'] = getAdminInfo();
             $participate['op_time'] = time();
-            db($this->participate_db)->where(['related_id'=>$condition['id']])->update($participate);
+            db($this->participate_db)->where(['related_id'=>$condition['p_temporary_id']])->update($participate);
             //被统筹人信息
             $coordinated = array();
             if(isset($condition['coordinated_same'])) {
@@ -756,7 +762,7 @@ class Endorsements extends Model {
             $coordinated['create_time'] = time();
             $coordinated['op_time'] = time();
             $coordinated['op_user'] = getAdminInfo();
-            db($this->coordinator_db)->where(['related_id'=>$condition['id']])->update($coordinated);
+            db($this->coordinator_db)->where(['related_id'=>$condition['p_temporary_id']])->update($coordinated);
             //缴费信息
             $pay = array();
             $pay['overall_type'] = 1;
@@ -768,7 +774,7 @@ class Endorsements extends Model {
             $pay['create_time'] = time();
             $pay['op_user'] = getAdminInfo();
             $pay['op_time'] = time();
-            db($this->pay_db)->where(['related_id' => $condition['id']])->update($pay);
+            db($this->pay_db)->where(['related_id' => $condition['p_temporary_id']])->update($pay);
             //开票信息
             if(isset($condition['invoice_type'])) {
                 $invoice = array();
@@ -794,14 +800,13 @@ class Endorsements extends Model {
                 if(isset($condition['invoice_remarks'])) {
                     $invoice['invoice_remarks'] = $condition['invoice_remarks'];
                 }
-//                $invoice['temporary_id'] = $condition['temporary_id'];
                 if(isset($condition['create_user'])) {
                     $invoice['create_user'] = $condition['create_user'];
                 }
                 $invoice['create_time'] = time();
                 $invoice['op_user'] = getAdminInfo();
                 $invoice['op_time'] = time();
-                db($this->invoice_db)->where(['related_id'=>$invoice['id']])->update($invoice);
+                db($this->invoice_db)->where(['related_id'=>$invoice['p_temporary_id']])->update($invoice);
             }
             // 提交事务
             Db::commit();
@@ -841,11 +846,11 @@ class Endorsements extends Model {
             $condition = array();
             $condition['endorsements_id'] = ['like',$result."%"];
             $condition['type'] = 1;
-            $res = db($this->db)->where($condition)->order('id','desc')->select();
+            $res = db($this->db)->where($condition)->order('endorsements_id','desc')->select();
             if(empty($res)) {
                return $result.'000000001';
             }else{
-                $str = substr($res[0]['id'],-13) + 1;
+                $str = substr($res[0]['endorsements_id'],-13) + 1;
                 return 'ZH'.$str;
             }
         }

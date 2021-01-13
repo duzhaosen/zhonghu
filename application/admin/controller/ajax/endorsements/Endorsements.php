@@ -16,19 +16,19 @@ use think\Config;
 class Endorsements extends Common {
     private $param;
 
-    /** 统筹单添加
+    /** 批单添加
      * $request array()
      */
     public function addEndorsements(Request $request) {
-        $res = Config::parse(APP_PATH.'/admin/config/formValidator/addOverall.ini','ini');
-        foreach($res['addoverall'] as $key => $value) {
+        $res = Config::parse(APP_PATH.'/admin/config/formValidator/addEndorsements.ini','ini');
+        foreach($res['addendorsements'] as $key => $value) {
             $request->param($key) ? $this->param[$key] = $request->param($key) : "";
-//            if($value && empty($this->param[$key])) {
-//                $data = array();
-//                $data['code'] = 100001;
-//                $data['msg'] = $res['addquotationcomment'][$key].'不可为空';
-//                return json($data);
-//            }
+            if($value && empty($this->param[$key])) {
+                $data = array();
+                $data['code'] = 100001;
+                $data['msg'] = $res['addendorsementscomment'][$key].'不可为空';
+                return json($data);
+            }
         }
         //验证车架号/车牌号是否在系统内且在统筹期间内
         $car_frame = $this->param['frame'];
@@ -47,7 +47,7 @@ class Endorsements extends Common {
         //格式化数据
         $this->param['p_temporary_id'] = Model('Endorsements')->generatePTemporaryId();
         $this->param['endorsements_id'] = Model('Endorsements')->generatePId();
-        $this->param['status'] = 1;
+        $this->param['status'] = 2;
         $res = Model('Endorsements')->addEndorsements($this->param);
         if($res == true) {
             $data = array();
@@ -61,28 +61,28 @@ class Endorsements extends Common {
         return json($data);
     }
 
-    /** 统筹单修改
+    /** 批单修改
      *
      */
     public function editEndorsements(Request $request) {
-        $res = Config::parse(APP_PATH.'/admin/config/formValidator/addOverall.ini','ini');
-        foreach($res['addoverall'] as $key => $value) {
+        $res = Config::parse(APP_PATH.'/admin/config/formValidator/addEndorsements.ini','ini');
+        foreach($res['addendorsements'] as $key => $value) {
             $request->param($key) ? $this->param[$key] = $request->param($key) : "";
             if($value && empty($this->param[$key])) {
                 $data = array();
                 $data['code'] = 100001;
-                $data['msg'] = $res['addoverallcomment'][$key].'不可为空';
+                $data['msg'] = $res['addendorsementscomment'][$key].'不可为空';
                 return json($data);
             }
         }
 
         //验证车架号/车牌号是否在系统内且在统筹期间内
         $car_frame = $this->param['frame'];
-        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1,'overall.id'=>['<>',$this->param['id']]]);
+        $car_list = Model('Endorsements')->getList(['endorsements.frame'=>$car_frame,'endorsements.type'=>1,'endorsements.p_temporary_id'=>['<>',$this->param['p_temporary_id']]]);
         if($car_list->total() > 0) {
             $list = $car_list->all();
             foreach($list as $key => $value) {
-                if($value['end_time'] < strtotime($this->param['start_time'])) {
+                if($value['end_time']+86400 > strtotime($this->param['start_time'])) {
                     $data = array();
                     $data['code'] = 100001;
                     $data['msg'] = '车架号已在其他单子的统筹期内'.$value['overall_id'];
@@ -90,16 +90,16 @@ class Endorsements extends Common {
                 }
             }
         }
-        //格式化数据
-        $res = Model('Overall')->editOverall($this->param);
+        $this->param['status'] = 2;
+        $res = Model('Endorsements')->editEndorsements($this->param);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
-            $data['msg'] = '统筹单修改失败';
+            $data['msg'] = '批单修改失败';
             return json($data);
         }
         $data['code'] = 100000;
-        $data['msg'] = '统筹单修改成功';
+        $data['msg'] = '批单修改成功';
         return json($data);
     }
 }
