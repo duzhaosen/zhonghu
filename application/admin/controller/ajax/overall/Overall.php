@@ -160,6 +160,73 @@ class Overall extends Common {
         }
     }
 
+    /** 统筹单查询html
+     *
+     */
+    public function getOverallHtml(Request  $request) {
+        $this->param = array_filter($request->param());
+        if(isset($this->param['plate']) && !empty($this->param['plate'])) {
+            $this->param['overall.plate'] = $this->param['plate'];
+            unset($this->param['plate']);
+        }
+        if(isset($this->param['frame']) && !empty($this->param['frame'])) {
+            $this->param['overall.frame'] = $this->param['frame'];
+            unset($this->param['frame']);
+        }
+        if(isset($this->param['overall_id']) && !empty($this->param['overall_id'])) {
+            $this->param['overall.overall_id'] = $this->param['overall_id'];
+            unset($this->param['overall_id']);
+        }
+        if(isset($this->param['coordinated_name']) && !empty($this->param['coordinated_name'])) {
+            $this->param['coordinator.coordinated_name'] = $this->param['coordinated_name'];
+            unset($this->param['coordinated_name']);
+        }
+        if(empty($this->param)) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '未查询到信息';
+            return json($data);
+        }
+        $res = Model('Overall')->getList($this->param);
+        if($res->total() == 0) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '未查询到信息';
+            return json($data);
+        }else{
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = '查询成功';
+            $html = '<thead>
+                     <tr>
+                        <td>选择</td>
+                        <td>统筹单号</td>
+                        <td>车架号</td>
+                        <td>车牌号</td>
+                        <td>被统筹人</td>
+                        <td>生效日期</td>
+                        <td>到期日期</td>
+                     </tr>
+                    </thead>
+                    <tbody>';
+            foreach($res as $key=>$value) {
+                $html .= '<tr>
+                            <td><input type="checkbox" class="overallId" name="overallId" value="'.$value['id'].'"></td>
+                            <td>'.$value['overall_id'].'</td>
+                            <td>'.$value['frame'].'</td>
+                            <td>'.$value['plate'].'</td>
+                            <td>'.$value['coordinated_name'].'</td>
+                            <td>'.date('Y-m-d',$value['start_time']).'</td>
+                            <td>'.date('Y-m-d',$value['end_time']).'</td>
+                         </tr>';
+
+            }
+            $html .= '</tbody>';
+            $data['data'] = $html;
+            return json($data);
+        }
+    }
+
     /** 查询统筹单
      *
      */

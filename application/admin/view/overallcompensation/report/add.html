@@ -1,0 +1,434 @@
+<script  src="/static/ace1.4/assets/js/select-treeview.js"></script>
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5 class="widget-title">接报案信息</h5>
+            </div>
+            <div class="widget-body">
+                <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="search_plate" class="text-center search-item-label">车牌号:</label>
+                        <input type="text" class="form-control" id="search_plate" name="search_plate" placeholder="请输入车牌号" style="width:100%" value="{:input('param.search_plate')}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="search_overall_id" class="text-center search-item-label">统筹单号:</label>
+                        <input type="text" class="form-control" id="search_overall_id" name="search_overall_id" placeholder="请输入统筹单号" style="width:100%" value="{:input('param.search_overall_id')}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="search_coordinated_name" class="text-center search-item-label">被统筹人:</label>
+                        <input type="text" class="form-control" id="search_coordinated_name" name="search_coordinated_name" placeholder="请输入被统筹人" style="width:100%" value="{:input('param.search_coordinated_name')}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="search_frame" class="text-center search-item-label">车架号:</label>
+                        <input type="text" class="form-control" id="search_frame" name="search_frame" placeholder="请输入车架号" style="width:100%" value="{:input('param.search_frame')}">
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3 ">
+                        <button class="layui-btn layui-btn-radius layui-btn-normal" id="search">查询</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form role="form" name="addReport" id="addReport">
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5 class="widget-title">接报案信息</h5>
+            </div>
+            <div class="widget-body">
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="report_id" class="text-center search-item-label">报案单号:</label>
+                        <input type="text" class="form-control" id="report_id" readonly name="report_id"style="width:100%" value="{$report_id}">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="overall_id" class="text-center search-item-label">统筹单号:</label>
+                        <input type="text" class="form-control" id="overall_id" name="overall_id" placeholder="请输入统筹单号"  style="width:100%" value="">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="plate" class="text-center search-item-label">车牌号:</label>
+                        <input type="text" class="form-control" id="plate" name="plate" style="width:100%" placeholder="请输入车牌号" value="">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="frame" class="text-center search-item-label">车架号:</label>
+                        <input type="text" class="form-control" id="frame" name="frame" style="width:100%" placeholder="请输入车架号" value="">
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="coordinated_name" class="text-center search-item-label">被统筹人:</label>
+                        <input type="text" class="form-control" id="coordinated_name" name="coordinated_name" placeholder="请输入被统筹人" style="width:100%" value="">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="nuclear_system_time" class="text-center search-item-label">核统日期:</label>
+                        <input type="text" class="form-control" id="nuclear_system_time" readonly name="nuclear_system_time" style="width:100%" value="">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="end_time" class="text-center search-item-label">统筹止期:</label>
+                        <input type="text" class="form-control" id="end_time" readonly name="end_time" style="width:100%" value="">
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="report_user" class="text-center search-item-label">报案人:</label>
+                        <input type="text" class="form-control" id="report_user" name="report_user" style="width:100%" placeholder="请输入报案人" value="">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="report_time" class="text-center search-item-label">报案时间:</label>
+                        <input type="text" class="form-control" id="report_time" readonly name="report_time" style="width:100%" value="">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="out_danger_time" class="text-center search-item-label">出险时间:</label>
+                        <input type="text" class="form-control" id="out_danger_time" readonly name="out_danger_time" style="width:100%" value="">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="plate" class="text-center search-item-label">事故情况:</label>
+                        <select name="accident_situation" id="accident_situation" style="width:100%">
+                            <option value="-1">请选择事故情况</option>
+                            {volist name="$accident_situation" id="value" key="key"}
+                            <option value="{$key-1}">{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="human_injury" class="text-center search-item-label">是否有人伤:</label>
+                        <select name="human_injury" class="form-control" style="width:100%" id="human_injury">
+                            <option value="-1">请选择是否有人伤</option>
+                            {volist name="$human_injury" id="value" key="key"}
+                            <option value="{$key-1}">{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="driver" class="text-center search-item-label">驾驶员:</label>
+                        <input type="text" class="form-control" id="driver" name="driver" style="width:100%" placeholder="请输入驾驶员" value="">
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="way_type" class="text-center search-item-label">道路类型:</label>
+                        <select name="way_type" class="form-control" style="width:100%" id="way_type">
+                            <option value="-1">请选择道路类型</option>
+                            {volist name="$way_type" id="value" key="key"}
+                            <option value="{$key-1}">{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="plate" class="text-center search-item-label">联系电话:</label>
+                        <input type="text" class="form-control" name="phone" id="phone"style="width:100%" placeholder="请输入联系电话" value="">
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-8">
+                        <label for="report_id" class="text-center search-item-label">出险地点:</label>
+                        <div id="risk_location" name="risk_location"></div>
+                        <input type="text" class="form-control" name="address" id="address"style="width:40%;margin-top:1rem;" placeholder="请输入出险地点" value="">
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="report_id" class="text-center search-item-label">出险描述:</label>
+                        <textarea name="description" id="description" cols="130" rows="10" placeholder="请输入出险描述"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5 class="widget-title">委派查勘</h5>
+            </div>
+            <div class="widget-body">
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="survey_agency" class="text-center search-item-label">查勘机构:</label>
+                        <select name="survey_agency" class="form-control" style="width:100%" id="survey_agency">
+                            <option value="-1">请选择查勘机构</option>
+                            {volist name="$survey_agency" id="value" key="key"}
+                            <option value="{$key-1}">{$value}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="survey_user" class="text-center search-item-label">查勘人:</label>
+                        <select name="survey_user" id="survey_user" style="width:100%">
+                            <option value="-1">请选择查勘人</option>
+                        </select>
+                    </div>
+                    <div class="search-item-div col-xs-3">
+                        <label for="survey_phone" class="text-center search-item-label">电话:</label>
+                        <input type="text" id="survey_phone" name="survey_phone" placeholder="请输入电话" value="" style="width:100%">
+                    </div>
+                </div>
+
+
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="report_id" class="text-center search-item-label">备注:</label>
+                        <textarea name="survey_remarks" id="survey_remarks" cols="130" rows="10" placeholder="请输入备注"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-4">
+                        发送客户<input type="radio" name="sms" value="1" checked>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        发送查勘人<input type="radio" name="sms" value="2">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        发送经办人<input type="radio" name="sms" value="3">
+                    </div>
+                </div>
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-6">
+                        <button class="layui-btn layui-btn-radius layui-btn-normal" id="genSms">生成短信</button>
+                        <button class="layui-btn layui-btn-radius layui-btn-normal">发送短信</button>
+                        <textarea name="smsMsg" id="smsMsg" cols="130" rows="10" style="margin-top:2rem"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3 col-lg-offset-6">
+                        <button class="layui-btn layui-btn-radius layui-btn-normal" id="reportSubmit">提交查勘</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+<!--车牌/车架查询modal开始-->
+<div class="modal fade" id="overallsSearchModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" style="width:80%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">统筹单信息</h4>
+            </div>
+            <div class="modal-body">
+                <table id="searchOverall" class="table table-striped table-bordered table-hover center">
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="overallSearchSubmit">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--车牌/车架查询modal结束-->
+<script>
+    const survey_user = {$survey_user};
+    const survey_phone = {$survey_phone};
+    const cityList_data = {$cityList};
+jQuery(function($) {
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#nuclear_system_time' //核统日期
+            ,type: 'datetime'
+            , format: 'yyyy-MM-dd'
+            , done: function (value, date, endDate) {
+                $("#nuclear_system_time").val(value);
+            }
+        });
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#end_time' //统筹止期
+            ,type: 'datetime'
+            , format: 'yyyy-MM-dd'
+            , done: function (value, date, endDate) {
+                $("#end_time").val(value);
+            }
+        });
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#report_time' //报案时间
+            ,type: 'datetime'
+            , format: 'yyyy-MM-dd'
+            , done: function (value, date, endDate) {
+                $("#report_time").val(value);
+            }
+        });
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#out_danger_time' //出险时间
+            ,type: 'datetime'
+            , format: 'yyyy-MM-dd'
+            , done: function (value, date, endDate) {
+                $("#out_danger_time").val(value);
+            }
+        });
+    });
+    var options = {
+        data: cityList_data,
+        id: "id",
+        text: "text",
+        nodes: "nodes",
+        checked: "checked",
+        name: "risk_location",
+    };
+    /**
+     * 提初始化树城市地区结构
+     */
+    $('#risk_location').AddSelect(options);
+    //联动
+    $("#survey_agency").on('change',function() {
+        var val = $(this).val();
+        var info = survey_user[val];
+        var html = '<option value="-1">请选择查勘人</option>';
+        for (var i in info) {
+            html += "<option value='"+i+"'>"+info[i]+"</option>";
+        }
+        $("#survey_user").html(html);
+    })
+    $("#survey_user").on('change',function() {
+        var val = $(this).val();
+        $("#survey_phone").val(survey_phone[val]);
+    })
+    //查询
+    $("#search").on('click',function() {
+        var search_plate = $("#search_plate").val();
+        var search_overall_id = $("#search_overall_id").val();
+        var search_coordinated_name = $("#search_coordinated_name").val();
+        var search_frame = $("#search_frame").val();
+        $.ajax('/admin/ajax/overall/overall/getOverallHtml',{
+            dataType: 'json',
+            timeout: 500,
+            method: "get",
+            data: {plate:search_plate,overall_id:search_overall_id,coordinated_name:search_coordinated_name,frame:search_frame},
+            success: function (data) {
+                if(data.code == 100000) {
+                    $("#searchOverall").html(data.data);
+                    $("#overallsSearchModal").modal();
+                }else{
+                    layer.msg(data.msg);
+                }
+            }
+        });
+        return false;
+    })
+    //提交查勘
+    $("#reportSubmit").on('click',function() {
+        var but = $(this);
+        but.attr("disabled", "disabled");
+        var form = $("form[name=addReport]").serializeArray();
+        var url = '/admin/ajax/Report/addReport';
+        var city = $("#risk_location").GetSelect().split(',');
+        var city_length = city.length;
+        if (city_length > 1 && city[city_length - 1] == "") {
+            replaceForm(form, 'risk_location', city[city_length - 2]);
+        }
+        $.ajax(url,{
+            dataType: 'json', // type of response data
+            timeout: 500,     // timeout milliseconds
+            method: "post",
+            data: format(form),
+            success: function (data, status, xhr) {   // success callback function
+                but.removeAttr("disabled");
+                if (data.code == 100000) {
+                    layer.msg(data.msg);
+                    setTimeout(function () {
+                        location.reload();
+                    }, 300);
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function () {
+                but.removeAttr("disabled");
+                layer.msg("系统错误");
+            }
+        });
+
+    })
+    //生成短信
+    $("#genSms").on('click',function() {
+        var report_user = $("#report_user").val();
+        var report_id = $("#report_id").val();
+        var survey_user = $("#survey_user").find('option:selected').text();
+        var survey_phone = $("#survey_phone").val();
+        var str = '尊敬的'+report_user+'(报案人）先生/女士，您的报案已受理，报案单号：'+report_id+'，工作人员'+survey_user+'电话：'+survey_phone+'正在赶往现场，请您尽快报交警。特别提示：报警电话110、122。';
+        $("#smsMsg").val(str);
+    })
+    //同步统筹单
+    $("#overallSearchSubmit").on('click',function() {
+        var total = 0;
+        var value = "";
+        $(".overallId").each(function() {
+            value = $(this).val();
+            total ++;
+        })
+        if(total > 1) {
+            layer.msg("最多选择一个");
+            return false;
+        }
+        $.ajax('/admin/ajax/overall/overall/getOverallList',{
+            dataType: 'json',
+            timeout: 500,
+            method: "get",
+            data: {id:value},
+            success: function (data) {
+                if (data.code == 100000) {
+                    var info = data.data;
+                    $("#overall_id").val(info.overall_id);
+                    $("#plate").val(info.plate);
+                    $("#frame").val(info.frame);
+                    $("#coordinated_name").val(info.coordinated_name);
+                    $("#nuclear_system_time").val(formatlistdate(info.nuclear_system_time));
+                    $("#end_time").val(formatlistdate(info.end_time));
+                    $("#overallsSearchModal").modal('hide');
+                }
+            }
+        });
+    })
+    var formatlistdate = function(time) {
+        if(time == undefined) {
+            return "";
+        }
+        var date=new Date(time*1000);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var hour = date.getHours().toString();
+        var minutes = date.getMinutes().toString();
+        var seconds = date.getSeconds().toString();
+        if (hour < 10) {
+            hour = "0" + hour;
+        }
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+        if (seconds < 10) {
+            seconds = "0" + seconds;
+        }
+        return  y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d) + " " + hour + ":" + minutes + ":" + seconds;
+    }
+    var replaceForm = function (arr, name, value) {
+        var replace = false;
+        for (i = 0; i < arr.length; i++) {
+            if (arr[i]['name'] == name) {
+                replace = true;
+                arr[i]['value'] = value
+            }
+        }
+        if (!replace) {
+            var obj = {"name": name, "value": value};
+            arr.push(obj)
+        }
+    };
+    var format = function (arr) {
+        for (i = 0; i < arr.length; i++) {
+            if (arr[i]['value'] == "") {
+                delete arr[i];
+            }
+        }
+        return arr;
+    }
+});
+</script>

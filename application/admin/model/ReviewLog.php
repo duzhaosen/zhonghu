@@ -52,6 +52,10 @@ class ReviewLog extends Model {
                 $overall['status'] = $condition['status'];
                 $overall['op_user'] = getAdminInfo();
                 $overall['op_time'] = time();
+                if(in_array($condition['status'],[4,5])) {
+                    $endorsements['nuclear_system_user'] = getAdminInfo();
+                    $endorsements['nuclear_system_time'] = time();
+                }
                 db($this->overall_db)->where(['temporary_id'=>$condition['related_id']])->update($overall);
                 $review = array();
                 $review['related_id'] = $condition['related_id'];

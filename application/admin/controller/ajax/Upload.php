@@ -24,7 +24,7 @@ class Upload extends Common {
         if(!isset($result['folder'])) {
             $result['folder'] = 'default1';
         }
-        if(!isset($result['temporary_id']) || $result['temporary_id'] == false) {
+        if(!isset($result['related_id']) || $result['related_id'] == false) {
             // 上传失败获取错误信息
             $data = array();
             $data['code'] = 100001;
@@ -37,7 +37,7 @@ class Upload extends Common {
             if($info){
                 $url =  $info->getSaveName();
                 $param = array();
-                $param['related_id'] = $result['temporary_id'];
+                $param['related_id'] = $result['related_id'];
                 $param['attach_url'] = $url;
                 $param['folder'] = $result['folder'];
                 $param['name'] = $result['name'];

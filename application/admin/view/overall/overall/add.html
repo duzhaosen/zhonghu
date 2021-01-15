@@ -994,7 +994,7 @@
             </div>
         </div>
 
-        <div class="form-inline form-group col-xs-12" style="margin-top:20px;margin-left:40%">
+        <div class="form-inline form-group col-xs-4 col-lg-offset-5">
             <button class="layui-btn layui-btn-normal layui-btn-radius" id="addTemporary">暂存</button>
             <button class="layui-btn layui-btn-normal layui-btn-radius" id="addOverall" style=""  data-toggle="modal">提交审核</button>
         </div>
@@ -1173,7 +1173,7 @@
                     ,acceptMime: 'image/*'
                     ,size: 5120
                     ,data: {
-                        temporary_id: function() {
+                        related_id: function() {
                             return $("#temporary_id").val();
                         },
                         folder: 'default'+i,
