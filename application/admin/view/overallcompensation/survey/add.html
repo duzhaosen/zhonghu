@@ -1,7 +1,6 @@
 <link rel="stylesheet" href="/static/ace1.4/assets/css/jquery.magnify.css">
 <script src="/static/ace1.4/assets/js/jquery.magnify.js"></script>
 <style>
-
     .titles {
         width: 100%;
         height: 30px;
@@ -24,13 +23,13 @@
         margin: 0 5px;
     }
     .del-icon {
-        position: absolute;
+        position: relative;
         width: 15px;
         height: 15px;
         border: 1px solid #444;
         border-radius: 50%;
-        top: -13px;
-        right: -15px;
+        top: -12rem;
+        right: -10rem;
         transform: rotate(45deg);
 
     }
@@ -608,29 +607,38 @@
                     <img src="/static/ace1.4/assets/images/upload.png" alt=""  width="100%" height="100%">
                 </div>
             </div>
-            <div id="showImages">
+            <div id="showImages" style="margin-top:15rem">
                 {if isset($list.attach)}
-                {volist name="$report_list.attach" id="value"}
-                <div class="form-inline form-group col-xs-12">
-                    <div class="titles"><p><font></font>{$key}</p></div>
-                    <div class="conts">
-                        {volist name="$value" id="v"}
-                        <div class="search-item-div col-xs-1" id="img134" style="height:100px;">
-                            <a data-magnify="gallery" data-src="" data-group="{$v.folder}" href="{$v.url}">
-                                <img src="{$v.url}" style="padding:2px;" width="100%" height="100%">
-                            </a>
-                            <div class="del-icon" data-id="{$v.id}"></div>
+                    {volist name="$report_list.attach" id="value"}
+                    <div class="widget-box  collapsed">
+                        <div class="widget-header">
+                            <h5 class="widget-title">{$key}</h5>
+                            <div class="widget-toolbar">
+                                <a href="#" data-action="collapse">
+                                    <i class="ace-icon fa fa-chevron-down"></i>
+                                </a>
+                            </div>
                         </div>
-                        {/volist}
+                        <div class="widget-body" style="display:none;">
+                            <div style="display: flex;flex-direction:row;margin:2rem;">
+                                {volist name="$value" id="v"}
+                                <div id="img134" style="height:100px;width:10%;">
+                                    <a data-magnify="gallery" data-src="" data-group="{$v.folder}" href="{$v.url}">
+                                        <img src="{$v.url}" style="padding:2px;" width="100%" height="100%">
+                                    </a>
+                                    <div class="del-icon" data-id="{$v.id}"></div>
+                                </div>
+                                {/volist}
+                            </div>
+                        </div>
                     </div>
-                </div>
-                {/volist}
+                    {/volist}
                 {/if}
             </div>
         </div>
         </div>
         <!--影像上传结束-->
-    <!--车辆统筹情况开始-->
+        <!--车辆统筹情况开始-->
         <div class="layui-tab-item">
             <div class="row">
                 <div class="col-xs-12 col-sm-12">
@@ -1404,10 +1412,801 @@
                 </div>
             </div>
         </div>
-    <!--车辆统筹情况结束-->
-        <div class="layui-tab-item">5</div>
-        <div class="layui-tab-item">6</div>
-        <div class="layui-tab-item">7</div>
+        <!--车辆统筹情况结束-->
+        <!--车损开始-->
+        <div class="layui-tab-item">
+            <div class="row" style="margin: 0.5rem">
+                    <div class="widget-box  collapsed">
+                        <div class="widget-header">
+                            <h5 class="widget-title">本车定损</h5>
+                            <div class="widget-toolbar">
+                                <a href="#" data-action="collapse">
+                                    <i class="ace-icon fa fa-chevron-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="widget-body" style="display:none">
+                            <table class="table  table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="center">车牌号</th>
+                                    <th class="center">车辆品牌</th>
+                                    <th class="center">车辆型号</th>
+                                    <th class="center">车辆年款</th>
+                                    <th class="center">车架号</th>
+                                    <th class="center">发动机号</th>
+                                    <th class="center">驾驶员</th>
+                                    <th class="center">性别</th>
+                                    <th class="center">联系电话</th>
+                                    <th class="center">维修厂名称</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr>
+                                    <td><input class="col-xs-12" type="text" name="damage_plate" id="damage_plate" value="{$list.plate}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_brand" id="damage_brand" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_model" id="damage_model" value="{$list.label_signal}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_year" id="damage_year" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_frame" id="damage_frame" value="{$list.frame}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_engine" id="damage_engine" value="{$list.engine}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_driver" id="damage_driver" value="{$report_list.driver}"></td>
+                                    <td>
+                                        <select class="col-xs-12" name="damage_sex" id="damage_sex">
+                                            <option value="-1">请选择性别</option>
+                                            <option value="1">男</option>
+                                            <option value="2">女</option>
+                                        </select>
+                                    </td>
+                                    <td><input class="col-xs-12" type="text" name="damage_phone" id="damage_phone" value="{$report_list.phone}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_repairer" id="damage_repairer" value=""></td>
+                                </tr>
+                                </tbody>
+                            </table>
+<!--                           配件定损开始-->
+                            <div class="titles"><p><font></font>配件定损</p></div>
+                            <form action="" name="addAccessories" style="margin-top:1rem;margin-left:1rem">
+                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
+                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
+                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                                <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+                                    <thead>
+                                    <tr>
+                                        <th class="center">选择</th>
+                                        <th class="center">序号</th>
+                                        <th class="center">统筹种类</th>
+                                        <th class="center">配件名称</th>
+                                        <th class="center">价格方案</th>
+                                        <th class="center">价格</th>
+                                        <th class="center">数量</th>
+                                        <th class="center">金额</th>
+                                        <th class="center">折扣(%)</th>
+                                        <th class="center">核定金额</th>
+                                        <th class="center">备注</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr id="accessories_1">
+                                        <td><input type="checkbox" name="accessories" value="accessories"></td>
+                                        <td><input class="col-xs-12" type="text" value="1"></td>
+                                        <td>
+                                            <select class="col-xs-12" name="damage_sex">
+                                                <option value="-1">请选择</option>
+                                                {volist name="$damage_overall_type" id="value" key="key"}
+                                                <option value="{$key-1}">{$value}</option>
+                                                {/volist}
+                                            </select>
+                                        </td>
+                                        <td><input class="col-xs-12" type="text" name="damage_name" value=""></td>
+                                        <td>
+                                            <select class="col-xs-12" name="price_program">
+                                                <option value="-1">请选择</option>
+                                                {volist name="$price_program" id="value" key="key"}
+                                                <option value="{$key-1}">{$value}</option>
+                                                {/volist}
+                                            </select>
+                                        </td>
+                                        <td><input class="col-xs-12" type="text" name="damage_price" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_num" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_money" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_discount" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_approved" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_remark" value=""></td>
+                                    </tr>
+                                    <tr>
+                                        <td>小计</td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="accessories_money" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="accessories_approved" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                    <div style="margin-left: 2rem;width:20%">
+                                        <label class="text-center search-item-label">合计:</label>
+                                        <input type="text" class="form-control input-sm" name="accessories_total" id="accessories_total" style="width:100%" value="">
+
+                                    </div>
+                                    <div style="margin-left: 2rem;width:20%">
+                                        <label class="text-center search-item-label">残值:</label>
+                                        <input type="text" class="form-control input-sm" style="width:100%" name="accessories_residual" id="accessories_residual" value="0">
+                                    </div>
+                                    <div style="margin-left: 2rem;width:20%">
+                                        <label class="text-center search-item-label">总计:</label>
+                                        <input type="text" class="form-control input-sm" id="accessories_all" name="accessories_all" style="width:100%" value="">
+                                    </div>
+                                </div>
+                            </form>
+<!--                           配件定损结束-->
+<!--                           本车工时开始-->
+                            <div class="titles"><p><font></font>本车工时核定</p></div>
+                            <form action="" name="addWork" style="margin-top:1rem;margin-left:1rem">
+                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
+                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
+                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                                <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+                                    <thead>
+                                    <tr>
+                                        <th class="center">选择</th>
+                                        <th class="center">序号</th>
+                                        <th class="center">统筹种类</th>
+                                        <th class="center">配件名称</th>
+                                        <th class="center">价格方案</th>
+                                        <th class="center">价格</th>
+                                        <th class="center">数量</th>
+                                        <th class="center">金额</th>
+                                        <th class="center">折扣(%)</th>
+                                        <th class="center">核定金额</th>
+                                        <th class="center">备注</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr id="work_1">
+                                        <td><input type="checkbox" name="work" value="work"></td>
+                                        <td><input class="col-xs-12" type="text" value="1"></td>
+                                        <td>
+                                            <select class="col-xs-12" name="work_sex">
+                                                <option value="-1">请选择</option>
+                                                {volist name="$damage_overall_type" id="value" key="key"}
+                                                <option value="{$key-1}">{$value}</option>
+                                                {/volist}
+                                            </select>
+                                        </td>
+                                        <td><input class="col-xs-12" type="text" name="damage_name" value=""></td>
+                                        <td>
+                                            <select class="col-xs-12" name="price_program">
+                                                <option value="-1">请选择</option>
+                                                {volist name="$price_program" id="value" key="key"}
+                                                <option value="{$key-1}">{$value}</option>
+                                                {/volist}
+                                            </select>
+                                        </td>
+                                        <td><input class="col-xs-12" type="text" name="damage_price" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_num" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_money" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_discount" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_approved" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_remark" value=""></td>
+                                    </tr>
+                                    <tr>
+                                        <td>小计</td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="work_money" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="work_approved" value=""></td>
+                                        <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                    <div style="margin-left: 2rem;width:20%">
+                                        <label class="text-center search-item-label">施救费:</label>
+                                        <input type="text" class="form-control input-sm" name="work_rescue" id="work_rescue" style="width:100%" value="">
+
+                                    </div>
+                                    <div style="margin-left: 2rem;width:20%">
+                                        <label class="text-center search-item-label">总计:</label>
+                                        <input type="text" class="form-control input-sm" style="width:100%" name="work_all" id="work_all" value="">
+                                    </div>
+                                </div>
+                                <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                    <div style="margin-left: 2rem;width:20%">
+                                        <label class="text-center search-item-label">费用合计:</label>
+                                        <input type="text" class="form-control input-sm" id="work_total" name="work_total" style="width:100%" value="">
+                                    </div>
+                                </div>
+                            </form>
+<!--                           本车工时结束-->
+<!--                           本车财务开始-->
+                            <div class="titles"><p><font></font>本车财务定损</p></div>
+                            <form action="" name="addFinance" style="margin-top:1rem;margin-left:1rem">
+                                        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
+                                        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
+                                        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                                        <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+                                            <thead>
+                                            <tr>
+                                                <th class="center">选择</th>
+                                                <th class="center">序号</th>
+                                                <th class="center">统筹种类</th>
+                                                <th class="center">配件名称</th>
+                                                <th class="center">价格方案</th>
+                                                <th class="center">价格</th>
+                                                <th class="center">数量</th>
+                                                <th class="center">金额</th>
+                                                <th class="center">折扣(%)</th>
+                                                <th class="center">核定金额</th>
+                                                <th class="center">备注</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <tr id="finance_1">
+                                                <td><input type="checkbox" name="finance" value="finance"></td>
+                                                <td><input class="col-xs-12" type="text" value="1"></td>
+                                                <td>
+                                                    <select class="col-xs-12" name="damage_sex">
+                                                        <option value="-1">请选择</option>
+                                                        {volist name="$damage_overall_type" id="value" key="key"}
+                                                        <option value="{$key-1}">{$value}</option>
+                                                        {/volist}
+                                                    </select>
+                                                </td>
+                                                <td><input class="col-xs-12" type="text" name="damage_name" value=""></td>
+                                                <td>
+                                                    <select class="col-xs-12" name="price_program">
+                                                        <option value="-1">请选择</option>
+                                                        {volist name="$price_program" id="value" key="key"}
+                                                        <option value="{$key-1}">{$value}</option>
+                                                        {/volist}
+                                                    </select>
+                                                </td>
+                                                <td><input class="col-xs-12" type="text" name="damage_price" value=""></td>
+                                                <td><input class="col-xs-12" type="text" name="damage_num" value=""></td>
+                                                <td><input class="col-xs-12" type="text" name="damage_money" value=""></td>
+                                                <td><input class="col-xs-12" type="text" name="damage_discount" value=""></td>
+                                                <td><input class="col-xs-12" type="text" name="damage_approved" value=""></td>
+                                                <td><input class="col-xs-12" type="text" name="damage_remark" value=""></td>
+                                            </tr>
+                                            <tr>
+                                                <td>小计</td>
+                                                <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                                <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                                <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                                <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                                <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                                <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                                <td><input class="col-xs-12" type="text" name="finance_money" value=""></td>
+                                                <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                                <td><input class="col-xs-12" type="text" name="finance_approved" value=""></td>
+                                                <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                            <div style="margin-left: 2rem;width:20%">
+                                                <label class="text-center search-item-label">合计:</label>
+                                                <input type="text" class="form-control input-sm" name="finance_total" id="finance_total" style="width:100%" value="">
+
+                                            </div>
+                                            <div style="margin-left: 2rem;width:20%">
+                                                <label class="text-center search-item-label">残值:</label>
+                                                <input type="text" class="form-control input-sm" style="width:100%" name="finance_residual" id="finance_residual" value="0">
+                                            </div>
+                                            <div style="margin-left: 2rem;width:20%">
+                                                <label class="text-center search-item-label">财务总计:</label>
+                                                <input type="text" class="form-control input-sm" id="finance_all" name="finance_all" style="width:100%" value="">
+                                            </div>
+                                        </div>
+                                        <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                            <div style="margin-left: 2rem;width:20%">
+                                                <label class="text-center search-item-label">诉讼费:</label>
+                                                <input type="text" class="form-control input-sm" name="finance_litigation" id="finance_litigation" style="width:100%" value="">
+
+                                            </div>
+                                            <div style="margin-left: 2rem;width:20%">
+                                                <label class="text-center search-item-label">鉴定费:</label>
+                                                <input type="text" class="form-control input-sm" style="width:100%" name="finance_identification" id="finance_identification" value="">
+                                            </div>
+                                            <div style="margin-left: 2rem;width:20%">
+                                                <label class="text-center search-item-label">公估费:</label>
+                                                <input type="text" class="form-control input-sm" id="finance_appraisal" name="finance_appraisal" style="width:100%" value="">
+                                            </div>
+                                            <div style="margin-left: 2rem;width:20%">
+                                                <label class="text-center search-item-label">住宿费:</label>
+                                                <input type="text" class="form-control input-sm" id="finance_stay" name="finance_stay" style="width:100%" value="">
+                                            </div>
+                                        </div>
+                                        <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                            <div style="margin-left: 2rem;width:20%">
+                                                <label class="text-center search-item-label">路桥费:</label>
+                                                <input type="text" class="form-control input-sm" name="finance_road" id="finance_road" style="width:100%" value="">
+
+                                            </div>
+                                            <div style="margin-left: 2rem;width:20%">
+                                                <label class="text-center search-item-label">燃油费:</label>
+                                                <input type="text" class="form-control input-sm" style="width:100%" name="finance_fuel" id="finance_fuel" value="">
+                                            </div>
+                                            <div style="margin-left: 2rem;width:20%">
+                                                <label class="text-center search-item-label">其他:</label>
+                                                <input type="text" class="form-control input-sm" id="finance_other" name="finance_other" style="width:100%" value="">
+                                            </div>
+                                            <div style="margin-left: 2rem;width:20%">
+                                                <label class="text-center search-item-label">汇总:</label>
+                                                <input type="text" class="form-control input-sm" id="finance_summary" name="finance_summary" style="width:100%" value="">
+                                            </div>
+                                        </div>
+                                        <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                            <div style="margin-left: 2rem;width:20%">
+                                                <label class="text-center search-item-label">备注说明:</label>
+                                                <textarea name="finance_remark" id="finance_remark" cols="120" rows="10"></textarea>
+                                            </div>
+                                        </div>
+                                    </form>
+<!--                           本车财务结束-->
+                        </div>
+                    </div>
+                <div class="widget-box  collapsed">
+                    <div class="widget-header">
+                        <h5 class="widget-title">三者车车损失</h5>
+                        <div class="widget-toolbar">
+                            <a href="#" data-action="collapse">
+                                <i class="ace-icon fa fa-chevron-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="widget-body" style="display:none">
+                        <form action="" name="addOthercar" style="margin-top:1rem;margin-left:1rem">
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                            <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+                                <thead>
+                                <tr>
+                                    <th class="center">选择</th>
+                                    <th class="center">序号</th>
+                                    <th class="center">车牌号</th>
+                                    <th class="center">驾驶员</th>
+                                    <th class="center">性别</th>
+                                    <th class="center">电话</th>
+                                    <th class="center">车辆品牌</th>
+                                    <th class="center">车辆型号</th>
+                                    <th class="center">车辆款式</th>
+                                    <th class="center">车架号</th>
+                                    <th class="center">发动机号</th>
+                                    <th class="center">维修厂名称</th>
+                                    <th class="center">车损</th>
+                                    <th class="center">财物</th>
+                                    <th class="center">汇总</th>
+                                    <th class="center">状态</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr id="other_car">
+                                    <td><input type="checkbox" name="othercar" value="othercar"></td>
+                                    <td><input class="col-xs-12" type="text" value="1"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_plate" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_driver" value=""></td>
+                                    <td>
+                                        <select class="col-xs-12" name="damage_sex">
+                                            <option value="-1">请选择</option>
+                                            {volist name="$damage_overall_type" id="value" key="key"}
+                                            <option value="{$key-1}">{$value}</option>
+                                            {/volist}
+                                        </select>
+                                    </td>
+                                    <td><input class="col-xs-12" type="text" name="damage_phone" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_brand" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_model" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_year" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_frame" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_engine" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_repairer" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="work_total" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="finance_all" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="finance_summary" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_status" value=""></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--车损结束-->
+        <!--人伤开始-->
+        <div class="layui-tab-item">
+            <div class="row" style="margin: 0.5rem">
+                <div class="widget-box  collapsed">
+                    <div class="widget-header">
+                        <h5 class="widget-title">本车人伤</h5>
+                        <div class="widget-toolbar">
+                            <a href="#" data-action="collapse">
+                                <i class="ace-icon fa fa-chevron-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="widget-body" style="display:none">
+                        <form action="" name="addHuman" style="margin-top:1rem;margin-left:1rem">
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                            <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+                                <thead>
+                                <tr>
+                                    <th class="center">选择</th>
+                                    <th class="center">统筹种类</th>
+                                    <th class="center">姓名</th>
+                                    <th class="center">性别</th>
+                                    <th class="center">年龄</th>
+                                    <th class="center">户籍性质</th>
+                                    <th class="center">医疗机构</th>
+                                    <th class="center">病案号</th>
+                                    <th class="center">金额</th>
+                                    <th class="center">核价金额</th>
+                                    <th class="center">备注</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr id="human_1">
+                                    <td><input type="checkbox" name="human" value="human"></td>
+                                    <td>
+                                        <select class="col-xs-12" name="damage_sex">
+                                            <option value="-1">请选择</option>
+                                            {volist name="$human_overall_type" id="value" key="key"}
+                                            <option value="{$key-1}">{$value}</option>
+                                            {/volist}
+                                        </select>
+                                    </td>
+                                    <td><input class="col-xs-12" type="text" name="injury_name" value=""></td>
+                                    <td>
+                                        <select class="col-xs-12" name="injury_sex">
+                                            <option value="-1">请选择</option>
+                                            {volist name="$survey_sex" id="value" key="key"}
+                                            <option value="{$key-1}">{$value}</option>
+                                            {/volist}
+                                        </select>
+                                    </td>
+                                    <td><input class="col-xs-12" type="text" name="injury_age" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_domicile" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_medical" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_record" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_money" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_approved" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_remarks" value=""></td>
+                                </tr>
+                                <tr>
+                                    <td>小计</td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="human_money" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="human_approved" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">费用合计:</label>
+                                    <input type="text" class="form-control input-sm" name="human_fee" id="human_fee" style="width:100%" value="">
+
+                                </div>
+                            </div>
+                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">诉讼费:</label>
+                                    <input type="text" class="form-control input-sm" name="human_litigation" id="human_litigation" style="width:100%" value="">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">鉴定费:</label>
+                                    <input type="text" class="form-control input-sm" name="human_identification" id="human_identification" style="width:100%" value="">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">公估费:</label>
+                                    <input type="text" class="form-control input-sm" name="human_appraisal" id="human_appraisal" style="width:100%" value="">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">住宿费:</label>
+                                    <input type="text" class="form-control input-sm" name="human_stay" id="human_stay" style="width:100%" value="">
+                                </div>
+                            </div>
+                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">路桥费:</label>
+                                    <input type="text" class="form-control input-sm" name="human_road" id="human_road" style="width:100%" value="">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">燃油费:</label>
+                                    <input type="text" class="form-control input-sm" name="human_fue" id="human_fue" style="width:100%" value="">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">其他:</label>
+                                    <input type="text" class="form-control input-sm" name="human_other" id="human_other" style="width:100%" value="">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">合计:</label>
+                                    <input type="text" class="form-control input-sm" name="human_total" id="human_total" style="width:100%" value="">
+                                </div>
+                            </div>
+                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                <div style="margin-left: 2rem;width:20%">
+                                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">提交</button>
+                                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="widget-box  collapsed">
+                    <div class="widget-header">
+                        <h5 class="widget-title">三者人伤</h5>
+                        <div class="widget-toolbar">
+                            <a href="#" data-action="collapse">
+                                <i class="ace-icon fa fa-chevron-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="widget-body" style="display:none">
+
+                        <form action="" name="addotherhuman" style="margin-top:1rem;margin-left:1rem">
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                            <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+                                <thead>
+                                <tr>
+                                    <th class="center">选择</th>
+                                    <th class="center">统筹种类</th>
+                                    <th class="center">姓名</th>
+                                    <th class="center">性别</th>
+                                    <th class="center">年龄</th>
+                                    <th class="center">户籍性质</th>
+                                    <th class="center">医疗机构</th>
+                                    <th class="center">病案号</th>
+                                    <th class="center">金额</th>
+                                    <th class="center">核价金额</th>
+                                    <th class="center">备注</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr id="other_human_1">
+                                    <td><input type="checkbox" name="other_human" value="other_human"></td>
+                                    <td>
+                                        <select class="col-xs-12" name="damage_sex">
+                                            <option value="-1">请选择</option>
+                                            {volist name="$human_overall_type" id="value" key="key"}
+                                            <option value="{$key-1}">{$value}</option>
+                                            {/volist}
+                                        </select>
+                                    </td>
+                                    <td><input class="col-xs-12" type="text" name="injury_name" value=""></td>
+                                    <td>
+                                        <select class="col-xs-12" name="injury_sex">
+                                            <option value="-1">请选择</option>
+                                            {volist name="$survey_sex" id="value" key="key"}
+                                            <option value="{$key-1}">{$value}</option>
+                                            {/volist}
+                                        </select>
+                                    </td>
+                                    <td><input class="col-xs-12" type="text" name="injury_age" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_domicile" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_medical" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_record" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_money" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_approved" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_remarks" value=""></td>
+                                </tr>
+                                <tr>
+                                    <td>小计</td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="human_money" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="human_approved" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">费用合计:</label>
+                                    <input type="text" class="form-control input-sm" name="human_fee" style="width:100%" value="">
+
+                                </div>
+                            </div>
+                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">诉讼费:</label>
+                                    <input type="text" class="form-control input-sm" name="human_litigation"  style="width:100%" value="">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">鉴定费:</label>
+                                    <input type="text" class="form-control input-sm" name="human_identification" style="width:100%" value="">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">公估费:</label>
+                                    <input type="text" class="form-control input-sm" name="human_appraisal" style="width:100%" value="">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">住宿费:</label>
+                                    <input type="text" class="form-control input-sm" name="human_stay" style="width:100%" value="">
+                                </div>
+                            </div>
+                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">路桥费:</label>
+                                    <input type="text" class="form-control input-sm" name="human_road" style="width:100%" value="">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">燃油费:</label>
+                                    <input type="text" class="form-control input-sm" name="human_fue" style="width:100%" value="">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">其他:</label>
+                                    <input type="text" class="form-control input-sm" name="human_other" style="width:100%" value="">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">合计:</label>
+                                    <input type="text" class="form-control input-sm" name="human_total" style="width:100%" value="">
+                                </div>
+                            </div>
+                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                <div style="margin-left: 2rem;width:20%">
+                                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">提交</button>
+                                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--人伤结束-->
+        <!--补偿款信息开始-->
+        <div class="layui-tab-item">
+            <div class="row" style="margin: 0.5rem">
+                <div class="widget-box  collapsed">
+                    <div class="widget-header">
+                        <h5 class="widget-title">补偿款信息</h5>
+                        <div class="widget-toolbar">
+                            <a href="#" data-action="collapse">
+                                <i class="ace-icon fa fa-chevron-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="widget-body" style="display:none">
+                        <form action="" name="addcompensation" style="margin-top:1rem;margin-left:1rem">
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                            <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+                                <thead>
+                                <tr>
+                                    <th class="center">选择</th>
+                                    <th class="center">收款人</th>
+                                    <th class="center">证件类型</th>
+                                    <th class="center">证件号</th>
+                                    <th class="center">电话</th>
+                                    <th class="center">与被统筹人关系</th>
+                                    <th class="center">开户行</th>
+                                    <th class="center">帐号</th>
+                                    <th class="center">金额</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr id="compensation_1">
+                                    <td><input type="checkbox" name="compensation" value="compensation"></td>
+                                    <td><input class="col-xs-12" type="text" name="payee" value=""></td>
+                                    <td>
+                                        <select class="col-xs-12" name="license_type">
+                                            <option value="-1">请选择</option>
+                                            {volist name="$license_type" id="value" key="key"}
+                                            <option value="{$key-1}">{$value}</option>
+                                            {/volist}
+                                        </select>
+                                    </td>
+                                    <td><input class="col-xs-12" type="text" name="license_number" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_phone" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_relationship" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_bank" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_account" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_money" value=""></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+                <div class="widget-box  collapsed">
+                    <div class="widget-header">
+                        <h5 class="widget-title">其他费用信息</h5>
+                        <div class="widget-toolbar">
+                            <a href="#" data-action="collapse">
+                                <i class="ace-icon fa fa-chevron-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="widget-body" style="display:none">
+                        <form action="" name="addothercompensation" style="margin-top:1rem;margin-left:1rem">
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                            <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+                                <thead>
+                                <tr>
+                                    <th class="center">选择</th>
+                                    <th class="center">收款人</th>
+                                    <th class="center">证件类型</th>
+                                    <th class="center">证件号</th>
+                                    <th class="center">电话</th>
+                                    <th class="center">与被统筹人关系</th>
+                                    <th class="center">开户行</th>
+                                    <th class="center">帐号</th>
+                                    <th class="center">金额</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr id="other_compensation_1">
+                                    <td><input type="checkbox" name="other_compensation" value="other_compensation"></td>
+                                    <td><input class="col-xs-12" type="text" name="payee" value=""></td>
+                                    <td>
+                                        <select class="col-xs-12" name="license_type">
+                                            <option value="-1">请选择</option>
+                                            {volist name="$license_type" id="value" key="key"}
+                                            <option value="{$key-1}">{$value}</option>
+                                            {/volist}
+                                        </select>
+                                    </td>
+                                    <td><input class="col-xs-12" type="text" name="license_number" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_phone" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_relationship" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_bank" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_account" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_money" value=""></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                                <div style="margin: 2rem;width:20%">
+                                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">补偿款提交</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--补偿款信息结束-->
     </div>
 </div>
 

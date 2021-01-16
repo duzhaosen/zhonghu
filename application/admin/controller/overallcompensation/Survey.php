@@ -112,8 +112,16 @@ class Survey extends Common {
         $this->assign('uploadTotal',11);
 
         //统筹单情况
-        $res = Model('Overall')->getList(['overall_id'=>$list[0]['overall_id']]);
-        $this->assign('list',$res[0]);
+        $list = Model('Overall')->getList(['overall_id'=>$list[0]['overall_id']]);
+        $this->assign('list',$list[0]);
+
+        //车损
+        $this->assign('damage_overall_type',$res['damage_overall_type']);
+        $this->assign('price_program',$res['price_program']);
+
+        //人伤
+        $this->assign('human_overall_type',$res['human_overall_type']);
+        $this->assign('license_type',$res['license_type']);
 
         $this->fetch();
     }
