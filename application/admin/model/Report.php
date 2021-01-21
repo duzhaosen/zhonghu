@@ -18,10 +18,10 @@ class Report extends Model {
     /** 报案中心查询
      * @param $condition
      */
-    public function getList($condition,$page=10) {
+    public function getList($condition,$page=10,$paginate=[]) {
         $comment = Config::parse(APP_PATH.'/admin/config/report.ini','ini');
         $res = db($this->db)->where($condition)->alias('report')
-            ->paginate($page)->each(function($item,$key) use($comment) {
+            ->paginate($page,false,$paginate)->each(function($item,$key) use($comment) {
             $item['accident_situationStr'] = $comment['accident_situation'][$item['accident_situation']];
             $overall = Model('Overall')->getList(['overall_id'=>$item['overall_id']]);
             $item['financial_review_time'] = $overall[0]['financial_review_time'];

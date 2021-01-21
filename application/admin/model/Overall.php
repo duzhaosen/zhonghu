@@ -28,7 +28,7 @@ class Overall extends Model {
     /** 查询统筹单单查询
      * $condition array()
      */
-    public function getList($condition,$field='*',$page=10) {
+    public function getList($condition,$field='*',$page=10,$paginate=[]) {
         $condition['overall.type'] = 1;
         $admin = Session::get('user_admin');
         if(!isset($condition['overall.attribution_user'])) {
@@ -55,7 +55,7 @@ class Overall extends Model {
             ->join($this->participate_db." participate", "overall.temporary_id=participate.related_id")
             ->join($this->coordinator_db." coordinator", "overall.temporary_id=coordinator.related_id")
             ->join($this->pay_db." pay", "overall.temporary_id=pay.related_id")
-            ->paginate($page)->each(function($item,$key) use($commont) {
+            ->paginate($page,false,$paginate)->each(function($item,$key) use($commont) {
                 $item['plate_typeStr'] = $commont['plate_type'][$item['plate_type']];
                 $manager = Model('User')->getList(['id'=>$item['manager']]);
                 $item['managerStr'] = isset($manager[0]) ? $manager[0]['name'] : '';
@@ -336,7 +336,7 @@ class Overall extends Model {
             $traffic['traffic_company'] = $condition['traffic_company'];
             $traffic['traffic_start_time'] = strtotime($condition['traffic_start_time']);
             $traffic['traffic_end_time'] = strtotime($condition['traffic_end_time']);
-            $traffic['temporary_id'] = $condition['temporary_id'];
+            $traffic['related_id'] = $condition['temporary_id'];
             $traffic['traffic_company'] = $condition['traffic_company'];
             if(isset($condition['create_user'])) {
                 $traffic['create_user'] = $condition['create_user'];

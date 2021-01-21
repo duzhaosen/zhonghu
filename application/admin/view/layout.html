@@ -63,6 +63,7 @@
         </div>
     </div><!-- /.main-content -->
     {include file="public/footer" /}
+
     <!-- basic scripts -->
 
 
@@ -80,5 +81,35 @@
     <!-- ace scripts -->
     <script src="/static/ace1.4/assets/js/ace-elements.min.js"></script>
     <script src="/static/ace1.4/assets/js/ace.min.js"></script>
+
+    <script>
+        jQuery(function ($) {
+            $(".widget-header").on('click',function() {
+                if($(this).parents(".widget-box").find(".widget-body").css('display') === 'none') {
+                    $(this).parents(".widget-box").removeClass("collapsed");
+                    $(this).parents(".widget-box").find(".widget-body").fadeIn();
+                }else{
+                    $(this).parents(".widget-box").addClass("collapsed");
+                    $(this).parents(".widget-box").find(".widget-body").fadeOut();
+                }
+            })
+        })
+        var replaceForm = function (arr, name, value) {
+            var replace = false;
+            for (i = 0; i < arr.length; i++) {
+                if (arr[i]['name'] == name) {
+                    replace = true;
+                    arr[i]['value'] = value
+                }
+            }
+            if (!replace) {
+                var obj = {"name": name, "value": value};
+                arr.push(obj)
+            }
+        };
+        Array.prototype.remove = function(el) {
+            return this.splice(this.indexOf(el), 1);
+        }
+    </script>
 </body>
 </html>

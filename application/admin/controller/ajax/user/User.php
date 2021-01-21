@@ -31,6 +31,8 @@ class User extends Common {
         //密码加密
         $this->param['passwd'] = md5($this->param['passwd']);
         $res = Model('User')->addUser($this->param);
+        $result = $res == true? '成功': '失败';
+        writLog("添加用户".http_build_query($this->param)."结果：".$result,ADD_LOGS,10);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -57,6 +59,8 @@ class User extends Common {
             return $verify;
         }
         $res = Model('User')->editUser($this->param);
+        $result = $res == true? '成功': '失败';
+        writLog("修改用户".http_build_query($this->param)."结果：".$result,EDIT_LOGS,10);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -81,6 +85,8 @@ class User extends Common {
         }
         $this->param['type'] = 2;
         $res = Model('User')->editUser($this->param);
+        $result = $res == true? '成功': '失败';
+        writLog("删除用户".http_build_query($this->param)."结果：".$result,DEL_LOGS,10);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -185,7 +191,7 @@ class User extends Common {
      */
     public function editPass(Request $request) {
         $this->param = $request->param();
-        if(!isset($this->param['password'] )) {
+        if(!isset($this->param['password'] ) || empty($this->param['password'])) {
             $data = array();
             $data['code'] = 100001;
             $data['msg'] = '密码不可为空';
@@ -204,6 +210,8 @@ class User extends Common {
         $condition['id'] = $user_id;
         $condition['passwd'] = md5($this->param['password']);
         $res = Model('User')->editUser($condition);
+        $result = $res == true? '成功': '失败';
+        writLog("修改密码".http_build_query($condition)."结果：".$result,EDIT_LOGS,10);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;

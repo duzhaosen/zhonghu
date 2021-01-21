@@ -1,5 +1,5 @@
 <div class="row">
-    <form style="" name="addQuotationForm">
+    <form style="" class="exportForm" name="addQuotationForm">
         <div class="col-xs-12 col-sm-12">
             <div class="widget-box">
                 <div class="widget-header">
@@ -46,12 +46,12 @@
                             <input type="text" class="form-control" id="coordinated_name" name="coordinated_name" style="width:100%" value="{:input('param.coordinated_name')}">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="create_time_start" class="text-center search-item-label">批改日期起期:</label>
-                            <input type="text" class="form-control" id="create_time_start" name="create_time_start" readonly style="width:100%" value="{:input('param.create_time_start')}">
+                            <label for="endorsements_time_start" class="text-center search-item-label">批改日期起期:</label>
+                            <input type="text" class="form-control" id="endorsements_time_start" name="endorsements_time_start" readonly style="width:100%" value="{:input('param.endorsements_time_start')}">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="create_time_end" class="text-center search-item-label">批改日期止期:</label>
-                            <input type="text" class="form-control" id="create_time_end" name="create_time_end" readonly style="width:100%" value="{:input('param.create_time_end')}">
+                            <label for="endorsements_time_end" class="text-center search-item-label">批改日期止期:</label>
+                            <input type="text" class="form-control" id="endorsements_time_end" name="endorsements_time_end" readonly style="width:100%" value="{:input('param.endorsements_time_end')}">
                         </div>
                     </div>
 
@@ -149,12 +149,13 @@
                 <div style="margin-left:40%" class="second">
                     <button class="layui-btn layui-btn-radius layui-btn-normal">取消通过</button>
                     <button class="layui-btn layui-btn-radius layui-btn-normal quotationPdf">打印</button>
-                    <button class="layui-btn layui-btn-radius layui-btn-normal">导出</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal export">导出</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{include file="public/export" /}
 <script>
     jQuery(function($) {
         layui.use('laydate', function () {

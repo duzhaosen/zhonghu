@@ -46,6 +46,8 @@ class Quotation extends Common {
         }
         //格式化数据
         $res = Model('Quotation')->addQuotation($this->param);
+        $result = $res == true? '成功': '失败';
+        writLog("添加报价单".http_build_query($this->param)."结果：".$result,ADD_LOGS,18);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -70,6 +72,8 @@ class Quotation extends Common {
             return json($data);
         }
         $res = Model('Quotation')->editQuotation(['id'=>$id,'type' => 2]);
+        $result = $res == true? '成功': '失败';
+        writLog("删除报价单".http_build_query($this->param)."结果：".$result,DEL_LOGS,21);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -112,6 +116,8 @@ class Quotation extends Common {
         }
         //格式化数据
         $res = Model('Quotation')->editQuotation($this->param);
+        $result = $res == true? '成功': '失败';
+        writLog("修改报价单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,21);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -121,5 +127,65 @@ class Quotation extends Common {
         $data['code'] = 100000;
         $data['msg'] = '报价单修改成功';
         return json($data);
+    }
+    /** 报价单导出
+     *
+     */
+    public function export() {
+        $param = input('get.');
+        $param = array_filter($param);
+        $condition = [];
+        if(isset($param['create_time_start'])) {
+            if(!empty($param['create_time_end'])) {
+                $condition['quotation.create_time'] = ['between',[strtotime($param['create_time_start']),strtotime($param['create_time_end'])]];
+            }else{
+                $condition['quotation.create_time'] = strtotime($param['create_time_start']);
+            }
+        }
+        if(isset($param['start_time'])){
+            $condition['start_time'] = strtotime($param['start_time']);
+        }
+        if(isset($param['end_time'])){
+            $condition['end_time'] = strtotime($param['end_time']);
+        }
+        if(isset($param['plate'])){
+            $condition['quotation.plate'] = $param['plate'];
+            unset($param['plate']);
+        }
+        if(isset($param['frame'])){
+            $condition['quotation.frame'] = $param['frame'];
+        }
+        if(isset($param['create_user'])){
+            $condition['quotation.create_user'] = $param['create_user'];
+        }
+        if(isset($param['remarks'])){
+            $condition['quotation.remarks'] = $param['remarks'];
+        }
+        $page = 1;
+        if(isset($param['page'])) {
+            $page = $param['page'];
+        }
+        $total = false;
+        if($param['total'] == 1) {
+            $total = true;
+        }
+        $res = Model('Quotation')->getList($condition,'quotation.id as quotation_id,quotation.*,car.*,overall.*',$param['pagesize'],['page'=>$page,'query'=>$param]);
+        if($total) {
+            writLog("导出报价单".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,19);
+            return ceil($res->total()/$param['pagesize']);
+        }
+        $line = '';
+        $condition = explode(",",$param['condition']);
+        foreach($res->all() as $key =>$value) {
+            foreach ($condition as $k => $v) {
+                if(strpos($v,'time') !== false && $value[$v] != 0){
+                    $line .= date('Y-m-d H:i:s',$value[$v]).",";
+                }else{
+                    $line .= $value[$v].",";
+                }
+            }
+            $line .= "\n";
+        }
+        return $line;
     }
 }

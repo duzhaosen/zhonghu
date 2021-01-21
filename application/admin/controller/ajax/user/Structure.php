@@ -30,6 +30,8 @@ class Structure extends Common {
             $this->param['pid'] = $this->param['pid'];
         }
         $res = Model('Structure')->addStructure($this->param);
+        $result = $res == true? '成功': '失败';
+        writLog("添加组织".http_build_query($this->param)."结果：".$result,ADD_LOGS,9);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -61,6 +63,8 @@ class Structure extends Common {
             return json($data);
         }
         $res = Model('Structure')->editStructure($this->param);
+        $result = $res == true? '成功': '失败';
+        writLog("修改组织".http_build_query($this->param)."结果：".$result,EDIT_LOGS,9);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -87,6 +91,7 @@ class Structure extends Common {
         $params['id'] = $id;
         $params['type'] = 2;
         $res = Model('Structure')->editStructure($params);
+        writLog("删除组织".http_build_query($params)."结果：".$res == true? '成功': '失败',"del_structure",'del');
         if($res == false) {
             $data = array();
             $data['code'] = 100001;

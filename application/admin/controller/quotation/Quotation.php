@@ -15,7 +15,7 @@ use think\Request;
 
 class Quotation extends Common {
     protected $power;
-    private $page = 10;
+    private $pagesize = 10;
     public function __construct(Request $request = null)
     {
         if($request->action() == 'index') {
@@ -142,40 +142,58 @@ class Quotation extends Common {
     public function index() {
         $param = input('get.');
         $param = array_filter($param);
+        $condition = [];
         if(isset($param['create_time_start'])) {
             if(!empty($param['create_time_end'])) {
-                $param['quotation.create_time'] = ['between',[strtotime($param['create_time_start']),strtotime($param['create_time_end'])]];
-                unset($param['create_time_start']);
-                unset($param['create_time_end']);
+                $condition['quotation.create_time'] = ['between',[strtotime($param['create_time_start']),strtotime($param['create_time_end'])]];
             }else{
-                $param['quotation.create_time'] = strtotime($param['create_time_start']);
-                unset($param['create_time_start']);
+                $condition['quotation.create_time'] = strtotime($param['create_time_start']);
             }
         }
         if(isset($param['start_time'])){
-            $param['start_time'] = strtotime($param['start_time']);
+            $condition['start_time'] = strtotime($param['start_time']);
         }
         if(isset($param['end_time'])){
-            $param['end_time'] = strtotime($param['end_time']);
+            $condition['end_time'] = strtotime($param['end_time']);
         }
         if(isset($param['plate'])){
-            $param['quotation.plate'] = $param['plate'];
+            $condition['quotation.plate'] = $param['plate'];
             unset($param['plate']);
         }
         if(isset($param['frame'])){
-            $param['quotation.frame'] = $param['frame'];
-            unset($param['frame']);
+            $condition['quotation.frame'] = $param['frame'];
         }
         if(isset($param['create_user'])){
-            $param['quotation.create_user'] = $param['create_user'];
-            unset($param['create_user']);
+            $condition['quotation.create_user'] = $param['create_user'];
         }
         if(isset($param['remarks'])){
-            $param['quotation.remarks'] = $param['remarks'];
-            unset($param['remarks']);
+            $condition['quotation.remarks'] = $param['remarks'];
         }
-        $quotationList = Model('Quotation')->getList($param,'quotation.id as quotation_id,quotation.*,car.*,overall.*',$this->page);
+        if(isset($param['attribution_user'])){
+            $condition['quotation.attribution_user'] = $param['attribution_user'];
+        }
+        if(isset($param['manager'])){
+            $condition['quotation.manager'] = $param['manager'];
+        }
+        $page = 0;
+        if(isset($param['page'])) {
+            $page = $param['page'];
+        }
+        if(!empty($condition)) {
+            writLog("查询条件".http_build_query($condition),"search_quotation",'search');
+        }
+        $quotationList = Model('Quotation')->getList($condition,'quotation.id as quotation_id,quotation.*,car.*,overall.*',$this->pagesize,['page'=>$page,'query'=>$param]);
         $this->assign('quotationList',$quotationList);
+        $res = Config::parse(APP_PATH.'/admin/config/quotation.ini','ini');
+        $this->assign('export',$res['export']);
+        $this->assign('export_url','/admin/ajax/quotation/export');
+        $this->assign('export_name','报价单'.date('Ymd').'.csv');
+
+
+        //归属人查询
+        $users = Model('User')->getList(['salesman'=>1]);
+        $this->assign('users',$users);
+
         $this->fetch();
     }
 
@@ -184,8 +202,14 @@ class Quotation extends Common {
      */
     public function view(Request $request) {
         $param = input('get.');
+        if($param['id']) {
+            $param['quotation.id'] = $param['id'];
+            unset($param['id']);
+        }else{
+            $this->error("报价单id不可为空");
+        }
         $quotationList = Model('Quotation')->getList($param,'*',1);
-        $this->assign('list',$quotationList->all()[0]);
+        $this->assign('list',$quotationList[0]);
         $this->fetch();
     }
 
@@ -198,11 +222,11 @@ class Quotation extends Common {
             $param['quotation.id'] = $param['id'];
             unset($param['id']);
         }else{
-            $this->error("报价单id不可为空");exit;
+            $this->error("报价单id不可为空");
         }
-        $quotationList = Model('Quotation')->getList($param,'quotation.id as quotation_id,quotation.*,car.*,overall.*',$this->page);
+        $quotationList = Model('Quotation')->getList($param,'quotation.id as quotation_id,quotation.*,car.*,overall.*',1);
         if(empty($quotationList)) {
-            $this->error("查询失败");exit;
+            $this->error("查询失败");
         }
         $this->assign('list',$quotationList->all()[0]);
         $this->fetch();

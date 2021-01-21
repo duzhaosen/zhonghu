@@ -1,5 +1,5 @@
 <div class="row">
-    <form>
+    <form class="exportForm">
         <div class="col-xs-12 col-sm-12">
             <div class="widget-box">
                 <div class="widget-header">
@@ -53,7 +53,7 @@
                         <div class=" search-item-div col-xs-3 ">
                             <button class="layui-btn layui-btn-radius layui-btn-normal">查询</button>
                             <button class="layui-btn layui-btn-radius layui-btn-normal" id="addReport">新增</button>
-                            <button class="layui-btn layui-btn-radius layui-btn-normal">导出</button>
+                            <button class="layui-btn layui-btn-radius layui-btn-normal export">导出</button>
                         </div>
                     </div>
                 </div>
@@ -138,6 +138,7 @@
         </div>
     </div>
 </div>
+{include file="public/export" /}
 <script>
 jQuery(function($) {
     layui.use('laydate', function () {

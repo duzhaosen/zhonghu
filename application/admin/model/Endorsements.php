@@ -11,6 +11,7 @@ namespace app\admin\model;
 use think\Config;
 use \think\Model;
 use think\Db;
+use think\Session;
 
 class Endorsements extends Model {
     private $db = "zh_endorsements";
@@ -26,8 +27,22 @@ class Endorsements extends Model {
     /** 查询批单单查询
      * $condition array()
      */
-    public function getList($condition,$field='*',$page=10) {
+    public function getList($condition,$field='*',$page=10,$paginate=[]) {
         $condition['endorsements.type'] = 1;
+        $admin = Session::get('user_admin');
+        if(!isset($condition['endorsements.attribution_user'])) {
+            if($admin == false) {
+                $users = Model('User')->getLoginUserid();
+                $condition['endorsements.attribution_user'] = $users;
+            }
+        }else{
+            if($admin == false) {
+                $users = Model('User')->getLoginUserid();
+                if(!in_array($condition['endorsements.attribution_user'],$users)) {
+                    return [];
+                }
+            }
+        }
         //车辆配置文件
         Config::parse(APP_PATH.'/admin/config/car.ini','ini');
         Config::parse(APP_PATH.'/admin/config/endorsements.ini','ini');
@@ -39,7 +54,7 @@ class Endorsements extends Model {
             ->join($this->participate_db." participate", "endorsements.p_temporary_id=participate.related_id")
             ->join($this->coordinator_db." coordinator", "endorsements.p_temporary_id=coordinator.related_id")
             ->join($this->pay_db." pay", "endorsements.p_temporary_id=pay.related_id")
-            ->paginate($page)->each(function($item,$key) use($commont) {
+            ->paginate($page,false,$paginate)->each(function($item,$key) use($commont) {
                 $item['plate_typeStr'] = $commont['plate_type'][$item['plate_type']];
                 $manager = Model('User')->getList(['id'=>$item['manager']]);
                 $item['managerStr'] = isset($manager[0]) ? $manager[0]['name'] : '';

@@ -1,5 +1,5 @@
 <div class="row">
-    <form>
+    <form class="exportForm">
         <div class="col-xs-12 col-sm-12">
             <div class="widget-box">
                 <div class="widget-header">
@@ -32,14 +32,19 @@
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="survey_user" class="text-center search-item-label">查勘员:</label>
-                            <input type="text" class="form-control" id="survey_user" name="survey_user" placeholder="请输入统筹单号" style="width:100%" value="{:input('param.overall_id')}">
+                            <select name="survey_user" id="survey_user" style="width:100%">
+                                <option value="-1">请选择查勘员</option>
+                                {volist name="$survey_user" id="value" key="key"}
+                                <option value="{$key-1}" {if input('param.survey_user') eq $key-1} selected {/if}> {$value}</option>
+                                {/volist}
+                            </select>
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="report_type" class="text-center search-item-label">案件状态:</label>
                             <select name="report_type" id="report_type" style="width:100%">
                                 <option value="-1">请选择案件状态</option>
                                 {volist name="$report_type_list" id="value" key="key"}
-                                <option value="{$key-1}" {if input('param.time_type') eq $key-1} selected {/if}> {$value}</option>
+                                <option value="{$key-1}" {if input('param.report_type') eq $key-1} selected {/if}> {$value}</option>
                                 {/volist}
                             </select>
                         </div>
@@ -66,7 +71,7 @@
 
                         <div class=" search-item-div col-xs-3 " style="margin-top:2rem;">
                             <button class="layui-btn layui-btn-radius layui-btn-normal">查询</button>
-                            <button class="layui-btn layui-btn-radius layui-btn-normal">导出</button>
+                            <button class="layui-btn layui-btn-radius layui-btn-normal export">导出</button>
                         </div>
                     </div>
                 </div>
@@ -135,6 +140,7 @@
         </div>
     </div>
 </div>
+{include file="public/export" /}
 <script>
     jQuery(function($) {
         $(".add").on('click',function() {

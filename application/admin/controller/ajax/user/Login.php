@@ -55,6 +55,7 @@ class Login extends Controller {
             }
             $this->getSession($res);
 
+            writLog("登陆成功",LOGIN_LOGS,33);
             $data = array();
             $data['code'] = 100000;
             $data['msg'] = '登录成功';
@@ -91,5 +92,8 @@ class Login extends Controller {
         session('user_admin', $roles[0]['admin'] == 1 ? false : true);
         //菜单权限
         session('user_powers',explode(",",$roles[0]['powers']));
+        //验证码
+        $code = Model('Carcode')->getList([],1);
+        session('car_code',$code[0]['code']);
     }
 }

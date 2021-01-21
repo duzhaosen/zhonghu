@@ -15,28 +15,48 @@ use think\Request;
 
 class Report extends Common {
     private $param;
-    private $page=10;
+    private $pagesize = 20;
 
     /** 报案中心首页
      * @param Request $request
      */
-    public function center(Request $request) {
-        $this->param = array_filter($request->param());
+    public function index(Request $request) {
+        //导出
+        $res = Config::parse(APP_PATH.'/admin/config/report.ini','ini');
+        $this->assign('export',$res['export']);
+        $this->assign('export_url','/admin/ajax/overallcompensation/report/export');
+        $this->assign('export_name',"报案中心".date('Ymd').".csv");
 
+
+        $this->param = array_filter($request->param());;
+        $condition = [];
+        if(isset($this->param['report_id'])){
+            $condition['report_id'] = $this->param['report_id'];
+        }
+        if(isset($this->param['overall_id'])){
+            $condition['overall_id'] = $this->param['overall_id'];
+        }
+        if(isset($this->param['plate'])){
+            $condition['plate'] = $this->param['plate'];
+        }
+        if(isset($this->param['frame'])){
+            $condition['frame'] = $this->param['frame'];
+        }
+        if(isset($this->param['coordinated_name'])){
+            $condition['coordinated_name'] = $this->param['coordinated_name'];
+        }
         if(isset($this->param['time_type']) && $this->param['time_type'] != -1) {
             if($this->param['time_type'] == 1) {
-                $this->param['report_time'] = ["between",strtotime($this->param['start_time']),strtotime($this->param['end_time'])];
+                $condition['report_time'] = ["between",strtotime($this->param['start_time']),strtotime($this->param['end_time'])];
             }else if($this->param['time_type'] == 2) {
-                $this->param['out_danger_time'] = ["between",strtotime($this->param['start_time']),strtotime($this->param['end_time'])];
+                $condition['out_danger_time'] = ["between",strtotime($this->param['start_time']),strtotime($this->param['end_time'])];
             }
-        }else{
-            unset($this->param['time_type']);
-            unset($this->param['report_time']);
-            unset($this->param['out_danger_time']);
         }
-        unset($this->param['start_time']);
-        unset($this->param['end_time']);
-        $result = Model('Report')->getList($this->param,$this->page);
+        $page = 1;
+        if(isset($this->param['page'])) {
+            $page = $this->param['page'];
+        }
+        $result = Model('Report')->getList($condition,$this->pagesize,['page'=>$page,'query'=>$this->param]);
         $this->assign('res',$result);
         $res = Config::parse(APP_PATH.'/admin/config/report.ini','ini');
         $this->assign('time_type_list',$res['time_type']);

@@ -1,0 +1,189 @@
+<script src="/static/ace1.4/assets/js/FileSaver.js"></script>
+<!--    导出相关开始-->
+<input type="hidden" id="header" value="">
+<input type="hidden" id="export_url" value="{$export_url}">
+<input type="hidden" id="export_name" value="{$export_name}">
+<!--导出modal开始-->
+<div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">导出字段选择</h4>
+            </div>
+            <div class="modal-body" style="display: flex;flex-direction:row;flex-wrap: wrap">
+                {volist name="$export" id="item"}
+                <div style="width: 30%">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" class="export_header" checked value="{$key}" data-header="{$item}"> {$item}
+                    </label>
+                </div>
+                {/volist}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="exportSubmit">提交</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--导出modal结束-->
+<!--    导出相关结束-->
+<script>
+    jQuery(function($) {
+        //导出
+        $(".export").on('click',function() {
+            $("#exportModal").modal();
+            return false;
+        })
+        $("#exportSubmit").on('click',function() {
+            var but = $(this);
+            $("#exportModal").modal("hide");
+            but.attr("disabled", "disabled");
+            var form = $("form[class=exportForm]").serializeArray();
+            replaceForm(form,"pagesize","100");
+            replaceForm(form,"total",1);
+            var condition = [];
+            var header = '';
+            $(".export_header").each(function() {
+                if(this.checked) {
+                    val = $(this).val();
+                    condition.push(val);
+                    header += $(this).attr("data-header")+",";
+                }
+            })
+            if(header == "") {
+                layer.msg("请选择要导出的自字段");
+                return false;
+            }
+            header += "\n";
+            $("#header").val(header);
+            replaceForm(form,'condition',condition);
+            var total = 0;
+            var url = $("#export_url").val();
+            if(url == ''){
+                layer.msg("导出路径不可为空");
+                return false;
+            }
+            $.ajax({
+                url: url,
+                async: false,
+                type: "get",
+                dataType:"text",
+                data:  form,
+                success: function(data) {
+                    if(data > 0){
+                        total = 1;
+                    }
+                    else{
+                        layer.msg("数据为空，不可导出");
+                        return false;
+                    }
+                }
+            });
+            but.removeAttr("disabled");
+            if(total == 0 || total == ''){
+                return false;
+            }
+            replaceForm(form,'total',2);
+            var fileName = $("#export_name").val();
+            if(fileName == ''){
+                layer.msg("导出文件名称不可为空");
+                return false;
+            }
+            var exportData = new ExportData(
+                url,
+                form,
+                "pageNum",
+                1,
+                total,
+                fileName
+            );
+            exportData.export();
+        })
+    })
+
+    // 导出开始
+    /**
+     * 导出
+     */
+    ExportData.prototype.export = function () {
+        var header = $("#header").val();
+        var _ExportData = this;
+        _ExportData.buffers.push('\uFEFF'+header);
+        function sleep (time) {
+            return new Promise((resolve) => setTimeout(resolve, time));
+        }
+        (async function () {
+            _ExportData.toggleProgressBar(true);
+            await sleep(50);
+            _ExportData.params[_ExportData.paramPageName] = _ExportData.pageStart;
+            while (true) {
+                if (_ExportData.params[_ExportData.paramPageName] > _ExportData.pageEnd) {
+                    break;
+                }
+                var showPercent = 100 * Math.ceil(_ExportData.params[_ExportData.paramPageName] - _ExportData.pageStart + 1) / (_ExportData.pageEnd - _ExportData.pageStart + 1);
+                showPercent = showPercent.toFixed(2);
+
+                console.log("开始处理第["+_ExportData.params[_ExportData.paramPageName]+"]页数据");
+                $.ajax({
+                    url: _ExportData.dataUrl,
+                    async: false,
+                    type: "get",
+                    dataType:"json",
+                    data: _ExportData.params,
+                    success: function(data) {
+
+                        _ExportData.buffers.push(data);
+                    }
+                });
+                _ExportData.toggleProgressBar(true, showPercent);
+                await sleep(500);
+
+                _ExportData.params[_ExportData.paramPageName]++
+            }
+
+            saveAs(new Blob(
+                _ExportData.buffers,
+                {
+                    type:"application/vnd.ms-excel"
+                }),
+                _ExportData.exportName
+            );
+            _ExportData.toggleProgressBar(false);
+        })();
+    };
+    function ExportData(dataUrl, params, paramPageName, pageStart, pageEnd, exportName) {
+        this.dataUrl = dataUrl;
+        this.params = params;
+        this.paramPageName = paramPageName;
+        this.pageStart = pageStart;
+        this.pageEnd = pageEnd;
+        this.exportName = exportName;
+        this.buffers = [];
+    }
+
+    ExportData.prototype.toggleProgressBar = function (show, percent) {
+        show = !!show;
+        var id = "export-progress-bar";
+        if (show) {
+            if (percent) {
+                var showPrecent = "" + percent + "%";
+                $("#"+id + " div.progress-bar").css("width", showPrecent).html(showPrecent);
+            } else {
+                var html = "<div id='" + id + "' style='position:absolute;padding: 100px;width: 100%;height: 200%;top: 0;left: 0;background: #000;opacity: 0.8;z-index: 99'>" +
+                    "<div class='progress' style='margin-top: 50%;background-color:#ccc'>" +
+                    "<div class='progress-bar' style='width: 0%;background-color:rgb(119, 165, 143)'>" +
+                    "0%" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>";
+                $("body").append($(html));
+            }
+
+        } else {
+            $("#"+id).remove();
+        }
+    }
+    // 导出结束
+</script>

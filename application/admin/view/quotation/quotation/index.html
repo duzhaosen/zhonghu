@@ -1,5 +1,7 @@
+<link rel="stylesheet" href="/static/ace1.4/assets/css/chosen.min.css">
+<script src="/static/ace1.4/assets/js/chosen.jquery.min.js"></script>
 <div class="row">
-    <form style="" name="addQuotationForm">
+    <form style="" class="exportForm" name="addQuotationForm">
         <div class="col-xs-12 col-sm-12">
             <div class="widget-box">
                 <div class="widget-header">
@@ -32,7 +34,12 @@
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="attribution_user" class="text-center search-item-label">归属人:</label>
-                            <input type="text" class="form-control" id="attribution_user" name="attribution_user" style="width:100%" value="{:input('param.attribution_user')}">
+                            <select class="chosen-select form-control" id="attribution_user" name="attribution_user" style="width:100%" data-placeholder="选择归属人">
+                                <option value="0">请选择归属人</option>
+                                {volist name="users" id="value"}
+                                <option value="{$value.id}" {if input('param.attribution_user') eq $value.id} selected {/if} data-manager="{$value.manager_id}">{$value.all_name}</option>
+                                {/volist}
+                            </select>
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="create_user" class="text-center search-item-label">报价人:</label>
@@ -47,19 +54,19 @@
                     <div class="form-inline form-group col-xs-11">
                         <div class=" search-item-div col-xs-3">
                             <label for="create_time_start" class="text-center search-item-label">录入日期起:</label>
-                            <input type="text" class="form-control" id="create_time_start" name="create_time_start"  style="width:100%" value="{:input('param.create_time_start')}">
+                            <input type="text" class="form-control" id="create_time_start" readonly name="create_time_start"  style="width:100%" value="{:input('param.create_time_start')}">
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="create_time_end" class="text-center search-item-label">录入日期止:</label>
-                            <input type="text" class="form-control" id="create_time_end" name="create_time_end" style="width:100%" value="{:input('param.create_time_end')}">
+                            <input type="text" class="form-control" id="create_time_end" readonly name="create_time_end" style="width:100%" value="{:input('param.create_time_end')}">
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="start_time" class="text-center search-item-label">生效日期起:</label>
-                            <input type="text" class="form-control" id="start_time" name="start_time" style="width:100%" value="{:input('param.start_time')}">
+                            <input type="text" class="form-control" id="start_time" readonly name="start_time" style="width:100%" value="{:input('param.start_time')}">
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="end_time" class="text-center search-item-label">生效日期止:</label>
-                            <input type="text" class="form-control" id="end_time" name="end_time" style="width:100%" value="{:input('param.end_time')}">
+                            <input type="text" class="form-control" id="end_time" readonly name="end_time" style="width:100%" value="{:input('param.end_time')}">
                         </div>
                     </div>
                     <div class="form-inline form-group col-xs-11">
@@ -108,14 +115,14 @@
                     {volist name="quotationList" id="value"}
                     <tr data-id="{$value.quotation_id}">
                         <td><input type="checkbox" class="quotation_check" value="{$value.quotation_id}"></td>
-                        <td><a href="/admin/Quotation/quotation/view?id={$value.id}" target="_blank">{$value.quotation_id}</a></td>
-                        <td class="hidden-480 col-xs-1">{:date('Y-m-d',$value.create_time)}</td>
+                        <td><a href="/admin/Quotation/quotation/view?id={$value.quotation_id}">{$value.quotation_id}</a></td>
+                        <td class="hidden-480 col-xs-1">{if isset($value.create_time)}{:date('Y-m-d H:i:s',$value.create_time)}{/if}</td>
                         <td class="hidden-480">{$value.car_name}</td>
                         <td class="hidden-480">{$value.plate}</td>
                         <td>{$value.frame}</td>
                         <td>{$value.plate_typeStr}</td>
-                        <td>{:date('Y-m-d',$value.registered_time)}</td>
-                        <td>{:date('Y-m-d',$value.start_time)}</td>
+                        <td>{if isset($value.registered_time)}{:date('Y-m-d H:i:s',$value.registered_time)}{/if}</td>
+                        <td>{if isset($value.start_time)}{:date('Y-m-d H:i:s',$value.start_time)}{/if}</td>
                         <td class="hidden-480">{$value.coefficient}</td>
                         <td class="hidden-480">{$value.discount}</td>
                         <td>{$value.total_planning}</td>
@@ -169,15 +176,17 @@
                 <div style="margin-left:40%" class="second">
                     <button class="layui-btn layui-btn-radius layui-btn-normal overall">转出单</button>
                     <button class="layui-btn layui-btn-radius layui-btn-normal quotationPdf">报价单</button>
-                    <button class="layui-btn layui-btn-radius layui-btn-normal">导出</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal export">导出</button>
                 </div>
                 {$quotationList->render()}
             </div>
         </div>
     </div>
 </div>
+{include file="public/export" /}
 <script>
     $(function() {
+        $('.chosen-select').chosen({allow_single_deselect:true});
         //初始化日期
         layui.use('laydate', function(){
             var laydate = layui.laydate;

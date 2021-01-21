@@ -9,7 +9,16 @@
 // | Author: 流年 <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 use think\Config;
+use think\Request;
 use think\Session;
+
+define('ADD_LOGS',1);//添加类型
+define('EDIT_LOGS',2);//编辑类型
+define('DEL_LOGS',3);//删除类型
+define('UPLOAD_LOGS',4);//上传类型
+define('EXPORT_LOGS',5);//导出类型
+define('AUDIT_LOGS',6);//审核类型
+define('LOGIN_LOGS',7);//登陆类型
 
 // 应用公共文件
 
@@ -186,10 +195,29 @@ function getAdminInfo() {
     return $admin;
 }
 
-/** 根据登陆者信息获取对应的权限
- *
+/**
+ * 记录默认日志
+ * @param $content
+ * @param $logType
+ * @param $fileName
+ * @return bool
  */
-function getRolesUids() {
-//    $
+function writLog($content, $logType, $power_id=0){
+    try{
+        list($msec, $sec) = explode(' ', microtime());
+        $msectime =  (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
+        $data = array(
+            'log_type' => $logType,
+            'log_time' => date('Y-m-d H:i:s:').substr($msectime, -3),
+            'power_id' => $power_id,
+            'log_server_ip' => request()->ip(),
+            'login_name' => getAdminInfo(),
+            'log_content' => str_replace('"','',json_encode($content, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES))
+        );
+        Model('Logs')->addLogs($data);
+        return true;
+    }catch (Exception $e){
+        return false;
+    }
 }
 

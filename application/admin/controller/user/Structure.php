@@ -42,7 +42,7 @@ class Structure extends Common
                 }
             }
         }
-        $this->assign('rolesList',json_encode($list));
+        $this->assign('rolesList',$list);
 
         $res = Config::parse(APP_PATH.'/admin/config/user.ini','ini');
         $this->assign('managerList',$res['manager']);

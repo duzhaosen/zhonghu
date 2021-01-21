@@ -54,6 +54,8 @@ class Overall extends Common {
         }else{
             $res = Model('Overall')->addOverall($this->param);
         }
+        $result = $res == true? '成功': '失败';
+        writLog("添加统筹单".http_build_query($this->param)."结果：".$result,ADD_LOGS,2);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -98,6 +100,8 @@ class Overall extends Common {
         //格式化数据
         $this->param['status'] = 3;
         $res = Model('Overall')->editOverall($this->param);
+        $result = $res == true? '成功': '失败';
+        writLog("修改统筹单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,23);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -292,6 +296,8 @@ class Overall extends Common {
             }
         }
         $res = Model('Overall')->editPlate($this->param);
+        $result = $res == true? '成功': '失败';
+        writLog("新车上牌".http_build_query($this->param)."结果：".$result,EDIT_LOGS,14);
         if($res) {
             $data = array();
             $data['code'] = 100000;
@@ -303,5 +309,81 @@ class Overall extends Common {
             $data['msg'] = "上牌失败";
             return json($data);
         }
+    }
+
+    /** 统筹单导出
+     *
+     */
+    public function export(Request $request) {
+        $this->param = array_filter($request->param());
+        $condition = [];
+
+        if(isset($this->param['status']) && $this->param['status'] != -1){
+            $condition['overall.status'] = $this->param['status'];
+        }
+        if(isset($this->param['temporary_id'])){
+            $condition['overall.temporary_id'] = $this->param['temporary_id'];
+        }
+        if(isset($param['overall_id'])){
+            $condition['overall.overall_id'] = $this->param['overall_id'];
+        }
+        if(isset($this->param['documents_id'])){
+            $condition['overall.documents_id'] = $this->param['documents_id'];
+        }
+        if(isset($this->param['participate_name'])){
+            $condition['participate.participate_name'] = $this->param['participate_name'];
+        }
+        if(isset($param['coordinated_name'])){
+            $condition['coordinated.coordinated_name'] = $this->param['coordinated_name'];
+        }
+        if(isset($this->param['attribution_user'])){
+            $condition['overall.attribution_user'] = $this->param['attribution_user'];
+        }
+        if(isset($this->param['plate'])){
+            $condition['overall.plate'] = $this->param['plate'];
+        }
+        if(isset($this->param['frame'])){
+            $condition['overall.frame'] = $this->param['frame'];
+        }
+        if(isset($this->param['start_time_start'])) {
+            if(!empty($this->param['start_time_end'])) {
+                $condition['overall.start_time'] = ['between',[strtotime($this->param['start_time_start']),strtotime($this->param['start_time_end'])]];
+            }else{
+                $condition['overall.start_time'] = strtotime($this->param['start_time_start']);
+            }
+        }
+        if(isset($this->param['financial_review_time_start'])) {
+            if(!empty($this->param['financial_review_time_end'])) {
+                $condition['overall.financial_review_time'] = ['between',[strtotime($this->param['financial_review_time_start']),strtotime($this->param['financial_review_time_end'])]];
+            }else{
+                $condition['overall.financial_review_time'] = strtotime($this->param['financial_review_time_start']);
+            }
+        }
+        $page = 1;
+        if(isset($this->param['page'])) {
+            $page = $this->param['page'];
+        }
+        $total = false;
+        if($this->param['total'] == 1) {
+            $total = true;
+        }
+        $res = Model('Overall')->getList($condition,'*',$this->param['pagesize'],['page'=>$page,'query'=>$this->param]);
+        if($total) {
+            writLog("统筹单导出".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,3);
+            return ceil($res->total()/$this->param['pagesize']);
+        }
+        $line = '';
+        $condition = explode(",",$this->param['condition']);
+        foreach($res->all() as $key =>$value) {
+            foreach ($condition as $k => $v) {
+                if(strpos($v,'time') !== false && $value[$v] != 0){
+                    $line .= date('Y-m-d H:i:s',$value[$v]).",";
+                }else{
+                    $line .= $value[$v].",";
+                }
+            }
+            $line .= "\n";
+        }
+        return $line;
     }
 }

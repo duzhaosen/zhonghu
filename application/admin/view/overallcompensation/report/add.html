@@ -318,7 +318,7 @@ jQuery(function($) {
         var but = $(this);
         but.attr("disabled", "disabled");
         var form = $("form[name=addReport]").serializeArray();
-        var url = '/admin/ajax/Report/addReport';
+        var url = '/admin/ajax/overallcompensation/report/addReport';
         var city = $("#risk_location").GetSelect().split(',');
         var city_length = city.length;
         if (city_length > 1 && city[city_length - 1] == "") {

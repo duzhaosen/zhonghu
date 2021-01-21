@@ -613,11 +613,6 @@
                     <div class="widget-box  collapsed">
                         <div class="widget-header">
                             <h5 class="widget-title">{$key}</h5>
-                            <div class="widget-toolbar">
-                                <a href="#" data-action="collapse">
-                                    <i class="ace-icon fa fa-chevron-down"></i>
-                                </a>
-                            </div>
                         </div>
                         <div class="widget-body" style="display:none;">
                             <div style="display: flex;flex-direction:row;margin:2rem;">
@@ -1465,8 +1460,8 @@
                             </table>
 <!--                           配件定损开始-->
                             <div class="titles"><p><font></font>配件定损</p></div>
-                            <form action="" name="addAccessories" style="margin-top:1rem;margin-left:1rem">
-                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
+                            <form action="" class="tablesForm" name="addAccessories" style="margin-top:1rem;margin-left:1rem">
+                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="accessories" data-num="1">增加</button>
                                 <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
                                 <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
                                 <table class="table  table-bordered table-hover" style="margin-top:1rem;">
@@ -1545,6 +1540,18 @@
                                     </div>
                                 </div>
                             </form>
+                            <script>
+                                jQuery(function($){
+                                    $(".addTable").on('click',function() {
+                                        var num = $(this).attr("data-num");
+                                        var next = parseInt(num) + 1;
+                                        var val = $(this).attr("data-value");
+                                        var html = $(this).parents('.tablesForm').find("#"+val+"_"+num).html();
+                                        console.log(html);
+                                        return false;
+                                    })
+                                })
+                            </script>
 <!--                           配件定损结束-->
 <!--                           本车工时开始-->
                             <div class="titles"><p><font></font>本车工时核定</p></div>

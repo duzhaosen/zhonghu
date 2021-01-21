@@ -11,6 +11,7 @@ namespace app\admin\model;
 use think\Config;
 use \think\Model;
 use think\Db;
+use think\Session;
 
 class Quotation extends Model {
     private $db = "zh_quotation";
@@ -20,15 +21,29 @@ class Quotation extends Model {
     /** 报价单查询
      * $condition array()
      */
-    public function getList($condition,$field='*',$page=10) {
+    public function getList($condition,$field='*',$page=10,$paginate=[]) {
         $condition['quotation.type'] = 1;
+        $admin = Session::get('user_admin');
+        if(!isset($condition['quotation.attribution_user'])) {
+            if($admin == false) {
+                $users = Model('User')->getLoginUserid();
+                $condition['quotation.attribution_user'] = $users;
+            }
+        }else{
+            if($admin == false) {
+                $users = Model('User')->getLoginUserid();
+                if(!in_array($condition['quotation.attribution_user'],$users)) {
+                    return [];
+                }
+            }
+        }
         //车辆配置文件
         Config::parse(APP_PATH.'/admin/config/car.ini','ini');
         $commont = Config::parse(APP_PATH.'/admin/config/Structure.ini','ini');
         $result = Db($this->db)->field($field)->where($condition)->alias('quotation')
             ->join($this->car_db.' car','quotation.id=car.related_id')
             ->join($this->overall_db." overall",'quotation.id=overall.related_id')
-            ->paginate($page)->each(function($item,$key) use($commont) {
+            ->paginate($page,false,$paginate)->each(function($item,$key) use($commont) {
                 $item['plate_typeStr'] = $commont['plate_type'][$item['plate_type']];
                 $manager = Model('User')->getList(['id'=>$item['manager']]);
                 $item['managerStr'] = isset($manager[0]) ? $manager[0]['name'] : '';

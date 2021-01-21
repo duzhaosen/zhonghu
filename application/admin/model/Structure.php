@@ -54,7 +54,6 @@ class Structure extends Model {
                 $structure = Session::get('structure');
                 if($structure) {
                     $ReverseIds = $this->getStructureList([],['pid'=>$structure]);
-//                    print_r($ReverseIds);die;
                     if(!in_array($condition['id'],$ReverseIds)) {
                         return [];
                     }

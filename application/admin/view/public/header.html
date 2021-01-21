@@ -17,14 +17,14 @@
         <div class="navbar-buttons navbar-header pull-right" role="navigation">
             <ul class="nav ace-nav">
                 <li>
-                    <span style="color:white;margin-right:10px">今日验车码：{:session('ma')}</span>
+                    <span style="color:white;margin-right:10px">今日验车码：{:session('car_code')}</span>
                 </li>
                 <li class="light-blue dropdown-modal">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                         <img class="nav-user-photo" src="/static/ace1.4/assets/images/avatars/avatar2.png" alt="Jason's Photo" />
                         <span class="user-info">
                                     <small>欢迎,</small>
-                                    {:session('structure')}-{:session('name')}
+                                    {:session('structureStr')}-{:session('name')}
                                 </span>
                         <i class="ace-icon fa fa-caret-down"></i>
                     </a>
@@ -32,9 +32,14 @@
                         <li>
                             <a href="javascript:void(0)" disabled="true">
                                 <i class="ace-icon fa fa-users"></i>
-                                {:session('structure')}
+                                {:session('structureStr')}
                             </a>
-                        </li>
+                        </li><li>
+                        <a href="javascript:void(0)" disabled="true">
+                            <i class="ace-icon fa fa-users"></i>
+                            {:session('user_id')}
+                        </a>
+                    </li>
                         <li>
                             <a href="javascript:void(0)" disabled="true">
                                 <i class="ace-icon fa fa-asterisk"></i>
@@ -44,7 +49,7 @@
                         <li>
                             <a href="javascript:void(0)">
                                 <i class="ace-icon fa fa-globe"></i>
-                                {:session('roles')}
+                                {:session('rolesStr')}
                             </a>
                         </li>
                         <li>

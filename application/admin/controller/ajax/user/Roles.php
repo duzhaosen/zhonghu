@@ -30,6 +30,8 @@ class Roles extends Common {
         $this->param['admin'] = isset($this->param['admin']) ? 2 : 1;
         $this->param['salesman'] = isset($this->param['salesman']) ? 2 : 1;
         $res = Model('Roles')->addRoles($this->param);
+        $result = $res == true? '成功': '失败';
+        writLog('添加角色'.http_build_query($this->param).'结果：'.$result,ADD_LOGS, 11);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -64,6 +66,8 @@ class Roles extends Common {
         $this->param['admin'] = isset($this->param['admin']) ? 2 : 1;
         $this->param['salesman'] = isset($this->param['salesman']) ? 2 : 1;
         $res = Model('Roles')->editRoles($this->param);
+        $result = $res == true? '成功': '失败';
+        writLog("修改角色".http_build_query($this->param)."结果：".$result,EDIT_LOGS,11);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;

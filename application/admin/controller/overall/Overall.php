@@ -16,6 +16,7 @@ use think\Request;
 
 class Overall extends Common {
     private $param;
+    private $pagesize = 10;
     public function add(Request $request) {
         $res = Config::parse(APP_PATH.'/admin/config/structure.ini','ini');
         $this->assign('sourceList',$res['source']);
@@ -111,16 +112,16 @@ class Overall extends Common {
 
         $this->param = $request->param();
         if(isset($this->param['temporary_id'])) {
-            $res = Model('Overall')->getList(['overall.temporary_id'=> $this->param['temporary_id']]);
-            if($res[0]['status'] != 2) {
+            $list = Model('Overall')->getList(['overall.temporary_id'=> $this->param['temporary_id']]);
+            if(!in_array($list[0]['status'],$res['isedit'])) {
                 $this->error("统筹单状态不是待修改");
             }
-            $temporaryId = $res[0]['temporary_id'];
+            $temporaryId = $list[0]['temporary_id'];
         }else{
             $this->error("未查询到信息");
         }
         $this->assign('temporaryId', $temporaryId);
-        $this->assign('list',$res[0]);
+        $this->assign('list',$list[0]);
 
 
 
@@ -229,68 +230,60 @@ class Overall extends Common {
         //状态
         $res = Config::parse(APP_PATH.'/admin/config/overall.ini','ini');
         $this->assign('status',$res['status']);
+        //导出字段
+        $this->assign('export',$res['export']);
+        $this->assign('export_url','/admin/ajax/overall/overall/export');
+        $this->assign('export_name','统筹单'.date('Ymd').'.csv');
 
         $this->param = array_filter($request->param());
+        $condition = [];
 
         if(isset($this->param['status']) && $this->param['status'] != -1){
-            $this->param['overall.status'] = $this->param['status'];
-            unset($this->param['status']);
-        }else{
-            unset($this->param['status']);
+            $condition['overall.status'] = $this->param['status'];
         }
         if(isset($this->param['temporary_id'])){
-            $this->param['overall.temporary_id'] = $this->param['temporary_id'];
-            unset($this->param['temporary_id']);
+            $condition['overall.temporary_id'] = $this->param['temporary_id'];
         }
         if(isset($param['overall_id'])){
-            $this->param['overall.overall_id'] = $this->param['overall_id'];
-            unset($this->param['overall_id']);
+            $condition['overall.overall_id'] = $this->param['overall_id'];
         }
         if(isset($this->param['documents_id'])){
-            $this->param['overall.documents_id'] = $this->param['documents_id'];
-            unset($this->param['documents_id']);
+            $condition['overall.documents_id'] = $this->param['documents_id'];
         }
         if(isset($this->param['participate_name'])){
-            $this->param['participate.participate_name'] = $this->param['participate_name'];
-            unset($this->param['participate_name']);
+            $condition['participate.participate_name'] = $this->param['participate_name'];
         }
         if(isset($param['coordinated_name'])){
-            $this->param['coordinated.coordinated_name'] = $this->param['coordinated_name'];
-            unset($this->param['coordinated_name']);
+            $condition['coordinated.coordinated_name'] = $this->param['coordinated_name'];
         }
         if(isset($this->param['attribution_user'])){
-            $this->param['overall.attribution_user'] = $this->param['attribution_user'];
-            unset($this->param['attribution_user']);
+            $condition['overall.attribution_user'] = $this->param['attribution_user'];
         }
         if(isset($this->param['plate'])){
-            $this->param['overall.plate'] = $this->param['plate'];
-            unset($this->param['plate']);
+            $condition['overall.plate'] = $this->param['plate'];
         }
         if(isset($this->param['frame'])){
-            $this->param['overall.frame'] = $this->param['frame'];
-            unset($this->param['frame']);
+            $condition['overall.frame'] = $this->param['frame'];
         }
         if(isset($this->param['start_time_start'])) {
             if(!empty($this->param['start_time_end'])) {
-                $this->param['overall.start_time'] = ['between',[strtotime($this->param['start_time_start']),strtotime($this->param['start_time_end'])]];
-                unset($this->param['start_time_start']);
-                unset($this->param['start_time_end']);
+                $condition['overall.start_time'] = ['between',[strtotime($this->param['start_time_start']),strtotime($this->param['start_time_end'])]];
             }else{
-                $this->param['overall.start_time'] = strtotime($this->param['start_time_start']);
-                unset($this->param['start_time_start']);
+                $condition['overall.start_time'] = strtotime($this->param['start_time_start']);
             }
         }
         if(isset($this->param['financial_review_time_start'])) {
             if(!empty($this->param['financial_review_time_end'])) {
-                $this->param['overall.financial_review_time'] = ['between',[strtotime($this->param['financial_review_time_start']),strtotime($this->param['financial_review_time_end'])]];
-                unset($this->param['financial_review_time_start']);
-                unset($this->param['financial_review_time_end']);
+                $condition['overall.financial_review_time'] = ['between',[strtotime($this->param['financial_review_time_start']),strtotime($this->param['financial_review_time_end'])]];
             }else{
-                $this->param['overall.financial_review_time'] = strtotime($this->param['financial_review_time_start']);
-                unset($this->param['financial_review_time_start']);
+                $condition['overall.financial_review_time'] = strtotime($this->param['financial_review_time_start']);
             }
         }
-        $res = Model('Overall')->getList($this->param);
+        $page = 1;
+        if(isset($this->param['page'])) {
+            $page = $this->param['page'];
+        }
+        $res = Model('Overall')->getList($condition,'*',$this->pagesize,['page'=>$page,'query'=>$this->param]);
         $this->assign('list',$res);
 
 
@@ -326,7 +319,10 @@ class Overall extends Common {
             unset($this->param['temporary_id']);
         }
         $res = Model('Overall')->getList($this->param);
-        if($res[0]['status'] != 7) {
+        if($res->total() == 0) {
+            $this->error("未查询到统筹单");
+        }
+        if($res[0]['status'] != 6) {
             $this->error("审核状态不为审核通过");
         }
         $this->assign('res',$res[0]);

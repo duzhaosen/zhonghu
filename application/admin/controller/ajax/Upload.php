@@ -28,7 +28,7 @@ class Upload extends Common {
             // 上传失败获取错误信息
             $data = array();
             $data['code'] = 100001;
-            $data['msg'] = '暂存单号未标识';
+            $data['msg'] = '关联单号未标识';
             return json($data);
         }
         if($file) {
@@ -48,6 +48,7 @@ class Upload extends Common {
                     $data['msg'] = '上传成功';
                     $data['url'] = $path['url']['path'].$result['folder'].'/'.$url;
                     $data['id'] = $res;
+                    writLog("上传图片成功".http_build_query($data),UPLOAD_LOGS,0);
                     return json($data);
                 }else{
                     $data = array();
@@ -61,6 +62,7 @@ class Upload extends Common {
                 $data['code'] = 100001;
                 $data['msg'] = '上传文件失败';
                 $data['data'] = $file->getError();
+                writLog("上传图片失败".$file->getError(),UPLOAD_LOGS,0);
                 return json($data);
             }
         }else{
@@ -85,6 +87,8 @@ class Upload extends Common {
             return json($data);
         }
         $res = Model('Upload')->editUpload(['id'=>$id,'type'=>2]);
+        $result = $res == true? '成功': '失败';
+        writLog("删除文件".http_build_query($id)."结果：".$result,DEL_LOGS,0);
         if($res) {
             $data = array();
             $data['code'] = 100000;

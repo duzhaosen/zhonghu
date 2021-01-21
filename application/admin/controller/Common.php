@@ -56,7 +56,7 @@ class Common extends Controller
         if(!empty($position)) {
             if($position[0]['pid']) {
                 $father_position = Model('menu')->search(['id'=>$position[0]['pid']],'name');
-                $html .= '<a href="/admin/'.$where['folder'].'">'.$father_position[0]['name'].'</a>';
+                $html .= '<a href="/admin/'.$where['folder'].'/'.explode("/",$where['action'])[0].'/index'.'">'.$father_position[0]['name'].'</a>';
             }
             $html .='</li><li><a href="/admin/'.$where['folder'].'/'.$where['action'].'">'.$position[0]['name'].'</a>';
             $html .= '</li>';
