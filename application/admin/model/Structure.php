@@ -67,7 +67,7 @@ class Structure extends Model {
         return [];
     }
 
-    /**
+    /** 组织ID
      *
      */
     public function getStructureList($ids=[],$condition,$field='*') {

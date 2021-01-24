@@ -1,0 +1,273 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5 class="widget-title">单证入库</h5>
+            </div>
+            <div class="widget-body">
+                <form action="" name="addDocumentsForm">
+                    <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
+                        <div class=" search-item-div col-xs-3">
+                            <label for="s_num" class="text-center search-item-label">起始号:</label>
+                            <input type="text" class="form-control" id="s_num" name="s_num" style="width:100%" value="{:input('param.s_num')}">
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="e_num" class="text-center search-item-label">截止号:</label>
+                            <input type="text" class="form-control" id="e_num" name="e_num" style="width:100%" value="{:input('param.e_num')}">
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="total" class="text-center search-item-label">数量:</label>
+                            <input type="text" class="form-control" id="total" name="total" style="width:100%" value="{:input('param.total')}">
+                        </div>
+                        <div class="search-item-div col-xs-2">
+                            <label for="type" class="text-center search-item-label">单证类型:</label>
+                            <select class="chosen-select form-control" id="type" name="type" style="width:100%">
+                                <option value="0">请选择单证类型</option>
+                                {volist name="type" id="value" key="key"}
+                                <option value="{$key-1}" {if input('param.type') eq $key-1} selected {/if}>{$value}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                        <div class="search-item-div col-xs-1" style="margin-top:2rem;">
+                            <button class="layui-btn layui-btn-radius layui-btn-normal" id="addDocuments">入库</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5 class="widget-title">入库查询</h5>
+            </div>
+            <div class="widget-body">
+                <form action="" class="exportForm" name="search">
+                    <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
+                        <div class=" search-item-div col-xs-3">
+                            <label for="add_id" class="text-center search-item-label">批次号:</label>
+                            <input type="text" class="form-control" id="add_id" name="add_id" style="width:100%" value="{:input('param.add_id')}">
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="documents_id" class="text-center search-item-label">单证号:</label>
+                            <input type="text" class="form-control" id="documents_id" name="documents_id" style="width:100%" value="{:input('param.documents_id')}">
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="create_user" class="text-center search-item-label">操作人:</label>
+                            <input type="text" class="form-control" id="create_user" name="create_user" style="width:100%" value="{:input('param.create_user')}">
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="create_time" class="text-center search-item-label">入库日期:</label>
+                            <input type="text" class="form-control" readonly id="create_time" name="create_time" style="width:100%" value="{:input('param.create_time')}">
+                        </div>
+                    </div>
+
+                    <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
+                        <div class=" search-item-div col-xs-3 ">
+                            <button class="layui-btn layui-btn-radius layui-btn-normal" id="search">查询</button>
+                            <button class="layui-btn layui-btn-radius layui-btn-normal export">导出</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12">
+        <div class="widget-box">
+            <div class="widget-header">
+                <h5 class="widget-title">统筹单列表</h5>
+            </div>
+            <div class="widget-body">
+                <div class="clearfix">
+                    <div class="pull-right tableTools-container"></div>
+                </div>
+                <table id="dynamic-table" class="table table-striped table-bordered table-hover center">
+                    <thead>
+                    <tr>
+                        <th class="center">入库批次号</th>
+                        <th class="hidden-480 center">单证类型</th>
+                        <th class="hidden-480 center">起始号</th>
+                        <th class="hidden-480 center">截止号</th>
+                        <th class="center">入库数量</th>
+                        <th class="center">剩余量</th>
+                        <th class="center">入库时间</th>
+                        <th class="center">有效截止期</th>
+                        <th class="hidden-480 center">操作人</th>
+                        <th class="center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="list" id="value"}
+                    <tr data-id="{$value.add_id}">
+                        <td>{$value.add_id}</td>
+                        <td>{$value.typeStr}</td>
+                        <td>{$value.s_num}</td>
+                        <td>{$value.e_num}</td>
+                        <td>{$value.total}</td>
+                        <td>{$value.remaining}</td>
+                        <td>{:date('Y-m-d H:i:s',$value.create_time)}</td>
+                        <td>{:date('Y-m-d H:i:s',$value.end_time)}</td>
+                        <td>{$value.create_user}</td>
+                        <td>
+                            <div class="hidden-sm hidden-xs action-buttons">
+                                <a class="red viewInfo" href="">
+                                    <i class="ace-icon fa fa-check bigger-120"></i>
+                                </a>
+                                <a class="red delDocuments" href="">
+                                    <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                </a>
+                            </div>
+                            <div class="hidden-md hidden-lg">
+                                <div class="inline pos-rel">
+                                    <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">
+                                        <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                        <li>
+                                            <a class="red viewInfo" href="#">
+                                                <i class="ace-icon fa fa-check bigger-130"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="red delDocuments" href="#">
+                                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+                {$list->render()}
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/export" /}
+<!--查询使用详情modal开始-->
+<div class="modal fade" id="viewInfoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:50%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">详情使用</h4>
+            </div>
+            <div class="modal-body">
+                <table id="document_info" class="table table-striped table-bordered table-hover center">
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--查询使用详情modal结束-->
+<script>
+    jQuery(function($) {
+        layui.use('laydate', function() {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#create_time' //核统起
+                , format: 'yyyy/MM/dd'
+                , done: function (value, date, endDate) {
+                    $("#create_time").val(value);
+                }
+            });
+        });
+        //计算数量
+        $("#e_num").on('keyup',function() {
+            var val = $(this).val();
+            var s_num = $("#s_num").val();
+            var num = parseInt(val) - parseInt(s_num);
+            $("#total").val(num+1);
+        })
+        //入库
+        $("#addDocuments").on('click',function() {
+            var but = $(this);
+            but.attr("disabled","disabled");
+            var form = $("form[name=addDocumentsForm]").serializeArray();
+            var url = '/admin/ajax/Documents/warehousing/addDocuments';
+            $.ajax(url, {
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: form,
+                success: function (data, status, xhr) {   // success callback function
+                    but.removeAttr("disabled");
+                    if (data.code == 100000) {
+                        layer.msg(data.msg);
+                        setTimeout(function () {
+                            location.reload();
+                        }, 300);
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function () {
+                    but.removeAttr("disabled");
+                    layer.msg("系统错误");
+                }
+            });
+            return false;
+        })
+
+        //删除
+        $(".delDocuments").on('click',function() {
+            var documents = $(this).parents('tr').attr("data-id");
+            var but = $(this);
+            but.attr("disabled","disabled");
+            layer.confirm('是否确认删除?', function(index){
+                $.ajax('/admin/ajax/Documents/warehousing/delDocuments',{
+                    dataType: 'json', // type of response data
+                    timeout: 500,     // timeout milliseconds
+                    method: "post",
+                    data: {add_id:documents},
+                    success: function (data,status,xhr) {   // success callback function
+                        but.removeAttr("disabled");
+                        if(data.code == 100000) {
+                            layer.msg(data.msg);
+                            setTimeout(function() {
+                                location.reload();
+                            },300);
+                        }else{
+                            layer.msg(data.msg);
+                        }
+                    },
+                    error: function() {
+                        layer.msg("系统错误");
+                    }
+                });
+                layer.close(index);
+            });
+            return false;
+        })
+        //查看详情
+        $(".viewInfo").on('click',function() {
+            var related_id = $(this).parents('tr').attr("data-id");
+            $.ajax('/admin/ajax/Documents/warehousing/getInfo',{
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: {related_id:related_id},
+                success: function (data,status,xhr) {   // success callback function
+                    if(data.code == 100000) {
+                        $("#document_info").html(data.data);
+                        $("#viewInfoModal").modal();
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function() {
+                    layer.msg("系统错误");
+                }
+            });
+            return false;
+        })
+    })
+</script>

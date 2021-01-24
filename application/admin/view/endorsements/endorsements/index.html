@@ -96,8 +96,8 @@
                     </thead>
                     <tbody>
                     {volist name="$list" id="value"}
-                    <tr>
-                        <td><input type="checkbox" name="endorsement_check"></td>
+                    <tr data-documents="{$value.documents_id}">
+                        <td><input type="checkbox" name="endorsement_check" class="endorsement_check" value="{$value.p_temporary_id}"></td>
                         <td><a href="/admin/Endorsements/endorsements/view?p_temporary_id={$value.p_temporary_id}">{$value.p_temporary_id}</a> </td>
                         <td>{$value.endorsements_id}</td>
                         <td>{$value.overall_id}</td>
@@ -148,13 +148,34 @@
                 </table>
                 <div style="margin-left:40%" class="second">
                     <button class="layui-btn layui-btn-radius layui-btn-normal">取消通过</button>
-                    <button class="layui-btn layui-btn-radius layui-btn-normal quotationPdf">打印</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal addDocuments">打印</button>
                     <button class="layui-btn layui-btn-radius layui-btn-normal export">导出</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!-- 打印modal开始-->
+<div class="modal fade" id="documents_edit_modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">单证号修改</h4>
+            </div>
+            <div class="modal-body">
+                <span>打印单号:</span>
+                <input type="text" id="documents_id_add" style="width:20%;margin-left:1rem" value="">
+                <input type="hidden" id="overall_documents" value="">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="addDocuments">提交</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--打印modal结束-->
 {include file="public/export" /}
 <script>
     jQuery(function($) {
@@ -178,5 +199,61 @@
                 }
             });
         });
+        //打印
+        $(".addDocuments").on('click',function() {
+            var but = $(this);
+            but.attr("disabled","disabled");;
+            var total = 0;
+            var documents_id = '';
+            var p_temporary_id = '';
+            $(".endorsement_check").each(function() {
+                if(this.checked){
+                    total ++;
+                    documents_id = $(this).parents("tr").attr("data-documents");
+                    p_temporary_id = $(this).val();
+                }
+            })
+            if(documents_id != '') {
+                layer.confirm('此单号已打印是否重新打印?', function(index){
+                    layer.close(index);
+                    $("#overall_documents").val(p_temporary_id);
+                    $("#documents_id_add").val(documents_id);
+                    $("#documents_edit_modal").modal();
+                });
+            }else{
+                $("#overall_documents").val(p_temporary_id);
+                $("#documents_id_add").val("");
+                $("#documents_edit_modal").modal();
+            }
+            but.removeAttr("disabled");
+        })
+        //打印提交
+        $("#addDocuments").on('click',function() {
+            var documents_id = $("#documents_id_add").val()
+            var but = $(this);
+            but.attr("disabled","disabled");;
+            var p_temporary_id = $("#overall_documents").val();
+            $.ajax('/admin/ajax/Overall/overall/editDocuments',{
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: {documents_id:documents_id,related_id:p_temporary_id,issued_type:2},
+                success: function (data,status,xhr) {   // success callback function
+                    but.removeAttr("disabled");
+                    if(data.code == 100000) {
+                        layer.msg(data.msg);
+                        setTimeout(function() {
+                            location.reload();
+                        },300);
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function() {
+                    but.removeAttr("disabled");
+                    layer.msg("系统错误");
+                }
+            });
+        })
     });
 </script>

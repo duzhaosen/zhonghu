@@ -22,7 +22,9 @@ class Overall extends Model {
     private $coordinator_db = "zh_coordinator";
     private $pay_db = "zh_pay";
     private $invoice_db = "zh_invoice";
-    private $log_db = "zh_review_log";
+    private $document_info_db = "zh_documents_info";
+    private $endorsements_db = "zh_endorsements";
+    private $documents_issued_db = "zh_documents_issued";
 
 
     /** 查询统筹单单查询
@@ -853,10 +855,8 @@ class Overall extends Model {
         $res = db($this->db)->where($condition)->order('id','desc')->select();
         if(empty($res)) {
             return $result.'00001';
-        }else{
-            return $res[0]['temporary_id'] + 1;
         }
-        return false;
+        return $res[0]['temporary_id'] + 1;
 
     }
 
@@ -877,7 +877,45 @@ class Overall extends Model {
         } catch (\Exception $e) {
             // 回滚事务
             Db::rollback();
-            print_r($e);die;
+            return false;
+        }
+        return true;
+    }
+
+    /** 修改打印单号
+     * @param $condition
+     * @return bool
+     */
+    public function editDocuments($condition) {
+        Db::startTrans();
+        try{
+            $data = [];
+            $data['op_user'] = getAdminInfo();
+            $data['op_time'] = time();
+            $data['documents_id'] = $condition['documents_id'];
+            //判断是统筹单还是批单
+            if($condition['issued_type'] == 1) {
+                db($this->db)->where(['temporary_id'=>$condition['related_id']])->update($data);
+            }else{
+                db($this->endorsements_db)->where(['p_temporary_id'=>$condition['related_id']])->update($data);
+            }
+            //单证详情表修改为已使用
+            $where = [];
+            $where['documents_id'] = $condition['documents_id'];
+            $where['related_id'] = $condition['issued_id'];
+            $data = [];
+            $data['is_issued'] = 2;
+            $data['issued_time'] = time();
+            $data['issued_user'] = getAdminInfo();
+            db($this->document_info_db)->where($where)->update($data);
+            //单证下发表更新数量
+            $list = db($this->documents_issued_db)->where(['issued_id'=>$condition['issued_id']])->select();
+            db($this->documents_issued_db)->where(['issued_id'=>$condition['issued_id']])->update(['issued_remaining'=>$list[0]['issued_remaining']-1]);
+            // 提交事务
+            Db::commit();
+        } catch (\Exception $e) {
+            // 回滚事务
+            Db::rollback();
             return false;
         }
         return true;

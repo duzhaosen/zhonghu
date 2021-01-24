@@ -31,8 +31,8 @@ class Logs extends Model {
      */
     public function getList($condition,$field='*',$page,$paginate=[]){
         $commont = Config::parse(APP_PATH.'/admin/config/Logs.ini','ini');
-        $result = db($this->db)->where($condition)->field($field)
-            ->paginate($page,false,$paginate)->each(function($item,$key) use($commont) {
+        $result = db($this->db)->where($condition)->field($field)->order('id','desc')
+            ->paginate($page,false,$paginate)->each(function($item) use($commont) {
                 $item['log_typeStr'] = $commont['log_type'][$item['log_type']];
                 if($item['power_id'] != 0) {
                     $power_str = '';
@@ -45,8 +45,11 @@ class Logs extends Model {
                         $power_str .= $position[0]['name'];
                     }
                     $item['power_idStr'] = $power_str;
-                    $item['log_content'] = urldecode($item['log_content']);
+                }else{
+                    $item['power_idStr'] = '';
                 }
+                $item['log_content'] = urldecode($item['log_content']);
+                $item['log_server_ip'] = !empty($item['log_server_ip']) ? long2ip($item['log_server_ip']): '';
               return $item;
             });
         return $result;

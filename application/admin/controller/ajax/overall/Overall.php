@@ -12,6 +12,7 @@ use think\Model;
 use think\Request;
 use app\admin\controller\Common;
 use think\Config;
+use think\Session;
 
 class Overall extends Common {
     private $param;
@@ -311,6 +312,67 @@ class Overall extends Common {
         }
     }
 
+    /** 打印
+     * @param Request $request
+     * @return \think\response\Json
+     */
+    public function editDocuments(Request $request)
+    {
+        $this->param = array_filter($request->param());
+        if (!isset($this->param['related_id']) || empty($this->param['related_id'])) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = "统筹单号不可为空";
+            return json($data);
+        }
+        if (!isset($this->param['documents_id']) || empty($this->param['documents_id'])) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = "打印单号不可为空";
+            return json($data);
+        }
+        //验证打印单号是否存在
+        $user_id = Session::get('user_id');
+        $list = Model('Documents')->getIssuedListPage(['issued_user' => $user_id, 'issued_type' => $this->param['issued_type']]);
+        $this->param['issued_id'] = 0;
+        if (!empty($list)) {
+            foreach ($list as $k => $value) {
+                if ($this->param['documents_id'] >= $value['issued_s_num'] && $this->param['documents_id'] <= $value['issued_e_num']) {
+                    $this->param['issued_id'] = $value['issued_id'];
+                }
+            }
+        } else {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = "未查询到下发本账号的打印单号";
+            return json($data);
+        }
+        if ($this->param['issued_id'] == 0) {
+            $data['code'] = 100001;
+            $data['msg'] = "请输入下发本账号的单号";
+            return json($data);
+        }
+        $info = Model('Documents')->getInfoList(['related_id' => $this->param['issued_id'], 'documents_id' => $this->param['documents_id']]);
+        if ($info[0]['is_issued'] == 2) {
+            $data['code'] = 100001;
+            $data['msg'] = "该打印单号已被使用";
+            return json($data);
+        }
+        //修改主表，同步单证详情表为已使用
+        $res = Model('Overall')->editDocuments($this->param);
+        $result = $res == true ? '成功' : '失败';
+        writLog("打印" . http_build_query($this->param) . "结果：" . $result, EDIT_LOGS, 1);
+        if ($res) {
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = "打印单号修改成功";
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100001;
+        $data['msg'] = "打印单号修改失败";
+        return json($data);
+    }
     /** 统筹单导出
      *
      */

@@ -66,6 +66,20 @@ class Overall extends Common {
         $imageArr = [];
         //定义上传文件夹
         $uploadArr = range(0,10);
+        $fils = Model('Upload')->getlist(['related_id'=>$temporaryId,'type'=>1]);
+        if(!empty($fils)) {
+            foreach($fils as $key=>$value) {
+                if(!empty($value)) {
+                    foreach ($value as $v) {
+                        $k = substr($v['folder'],-1);
+                        $imageArr[$k]['name'] = $v['name'];
+                        $imageArr[$k]['url'][] = $v['url'];
+                        $imageArr[$k]['id'][] = $v['id'];
+                    }
+                }
+            }
+        }
+        $this->assign('files',$fils);
         $this->assign('imageArr',json_encode($imageArr));
         $this->assign('image',$imageArr);
         $this->assign('upload',$uploadArr);

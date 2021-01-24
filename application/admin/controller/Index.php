@@ -7,7 +7,7 @@ class Index extends Common
     protected $power=0;
     public function index()
     {
-        return $this->fetch('index/index');
+        return $this->fetch();
     }
 
 }

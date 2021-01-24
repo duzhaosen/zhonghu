@@ -88,7 +88,7 @@ class Upload extends Common {
         }
         $res = Model('Upload')->editUpload(['id'=>$id,'type'=>2]);
         $result = $res == true? '成功': '失败';
-        writLog("删除文件".http_build_query($id)."结果：".$result,DEL_LOGS,0);
+        writLog("删除文件id-".$id."结果：".$result,DEL_LOGS,0);
         if($res) {
             $data = array();
             $data['code'] = 100000;

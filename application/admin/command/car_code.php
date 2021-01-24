@@ -16,19 +16,19 @@ class car_code extends Command{
 
     //调用addCarCode 这个类时,会自动运行execute方法
     protected function execute(Input $input, Output $output){
-        $this->writLog("任务开始执行",'car_code');
+        $this->writLog("car_code cron-任务开始执行");
         /*** 这里写计划任务列表集 START ***/
 
         //验车码查询今天是否已经生成
         $this->time = strtotime(date("Ymd"));
         $list = db($this->db)->where(['time'=>$this->time])->select();
         if(!empty($list)) {
-            $this->writLog("验证码已生成，任务结束",'car_code');
+            $this->writLog("car_code cron-验证码已生成，任务结束");
             return true;
         }
-        $this->addCode($num=0);
+        $this->addCode(1);
 
-        $this->writLog("任务执行完毕",'car_code');
+        $this->writLog("car_code cron-任务执行完毕");
     }
 
     /** 添加验车码，如果添加失败，则重复添加
@@ -38,11 +38,11 @@ class car_code extends Command{
         $code = $this->createInvitecode();
         $res = db($this->db)->insert(['time'=>$this->time,'code'=>$code]);
         if($res == false) {
-            $this->writLog("验车码生成失败，第{$num}次,内容{$code}",'car_code');
+            $this->writLog("car_code cron-验车码生成失败，第{$num}次,内容{$code}");
             $num ++;
             $this->addCode($num);
         }
-        $this->writLog("验车码生成成功，第{$num}次,内容{$code}",'car_code');
+        $this->writLog("car_code cron-验车码生成成功，第{$num}次,内容{$code}");
         return true;
     }
     /** 生成验车码

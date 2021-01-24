@@ -954,13 +954,13 @@
                         </div>
                     </div>
                     <div id="showImages">
-                        {if isset($list.attach)}
-                            {volist name="$list.attach" id="value"}
+                        {if isset($files)}
+                            {volist name="$files" id="value"}
                             <div class="form-inline form-group col-xs-12">
                                 <div class="titles"><p><font></font>{$key}</p></div>
                                     <div class="conts">
                                         {volist name="$value" id="v"}
-                                        <div class="search-item-div col-xs-1" id="img134" style="height:100px;">
+                                        <div class="search-item-div col-xs-1" id="img{$v.id}" style="height:100px;">
                                             <a data-magnify="gallery" data-src="" data-group="{$v.folder}" href="{$v.url}">
                                                 <img src="{$v.url}" style="padding:2px;" width="100%" height="100%">
                                             </a>
@@ -1152,10 +1152,10 @@
                 urlArr[i].url = [];
                 urlArr[i].id = [];
                 urlArr[i].name = urlArrObject[i].name;
-                for(let k in urlArrObject[i].url){
+                for(var k = 0; k< urlArrObject[i].url.length; k++){
                     urlArr[i].url.push(urlArrObject[i].url[k])
                 }
-                for(let k in urlArrObject[i].id){
+                for(var k = 0; k< urlArrObject[i].id.length; k++){
                     urlArr[i].id.push(urlArrObject[i].id[k])
                 }
             }else{
@@ -1203,7 +1203,6 @@
                         layer.msg("上传文件个数："+obj.total+"成功个数："+obj.successful+"失败个数："+obj.aborted);
                         var html = '';
                         for (var k = 1; k <= urlArr.length; k++) {
-                            console.log(urlArr[k]);
                             if(urlArr[k]) {
                                 if(urlArr[k].name != undefined) {
                                     html += '<div class="form-inline form-group col-xs-12">';
@@ -2064,19 +2063,6 @@
             });
             return false;
         })
-        var replaceForm = function (arr, name, value) {
-            var replace = false;
-            for (i = 0; i < arr.length; i++) {
-                if (arr[i]['name'] == name) {
-                    replace = true;
-                    arr[i]['value'] = value
-                }
-            }
-            if (!replace) {
-                var obj = {"name": name, "value": value};
-                arr.push(obj)
-            }
-        };
 
     });
     function GetNumberOfDays(date1,date2){

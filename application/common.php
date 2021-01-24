@@ -210,7 +210,7 @@ function writLog($content, $logType, $power_id=0){
             'log_type' => $logType,
             'log_time' => date('Y-m-d H:i:s:').substr($msectime, -3),
             'power_id' => $power_id,
-            'log_server_ip' => request()->ip(),
+            'log_server_ip' => sprintf("%u", ip2long(request()->ip())),
             'login_name' => getAdminInfo(),
             'log_content' => str_replace('"','',json_encode($content, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES))
         );
