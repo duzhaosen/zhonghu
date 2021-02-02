@@ -184,7 +184,7 @@
                     </tbody>
                 </table>
                 <div style="margin-left:40%" class="second">
-                    <button class="layui-btn layui-btn-radius layui-btn-normal">取消通过</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal cancelPass">取消通过</button>
                     <button class="layui-btn layui-btn-radius layui-btn-normal addDocuments">打印</button>
                     <button class="layui-btn layui-btn-radius layui-btn-normal overallPdf">电子统筹单</button>
                     <button class="layui-btn layui-btn-radius layui-btn-normal export">导出</button>
@@ -326,6 +326,10 @@
                     temporary_id = $(this).val();
                 }
             })
+            if(total > 1) {
+                layer.msg("请仅选择一项");
+                return false;
+            }
             if(documents_id != '') {
                 layer.confirm('此单号已打印是否重新打印?', function(index){
                     layer.close(index);
@@ -357,6 +361,52 @@
                         layer.msg(data.msg);
                         setTimeout(function() {
                             location.reload();
+                        },300);
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function() {
+                    but.removeAttr("disabled");
+                    layer.msg("系统错误");
+                }
+            });
+        })
+        //取消通过
+        $(".cancelPass").on('click',function () {
+            var but = $(this);
+            but.attr("disabled","disabled");;
+            var total = 0;
+            var status = '';
+            var temporary_id = '';
+            $(".overall_check").each(function() {
+                if(this.checked){
+                    total ++;
+                    status = $(this).parents("tr").attr("data-status");
+                    temporary_id = $(this).val();
+                }
+            })
+            if(total > 1) {
+                layer.msg("请仅选择一项");
+                but.removeAttr("disabled");
+                return false;
+            }
+            if(status != 6) {
+                layer.msg("该统筹单不是审核通过状态");
+                but.removeAttr("disabled");
+                return false;
+            }
+            $.ajax('/admin/ajax/review/primary/review',{
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: {related_id:temporary_id,type:1,status:2,log_type:7},
+                success: function (data,status,xhr) {   // success callback function
+                    but.removeAttr("disabled");
+                    if(data.code == 100000) {
+                        layer.msg(data.msg);
+                        setTimeout(function() {
+                            window.location.href="/admin/Overall/overall/index";
                         },300);
                     }else{
                         layer.msg(data.msg);

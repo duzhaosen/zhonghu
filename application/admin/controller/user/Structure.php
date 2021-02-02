@@ -17,7 +17,6 @@ use think\Session;
 class Structure extends Common
 {
     public function index(Request $request) {
-        $admin = Session::get('user_admin');
         $condition = array();
         $list = Model('Structure')->getList($condition);
         $format = Model('Structure')->formatTree($list);

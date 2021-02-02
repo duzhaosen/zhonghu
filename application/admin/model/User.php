@@ -46,7 +46,6 @@ class User extends Model {
                 }
             }
         }
-//        print_r($condition);die;
         $res = Db($this->db)->field($field)->where($condition)->select();
         if(!empty($res)) {
             foreach($res as $key => $value) {

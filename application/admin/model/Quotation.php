@@ -27,7 +27,7 @@ class Quotation extends Model {
         if(!isset($condition['quotation.attribution_user'])) {
             if($admin == false) {
                 $users = Model('User')->getLoginUserid();
-                $condition['quotation.attribution_user'] = $users;
+                $condition['quotation.attribution_user'] = ['in',$users];
             }
         }else{
             if($admin == false) {
@@ -40,7 +40,7 @@ class Quotation extends Model {
         //车辆配置文件
         Config::parse(APP_PATH.'/admin/config/car.ini','ini');
         $commont = Config::parse(APP_PATH.'/admin/config/Structure.ini','ini');
-        $result = Db($this->db)->field($field)->where($condition)->alias('quotation')
+        $result = Db($this->db)->field($field)->where($condition)->order('quotation.create_time desc')->alias('quotation')
             ->join($this->car_db.' car','quotation.id=car.related_id')
             ->join($this->overall_db." overall",'quotation.id=overall.related_id')
             ->paginate($page,false,$paginate)->each(function($item,$key) use($commont) {
@@ -230,7 +230,6 @@ class Quotation extends Model {
         } catch (\Exception $e) {
             // 回滚事务
             Db::rollback();
-            print_r($e);die;
             return false;
         }
         return true;

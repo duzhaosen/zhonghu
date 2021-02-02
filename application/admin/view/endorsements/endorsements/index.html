@@ -96,7 +96,7 @@
                     </thead>
                     <tbody>
                     {volist name="$list" id="value"}
-                    <tr data-documents="{$value.documents_id}">
+                    <tr data-documents="{$value.documents_id}" data-status="{$value.status}">
                         <td><input type="checkbox" name="endorsement_check" class="endorsement_check" value="{$value.p_temporary_id}"></td>
                         <td><a href="/admin/Endorsements/endorsements/view?p_temporary_id={$value.p_temporary_id}">{$value.p_temporary_id}</a> </td>
                         <td>{$value.endorsements_id}</td>
@@ -147,7 +147,7 @@
                     </tbody>
                 </table>
                 <div style="margin-left:40%" class="second">
-                    <button class="layui-btn layui-btn-radius layui-btn-normal">取消通过</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal cancelPass">取消通过</button>
                     <button class="layui-btn layui-btn-radius layui-btn-normal addDocuments">打印</button>
                     <button class="layui-btn layui-btn-radius layui-btn-normal export">导出</button>
                 </div>
@@ -244,6 +244,52 @@
                         layer.msg(data.msg);
                         setTimeout(function() {
                             location.reload();
+                        },300);
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function() {
+                    but.removeAttr("disabled");
+                    layer.msg("系统错误");
+                }
+            });
+        })
+        //取消通过
+        $(".cancelPass").on('click',function () {
+            var but = $(this);
+            but.attr("disabled","disabled");;
+            var total = 0;
+            var status = '';
+            var temporary_id = '';
+            $(".endorsement_check").each(function() {
+                if(this.checked){
+                    total ++;
+                    status = $(this).parents("tr").attr("data-status");
+                    temporary_id = $(this).val();
+                }
+            })
+            if(total > 1) {
+                layer.msg("请仅选择一项");
+                but.removeAttr("disabled");
+                return false;
+            }
+            if(status != 4) {
+                layer.msg("该批单不是审核通过状态");
+                but.removeAttr("disabled");
+                return false;
+            }
+            $.ajax('/admin/ajax/review/primary/review',{
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: {related_id:temporary_id,type:2,status:1,log_type:7},
+                success: function (data,status,xhr) {   // success callback function
+                    but.removeAttr("disabled");
+                    if(data.code == 100000) {
+                        layer.msg(data.msg);
+                        setTimeout(function() {
+                            window.location.href="/admin/Endorsements/endorsements/index";
                         },300);
                     }else{
                         layer.msg(data.msg);

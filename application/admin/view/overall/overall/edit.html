@@ -670,7 +670,7 @@
 
         <div class="col-xs-12 col-sm-12">
             <div class="widget-box">
-                <div class="widget-header">
+                <div class="widget-header" data-type="1">
                     <h5 class="widget-title">
                         <div class="search-item-div col-xs-3">
                             <label for="" class="text-center search-item-label">参统人信息</label>
@@ -724,7 +724,7 @@
 
         <div class="col-xs-12 col-sm-12">
             <div class="widget-box">
-                <div class="widget-header">
+                <div class="widget-header" data-type="1">
                     <h5 class="widget-title">
                         <div class="search-item-div col-xs-3">
                             <label class="text-center search-item-label">被统筹人信息</label>
@@ -1238,8 +1238,8 @@
             var val = $("#upload_total").val();
             console.log(val);
             $("#showUpload"+val).removeClass("hidden");
-            $("#upload_total").val(parseInt(val) + 1);
-            if(parseInt(val) + 1 >= uploadTotal) {
+            $("#upload_total").val(parseFloat(val) + 1);
+            if(parseFloat(val) + 1 >= uploadTotal) {
                 $("#addUpload").hide();
             }
         })
@@ -1553,7 +1553,8 @@
                         var html = '<select class="chosen-select form-control" id="salesman" name="salesman" style="width:100%" data-placeholder="选择归属人">';
                         html += '<option value="0">请选择归属人</option>';
                         var data = data.data;
-                        for (var i=0;i<data.length;i++) {
+                        var arr = Object.keys(data);
+                        for (var i=0;i<arr.length-2;i++) {
                             html += '<option value="'+data[i].id+'" data-manager="'+data[i].manager_id+'">'+data[i].all_name+"</option>";
                         }
                         html += '<select>';
@@ -1670,11 +1671,11 @@
                     $("#"+val+"_money").attr('readonly',true);
                     //计算基准统筹费
                     var benchmarking = $("#benchmarking").val();
-                    $("#benchmarking").val(parseInt(benchmarking - standard))
+                    $("#benchmarking").val(parseFloat(benchmarking - standard))
                     $("#"+val+"_standard").val("");
                     //计算统筹费
                     var total_planning = $("#total_planning").val();
-                    $("#total_planning").val(parseInt(total_planning - payable));
+                    $("#total_planning").val(parseFloat(total_planning - payable));
                     $("#"+val+"_payable").val("0.00");
                 }else{
                     $("#yuan").attr('readonly',true);
@@ -1700,7 +1701,7 @@
                                 if(standard == '') {
                                     standard = 0;
                                 }
-                                standard_price = parseInt(payable_price) + parseInt(standard);
+                                standard_price += parseFloat(standard);
                                 var discount = $("#total_discount").val();
                                 if(discount == '') {
                                     discount = 1;
@@ -1708,17 +1709,16 @@
                                     discount = discount/100;
                                 }
                                 var payable = standard * short_term_coefficient * discount;
-                                payable_price = parseInt(payable_price) + parseInt(payable.toFixed(2));
+                                payable_price = parseFloat(payable_price) + parseFloat(payable.toFixed(2));
                                 //应缴统筹费
                                 $("#"+value+"_payable").val(payable.toFixed(2));
                             }
                         }
                     })
                     //基准统筹费
-                    $("#benchmarking").val(parseInt(standard_price));
+                    $("#benchmarking").val(parseFloat(standard_price).toFixed(2));
                     //统筹费（合计）
-                    var planning = parseInt(payable_price);
-                    $("#total_planning").val(planning.toFixed(2));
+                    $("#total_planning").val(parseFloat(payable_price).toFixed(2));
                 }
             }
         });
@@ -1749,11 +1749,11 @@
                     $("#"+val+"_money").attr('readonly',true);
                     //计算基准统筹费
                     var benchmarking = $("#benchmarking").val();
-                    $("#benchmarking").val(parseInt(benchmarking - standard))
+                    $("#benchmarking").val(parseFloat(benchmarking - standard))
                     $("#"+val+"_standard").val("");
                     //计算统筹费
                     var total_planning = $("#total_planning").val();
-                    $("#total_planning").val(parseInt(total_planning - payable));
+                    $("#total_planning").val(parseFloat(total_planning - payable));
                     $("#"+val+"_payable").val("0.00");
                 }else{
                     $(".all_check_attch").each(function() {
@@ -1776,7 +1776,7 @@
                                 if(standard == '') {
                                     standard = 0;
                                 }
-                                standard_price = parseInt(payable_price) + parseInt(standard);
+                                standard_price += parseFloat(standard);
                                 var discount = $("#total_discount").val();
                                 if(discount == '') {
                                     discount = 1;
@@ -1784,17 +1784,16 @@
                                     discount = discount/100;
                                 }
                                 var payable = standard * short_term_coefficient * discount;
-                                payable_price = parseInt(payable_price) + parseInt(payable.toFixed(2));
+                                payable_price = parseFloat(payable_price) + parseFloat(payable.toFixed(2));
                                 //应缴统筹费
                                 $("#"+value+"_payable").val(payable.toFixed(2));
                             }
                         }
                     })
                     //基准统筹费
-                    $("#benchmarking").val(parseInt(standard_price));
+                    $("#benchmarking").val(parseFloat(standard_price).toFixed(2));
                     //统筹费（合计）
-                    var planning = parseInt(payable_price);
-                    $("#total_planning").val(planning.toFixed(2));
+                    $("#total_planning").val(parseFloat(payable_price).toFixed(2));
 
                 }
             }
@@ -1802,7 +1801,7 @@
         //核定人数联动
         $("#approved_user").on('keyup',function() {
             var value = $(this).val();
-            var seat = parseInt(value-1);
+            var seat = parseFloat(value-1);
             $("#seat").val(seat);
             var yuan = $("#yuan").val();
             if(yuan != '') {
@@ -1829,7 +1828,7 @@
                         if(standard == '') {
                             standard = 0;
                         }
-                        standard_price = parseInt(payable_price) + parseInt(standard);
+                        standard_price += parseFloat(standard);
                         var discount = $("#total_discount").val();
                         if(discount == '') {
                             discount = 1;
@@ -1837,7 +1836,7 @@
                             discount = discount/100;
                         }
                         var payable = standard * short_term_coefficient * discount;
-                        payable_price = parseInt(payable_price) + parseInt(payable.toFixed(2));
+                        payable_price = parseFloat(payable_price) + parseFloat(payable.toFixed(2));
                         //应缴统筹费
                         $("#"+value+"_payable").val(payable.toFixed(2));
                     }
@@ -1852,7 +1851,7 @@
                         if(standard == '') {
                             standard = 0;
                         }
-                        standard_price = parseInt(payable_price) + parseInt(standard);
+                        standard_price += parseFloat(standard);
                         var discount = $("#total_discount").val();
                         if(discount == '') {
                             discount = 1;
@@ -1860,25 +1859,16 @@
                             discount = discount/100;
                         }
                         var payable = standard * short_term_coefficient * discount;
-                        payable_price = parseInt(payable_price) + parseInt(payable.toFixed(2));
+                        payable_price = parseFloat(payable_price) + parseFloat(payable.toFixed(2));
                         //应缴统筹费
                         $("#"+value+"_payable").val(payable.toFixed(2));
                     }
                 }
             })
             //基准统筹费
-            var benchmarking = $("#benchmarking").val();
-            if(benchmarking == '') {
-                benchmarking = 0;
-            }
-            $("#benchmarking").val(parseInt(benchmarking) + parseInt(standard_price));
+            $("#benchmarking").val(parseFloat(standard_price).toFixed(2));
             //统筹费（合计）
-            var total_planning = $("#total_planning").val();
-            if(total_planning == '') {
-                total_planning = 0;
-            }
-            var planning = parseInt(total_planning) + parseInt(payable_price);
-            $("#total_planning").val(planning.toFixed(2));
+            $("#total_planning").val(parseFloat(payable_price).toFixed(2));
 
         })
         //元联动
@@ -1924,7 +1914,7 @@
                         if(standard == '') {
                             standard = 0;
                         }
-                        standard_price = parseInt(payable_price) + parseInt(standard);
+                        standard_price += parseFloat(standard);
                         var discount = $("#total_discount").val();
                         if(discount == '') {
                             discount = 1;
@@ -1932,7 +1922,7 @@
                             discount = discount/100;
                         }
                         var payable = standard * short_term_coefficient * discount;
-                        payable_price = parseInt(payable_price) + parseInt(payable.toFixed(2));
+                        payable_price = parseFloat(payable_price) + parseFloat(payable.toFixed(2));
                         //应缴统筹费
                         $("#"+value+"_payable").val(payable.toFixed(2));
                     }
@@ -1947,7 +1937,7 @@
                         if(standard == '') {
                             standard = 0;
                         }
-                        standard_price = parseInt(payable_price) + parseInt(standard);
+                        standard_price += parseFloat(standard);
                         var discount = $("#total_discount").val();
                         if(discount == '') {
                             discount = 1;
@@ -1955,7 +1945,7 @@
                             discount = discount/100;
                         }
                         var payable = standard * short_term_coefficient * discount;
-                        payable_price = parseInt(payable_price) + parseInt(payable.toFixed(2));
+                        payable_price = parseFloat(payable_price) + parseFloat(payable.toFixed(2));
                         //应缴统筹费
                         $("#"+value+"_payable").val(payable.toFixed(2));
                     }
@@ -1964,18 +1954,9 @@
 
 
             //基准统筹费
-            var benchmarking = $("#benchmarking").val();
-            if(benchmarking == '') {
-                benchmarking = 0;
-            }
-            $("#benchmarking").val(parseInt(benchmarking) + parseInt(standard_price));
+            $("#benchmarking").val(parseFloat(standard_price).toFixed(2));
             //统筹费（合计）
-            var total_planning = $("#total_planning").val();
-            if(total_planning == '') {
-                total_planning = 0;
-            }
-            var planning = parseInt(total_planning) + parseInt(payable_price);
-            $("#total_planning").val(planning.toFixed(2));
+            $("#total_planning").val(parseFloat(payable_price).toFixed(2));
         });
         Date.prototype.format = function(fmt) {
             var o = {
@@ -2017,12 +1998,11 @@
                 method: "post",
                 data: form,
                 success: function (data, status, xhr) {   // success callback function
-                    console.log(data);
                     but.removeAttr("disabled");
                     if (data.code == 100000) {
                         layer.msg(data.msg);
                         setTimeout(function () {
-                            location.reload();
+                            window.location.href="/admin/Overall/overall/index";
                         }, 300);
                     } else {
                         layer.msg(data.msg);
@@ -2049,12 +2029,11 @@
                 method: "post",
                 data: form,
                 success: function (data, status, xhr) {   // success callback function
-                    console.log(data);
                     but.removeAttr("disabled");
                     if (data.code == 100000) {
                         layer.msg(data.msg);
                         setTimeout(function () {
-                            location.reload();
+                            window.location.href="/admin/Overall/overall/index";
                         }, 300);
                     } else {
                         layer.msg(data.msg);
@@ -2085,7 +2064,7 @@
     function GetNumberOfDays(date1,date2){
         var a1 = Date.parse(new Date(date1));
         var a2 = Date.parse(new Date(date2));
-        var day = parseInt((a2-a1)/ (1000 * 60 * 60 * 24));//核心：时间戳相减，然后除以天数
+        var day = parseFloat((a2-a1)/ (1000 * 60 * 60 * 24));//核心：时间戳相减，然后除以天数
         return day;
     }
 </script>

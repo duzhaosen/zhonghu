@@ -32,10 +32,9 @@ class Endorsements extends Common {
         }
         //验证车架号/车牌号是否在系统内且在统筹期间内
         $car_frame = $this->param['frame'];
-        $car_list = Model('Endorsements')->getList(['endorsements.frame'=>$car_frame,'endorsements.type'=>1]);
-        if($car_list->total() > 0) {
-            $list = $car_list->all();
-            foreach($list as $key => $value) {
+        $car_list = Model('Endorsements')->getListSimple(['frame'=>$car_frame,'type'=>1]);
+        if(count($car_list) > 0) {
+            foreach($car_list as $key => $value) {
                 if($value['end_time']+86400 > strtotime($this->param['start_time'])) {
                     $data = array();
                     $data['code'] = 100001;

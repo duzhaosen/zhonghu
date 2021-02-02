@@ -355,6 +355,7 @@ jQuery(function($) {
         var survey_phone = $("#survey_phone").val();
         var str = '尊敬的'+report_user+'(报案人）先生/女士，您的报案已受理，报案单号：'+report_id+'，工作人员'+survey_user+'电话：'+survey_phone+'正在赶往现场，请您尽快报交警。特别提示：报警电话110、122。';
         $("#smsMsg").val(str);
+        return false;
     })
     //同步统筹单
     $("#overallSearchSubmit").on('click',function() {

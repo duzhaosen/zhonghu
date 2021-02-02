@@ -183,6 +183,7 @@ class Quotation extends Common {
             writLog("查询条件".http_build_query($condition),"search_quotation",'search');
         }
         $quotationList = Model('Quotation')->getList($condition,'quotation.id as quotation_id,quotation.*,car.*,overall.*',$this->pagesize,['page'=>$page,'query'=>$param]);
+//        print_r($quotationList);die;
         $this->assign('quotationList',$quotationList);
         $res = Config::parse(APP_PATH.'/admin/config/quotation.ini','ini');
         $this->assign('export',$res['export']);

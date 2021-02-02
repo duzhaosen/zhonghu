@@ -39,27 +39,27 @@ class Structure extends Model {
      */
     public function getList($condition=array(), $field='*') {
         $condition['type'] = 1;
-        if(!isset($condition['id'])) {
-            $admin = Session::get('user_admin');
-            if($admin == false) {
-                $structure = Session::get('structure');
-                $ReverseIds = $this->getStructureList([],['pid'=>$structure]);
-                if($ReverseIds) {
-                    $condition['id'] = ['in',$ReverseIds];
-                }
-            }
-        }else{
-            $admin = Session::get('user_admin');
-            if($admin == false) {
-                $structure = Session::get('structure');
-                if($structure) {
-                    $ReverseIds = $this->getStructureList([],['pid'=>$structure]);
-                    if(!in_array($condition['id'],$ReverseIds)) {
-                        return [];
-                    }
-                }
-            }
-        }
+//        if(!isset($condition['id'])) {
+//            $admin = Session::get('user_admin');
+//            if($admin == false) {
+//                $structure = Session::get('structure');
+//                $ReverseIds = $this->getStructureList([],['pid'=>$structure]);
+//                if($ReverseIds) {
+//                    $condition['id'] = ['in',$ReverseIds];
+//                }
+//            }
+//        }else{
+//            $admin = Session::get('user_admin');
+//            if($admin == false) {
+//                $structure = Session::get('structure');
+//                if($structure) {
+//                    $ReverseIds = $this->getStructureList([],['pid'=>$structure]);
+//                    if(!in_array($condition['id'],$ReverseIds)) {
+//                        return [];
+//                    }
+//                }
+//            }
+//        }
         $res = db($this->db)->field($field)->where($condition)->select();
         if(!empty($res)) {
             return $res;

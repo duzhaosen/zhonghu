@@ -85,12 +85,15 @@
     <script>
         jQuery(function ($) {
             $(".widget-header").on('click',function() {
-                if($(this).parents(".widget-box").find(".widget-body").css('display') === 'none') {
-                    $(this).parents(".widget-box").removeClass("collapsed");
-                    $(this).parents(".widget-box").find(".widget-body").fadeIn();
-                }else{
-                    $(this).parents(".widget-box").addClass("collapsed");
-                    $(this).parents(".widget-box").find(".widget-body").fadeOut();
+                var type = $(this).attr("data-type");
+                if(type == undefined) {
+                    if($(this).parents(".widget-box").find(".widget-body").css('display') === 'none') {
+                        $(this).parents(".widget-box").removeClass("collapsed");
+                        $(this).parents(".widget-box").find(".widget-body").fadeIn();
+                    }else{
+                        $(this).parents(".widget-box").addClass("collapsed");
+                        $(this).parents(".widget-box").find(".widget-body").fadeOut();
+                    }
                 }
             })
         })

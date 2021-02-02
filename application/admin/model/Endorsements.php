@@ -33,7 +33,7 @@ class Endorsements extends Model {
         if(!isset($condition['endorsements.attribution_user'])) {
             if($admin == false) {
                 $users = Model('User')->getLoginUserid();
-                $condition['endorsements.attribution_user'] = $users;
+                $condition['endorsements.attribution_user'] = ['in',$users];
             }
         }else{
             if($admin == false) {
@@ -53,7 +53,6 @@ class Endorsements extends Model {
             ->join($this->traffic_db." traffic", "endorsements.p_temporary_id=traffic.related_id")
             ->join($this->participate_db." participate", "endorsements.p_temporary_id=participate.related_id")
             ->join($this->coordinator_db." coordinator", "endorsements.p_temporary_id=coordinator.related_id")
-            ->join($this->pay_db." pay", "endorsements.p_temporary_id=pay.related_id")
             ->paginate($page,false,$paginate)->each(function($item,$key) use($commont) {
                 $item['plate_typeStr'] = $commont['plate_type'][$item['plate_type']];
                 $manager = Model('User')->getList(['id'=>$item['manager']]);
@@ -78,15 +77,18 @@ class Endorsements extends Model {
                 $item['attach'] = Model('Upload')->getlist(['related_id'=>$item['p_temporary_id']]);
 
                 //开票
-                $item['invoice'] = Model('Invoice')->getlist(['related_id'=>$item['id']]);
+                $item['invoice'] = Model('Invoice')->getlist(['related_id'=>$item['p_temporary_id']]);
 
                 //统筹单暂存号
                 $overall = Model('Overall')->getList(['overall.overall_id'=>$item['overall_id']]);;
                 $item['temporary_id'] = $overall[0]['temporary_id'];
 
+                //缴费信息
+                $item['pay'] = db($this->pay_db)->where(['related_id'=>$item['p_temporary_id'],'overall_type'=>2])->select();
+
 
                 //审核
-                $item['review_log'] = Model('ReviewLog')->getList(['related_id'=>$item['temporary_id']]);
+                $item['review_log'] = Model('ReviewLog')->getList(['related_id'=>$item['p_temporary_id']]);
 
                 //组织
                 $users = Model('User')->getList(['id'=> $item['attribution_user']]);
@@ -97,7 +99,6 @@ class Endorsements extends Model {
                 $item['sourceStr'] = $commont['source'][$users[0]['source']];
                 //用户地区
                 $item['cityStr'] = $users[0]['cityName'];
-
 
                 return $item;
         });
@@ -566,10 +567,6 @@ class Endorsements extends Model {
             $car['reason'] = $condition['reason'];
             $car['last_year_danger'] = $condition['last_year_danger'];
             $car['participate_city'] = $condition['participate_city'];
-            if(isset($condition['create_user'])) {
-                $param['create_user'] = $condition['create_user'];
-            }
-            $car['create_time'] = time();
             $car['op_user'] = getAdminInfo();
             $car['op_time'] = time();
             db($this->car_db)->where(['related_id' => $condition['p_temporary_id']])->update($car);
@@ -708,10 +705,6 @@ class Endorsements extends Model {
             if(isset($condition['total_planning'])) {
                 $overall['total_planning'] = $condition['total_planning'];
             }
-            if(isset($condition['create_user'])) {
-                $overall['create_user'] = $condition['create_user'];
-            }
-            $overall['create_time'] = time();
             $overall['op_user'] = getAdminInfo();
             $overall['op_time'] = time();
             db($this->overall_db)->where(['related_id'=>$condition['p_temporary_id']])->update($overall);
@@ -721,10 +714,6 @@ class Endorsements extends Model {
             $traffic['traffic_start_time'] = strtotime($condition['traffic_start_time']);
             $traffic['traffic_end_time'] = strtotime($condition['traffic_end_time']);
             $traffic['traffic_company'] = $condition['traffic_company'];
-            if(isset($condition['create_user'])) {
-                $traffic['create_user'] = $condition['create_user'];
-            }
-            $traffic['create_time'] = time();
             $traffic['op_user'] = getAdminInfo();
             $traffic['op_time'] = time();
             db($this->traffic_db)->where(['related_id'=>$condition['p_temporary_id']])->update($traffic);
@@ -745,10 +734,6 @@ class Endorsements extends Model {
             if(isset($condition['participate_address'])) {
                 $participate['participate_address'] = $condition['participate_address'];
             }
-            if(isset($condition['create_user'])) {
-                $participate['create_user'] = $condition['create_user'];
-            }
-            $participate['create_time'] = time();
             $participate['op_user'] = getAdminInfo();
             $participate['op_time'] = time();
             db($this->participate_db)->where(['related_id'=>$condition['p_temporary_id']])->update($participate);
@@ -771,10 +756,6 @@ class Endorsements extends Model {
             if(isset($condition['coordinated_address'])) {
                 $coordinated['coordinated_address'] = $condition['coordinated_address'];
             }
-            if(isset($condition['create_user'])) {
-                $coordinated['create_user'] = $condition['create_user'];
-            }
-            $coordinated['create_time'] = time();
             $coordinated['op_time'] = time();
             $coordinated['op_user'] = getAdminInfo();
             db($this->coordinator_db)->where(['related_id'=>$condition['p_temporary_id']])->update($coordinated);
@@ -783,10 +764,6 @@ class Endorsements extends Model {
             $pay['overall_type'] = 1;
             $pay['pay_money'] = $condition['total_planning'];
             $pay['pay_time'] = strtotime($condition['create_time']);
-            if(isset($condition['create_user'])) {
-                $pay['create_user'] = $condition['create_user'];
-            }
-            $pay['create_time'] = time();
             $pay['op_user'] = getAdminInfo();
             $pay['op_time'] = time();
             db($this->pay_db)->where(['related_id' => $condition['p_temporary_id']])->update($pay);
@@ -815,10 +792,6 @@ class Endorsements extends Model {
                 if(isset($condition['invoice_remarks'])) {
                     $invoice['invoice_remarks'] = $condition['invoice_remarks'];
                 }
-                if(isset($condition['create_user'])) {
-                    $invoice['create_user'] = $condition['create_user'];
-                }
-                $invoice['create_time'] = time();
                 $invoice['op_user'] = getAdminInfo();
                 $invoice['op_time'] = time();
                 db($this->invoice_db)->where(['related_id'=>$invoice['p_temporary_id']])->update($invoice);
@@ -889,5 +862,15 @@ class Endorsements extends Model {
         }
         return false;
 
+    }
+
+    /** 简易查询批单
+     * @param array $condition
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getListSimple($condition=[]) {
+        return db($this->db)->where($condition)->select();
     }
 }

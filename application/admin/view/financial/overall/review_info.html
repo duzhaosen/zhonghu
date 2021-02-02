@@ -153,7 +153,7 @@
                     </div>
                     <div class=" search-item-div col-xs-3">
                         <label class="text-center search-item-label">核统日期:</label>
-                        <input type="text" class="form-control" readonly  style="width:100%" value="{if isset($list.nuclear_system_time)}{:date('Y/m/d',$list.create_time)}{/if}">
+                        <input type="text" class="form-control" readonly  style="width:100%" value="{if $list.nuclear_system_time neq 0}{:date('Y/m/d',$list.nuclear_system_time)}{/if}">
                     </div>
                 </div>
 
@@ -165,7 +165,7 @@
                     </div>
                     <div class=" search-item-div col-xs-3">
                         <label class="text-center search-item-label">审核日期:</label>
-                        <input type="text" class="form-control" readonly  style="width:100%" value="{if isset($list.financial_review_time)}{:date('Y/m/d',$list.review_time)}{/if}">
+                        <input type="text" class="form-control" readonly  style="width:100%" value="{if $list.financial_review_time neq 0}{:date('Y/m/d',$list.financial_review_time)}{/if}">
 
                     </div>
                 </div>
@@ -915,7 +915,7 @@
                     if(data.code == 100000) {
                         layer.msg(data.msg);
                         setTimeout(function() {
-                            location.reload();
+                            window.location.href="/admin/Financial/overall/review";
                         },300);
                     }else{
                         layer.msg(data.msg);

@@ -36,7 +36,7 @@ class Overall extends Model {
         if(!isset($condition['overall.attribution_user'])) {
             if($admin == false) {
                 $users = Model('User')->getLoginUserid();
-                $condition['overall.attribution_user'] = $users;
+                $condition['overall.attribution_user'] = ['in',$users];
             }
         }else{
             if($admin == false) {
@@ -50,13 +50,12 @@ class Overall extends Model {
         Config::parse(APP_PATH.'/admin/config/car.ini','ini');
         Config::parse(APP_PATH.'/admin/config/overall.ini','ini');
         $commont = Config::parse(APP_PATH.'/admin/config/Structure.ini','ini');
-        $result = Db($this->db)->field($field)->where($condition)->alias('overall')
+        $result = Db($this->db)->field($field)->where($condition)->order('overall.create_time desc')->alias('overall')
             ->join($this->car_db.' car','overall.temporary_id=car.related_id')
             ->join($this->overall_db." overall_planning",'overall.temporary_id=overall_planning.related_id')
             ->join($this->traffic_db." traffic", "overall.temporary_id=traffic.related_id")
             ->join($this->participate_db." participate", "overall.temporary_id=participate.related_id")
             ->join($this->coordinator_db." coordinator", "overall.temporary_id=coordinator.related_id")
-            ->join($this->pay_db." pay", "overall.temporary_id=pay.related_id")
             ->paginate($page,false,$paginate)->each(function($item,$key) use($commont) {
                 $item['plate_typeStr'] = $commont['plate_type'][$item['plate_type']];
                 $manager = Model('User')->getList(['id'=>$item['manager']]);
@@ -81,7 +80,11 @@ class Overall extends Model {
                 $item['attach'] = Model('Upload')->getlist(['related_id'=>$item['temporary_id'],'type'=>1]);
 
                 //发票
-                $item['invoice'] = Model('Invoice')->getlist(['related_id'=>$item['id']]);
+                $invoice = Model('Invoice')->getList(['related_id'=>$item['temporary_id']]);
+                $item['invoice'] = !empty($invoice) ? $invoice[0] : [];
+
+                //缴费信息
+                $item['pay'] = db($this->pay_db)->where(['related_id'=>$item['temporary_id'],'overall_type'=>1])->select();
 
                 //审核
                 $item['review_log'] = Model('ReviewLog')->getList(['related_id'=>$item['temporary_id']]);
@@ -187,10 +190,8 @@ class Overall extends Model {
             $car['reason'] = $condition['reason'];
             $car['last_year_danger'] = $condition['last_year_danger'];
             $car['participate_city'] = $condition['participate_city'];
-            if(isset($condition['create_user'])) {
-                $param['create_user'] = $condition['create_user'];
-            }
-            $overall['create_time'] = time();
+            $car['create_user'] = getAdminInfo();
+            $car['create_time'] = time();
             db($this->car_db)->insert($car);
             //统筹项目
             $overall = array();
@@ -451,8 +452,6 @@ class Overall extends Model {
      *
      */
     public function editOverall($condition) {
-        $condition['op_user'] = getAdminInfo();
-        $condition['op_time'] = time();
         Db::startTrans();
         try{
             //统筹单
@@ -536,10 +535,6 @@ class Overall extends Model {
             $car['reason'] = $condition['reason'];
             $car['last_year_danger'] = $condition['last_year_danger'];
             $car['participate_city'] = $condition['participate_city'];
-            if(isset($condition['create_user'])) {
-                $param['create_user'] = $condition['create_user'];
-            }
-            $car['create_time'] = time();
             $car['op_user'] = getAdminInfo();
             $car['op_time'] = time();
             db($this->car_db)->where(['related_id' => $condition['temporary_id']])->update($car);
@@ -678,10 +673,6 @@ class Overall extends Model {
             if(isset($condition['total_planning'])) {
                 $overall['total_planning'] = $condition['total_planning'];
             }
-            if(isset($condition['create_user'])) {
-                $overall['create_user'] = $condition['create_user'];
-            }
-            $overall['create_time'] = time();
             $overall['op_user'] = getAdminInfo();
             $overall['op_time'] = time();
             db($this->overall_db)->where(['related_id'=>$condition['temporary_id']])->update($overall);
@@ -694,7 +685,6 @@ class Overall extends Model {
             if(isset($condition['create_user'])) {
                 $traffic['create_user'] = $condition['create_user'];
             }
-            $traffic['create_time'] = time();
             $traffic['op_user'] = getAdminInfo();
             $traffic['op_time'] = time();
             db($this->traffic_db)->where(['related_id'=>$condition['temporary_id']])->update($traffic);
@@ -718,7 +708,6 @@ class Overall extends Model {
             if(isset($condition['create_user'])) {
                 $participate['create_user'] = $condition['create_user'];
             }
-            $participate['create_time'] = time();
             $participate['op_user'] = getAdminInfo();
             $participate['op_time'] = time();
             db($this->participate_db)->where(['related_id'=>$condition['temporary_id']])->update($participate);
@@ -741,10 +730,6 @@ class Overall extends Model {
             if(isset($condition['coordinated_address'])) {
                 $coordinated['coordinated_address'] = $condition['coordinated_address'];
             }
-            if(isset($condition['create_user'])) {
-                $coordinated['create_user'] = $condition['create_user'];
-            }
-            $coordinated['create_time'] = time();
             $coordinated['op_time'] = time();
             $coordinated['op_user'] = getAdminInfo();
             db($this->coordinator_db)->where(['related_id'=>$condition['temporary_id']])->update($coordinated);
@@ -753,10 +738,6 @@ class Overall extends Model {
             $pay['overall_type'] = 1;
             $pay['pay_money'] = $condition['total_planning'];
             $pay['pay_time'] = strtotime($condition['create_time']);
-            if(isset($condition['create_user'])) {
-                $pay['create_user'] = $condition['create_user'];
-            }
-            $pay['create_time'] = time();
             $pay['op_user'] = getAdminInfo();
             $pay['op_time'] = time();
             db($this->pay_db)->where(['related_id' => $condition['temporary_id']])->update($pay);
@@ -785,21 +766,18 @@ class Overall extends Model {
                 if(isset($condition['invoice_remarks'])) {
                     $invoice['invoice_remarks'] = $condition['invoice_remarks'];
                 }
-//                $invoice['temporary_id'] = $condition['temporary_id'];
                 if(isset($condition['create_user'])) {
                     $invoice['create_user'] = $condition['create_user'];
                 }
-                $invoice['create_time'] = time();
                 $invoice['op_user'] = getAdminInfo();
                 $invoice['op_time'] = time();
-                db($this->invoice_db)->where(['related_id'=>$invoice['temporary_id']])->update($invoice);
+                db($this->invoice_db)->where(['related_id'=>$condition['temporary_id']])->update($invoice);
             }
             // 提交事务
             Db::commit();
         } catch (\Exception $e) {
             // 回滚事务
             Db::rollback();
-            print_r($e);die;
             return false;
         }
         return true;

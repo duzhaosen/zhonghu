@@ -52,9 +52,15 @@ class ReviewLog extends Model {
                 $overall['status'] = $condition['status'];
                 $overall['op_user'] = getAdminInfo();
                 $overall['op_time'] = time();
-                if(in_array($condition['status'],[4,5])) {
-                    $endorsements['nuclear_system_user'] = getAdminInfo();
-                    $endorsements['nuclear_system_time'] = time();
+                //二审通过，同步核统人和核统日期
+                if($condition['status'] == 5) {
+                    $overall['nuclear_system_user'] = getAdminInfo();
+                    $overall['nuclear_system_time'] = time();
+                }
+                //财务审核通过，同步财务审核人和财务审核日期
+                if($condition['status'] == 6) {
+                    $overall['financial_review_user'] = getAdminInfo();
+                    $overall['financial_review_time'] = time();
                 }
                 db($this->overall_db)->where(['temporary_id'=>$condition['related_id']])->update($overall);
                 $review = array();
@@ -79,6 +85,7 @@ class ReviewLog extends Model {
                 $endorsements['status'] = $condition['status'];
                 $endorsements['op_user'] = getAdminInfo();
                 $endorsements['op_time'] = time();
+                //财务审核通过
                 if($condition['status'] == 4) {
                     $endorsements['financial_review_user'] = getAdminInfo();
                     $endorsements['financial_review_time'] = time();

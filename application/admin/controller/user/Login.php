@@ -22,6 +22,7 @@ class Login extends Common
      *
      */
     public function loginout() {
+        writLog("推出登陆成功",LOGIN_LOGS,33);
         session('user_id', null);
         session('username', null);
         session('name', null);

@@ -26,7 +26,7 @@ class Documents extends Model {
     public function getList($condition=array(), $page=10,$paginate=[]) {
         $condition['status'] = 1;
         $commont = Config::parse(APP_PATH.'/admin/config/documents.ini','ini');
-        $res = db($this->db)->where($condition)
+        $res = db($this->db)->where($condition)->order('create_time desc')
             ->paginate($page,false,$paginate)->each(function($item,$key) use($commont) {
             $item['typeStr'] = $commont['type'][$item['type']];
             return $item;
@@ -90,6 +90,7 @@ class Documents extends Model {
                 $data[$num]['related_id'] = $condition['add_id'];
                 $data[$num]['documents_id'] = $i;
                 $data[$num]['is_issued'] = 1;
+                $data[$num]['related_type'] = 1;
                 $num ++;
             }
             db($this->info_db)->insertAll($data);
@@ -143,6 +144,7 @@ class Documents extends Model {
                 $data[$num]['related_id'] = $condition['issued_id'];
                 $data[$num]['documents_id'] = $i;
                 $data[$num]['is_issued'] = 1;
+                $data[$num]['related_type'] = 2;
 
                 //更新详情表
                 $where = array();
@@ -191,15 +193,38 @@ class Documents extends Model {
         unset($condition['recycle_s_num']);
         $end = $condition['recycle_e_num'];
         unset($condition['recycle_e_num']);
+        $total = $condition['recycle_total'];
         unset($condition['recycle_total']);
-        for ($i = $start; $i<= $end; $i++) {
-            if(strlen($start) != strlen($i)) {
-                $i = str_pad($i,strlen($start),"0",STR_PAD_LEFT);
+
+        Db::startTrans();
+        try{
+            for ($i = $start; $i<= $end; $i++) {
+                if(strlen($start) != strlen($i)) {
+                    $i = str_pad($i,strlen($start),"0",STR_PAD_LEFT);
+                }
+                $condition['documents_id'] = $i;
+                //修改单证详情表，同步回收状态
+                $u_info = [];
+                $u_info['is_issued'] = 3;
+                $u_info['issued_user'] = getAdminInfo();
+                $u_info['issued_time'] = time();
+                db($this->info_db)->where(['documents_id'=>$i])->update($u_info);
+                $data[] = $condition;
             }
-            $condition['documents_id'] = $i;
-            $data[] = $condition;
+            db($this->recycle_db)->insertAll($data);
+
+            //同步单证下发批次剩余量更新
+            $list = db($this->issued_db)->where(['issued_id'=>$condition['issued_id']])->find();
+            $total = $list['issued_remaining'] - $total <= 0 ? 0 : $list['issued_remaining'] - $total;
+            db($this->issued_db)->where(['issued_id'=>$condition['issued_id']])->update(['issued_remaining'=> $total]);
+            // 提交事务
+            Db::commit();
+        } catch (\Exception $e) {
+            // 回滚事务
+            Db::rollback();
+            return false;
         }
-        return db($this->recycle_db)->insertAll($data);
+        return true;
     }
 
     /**删除单证回收
@@ -223,7 +248,7 @@ class Documents extends Model {
     public function getIssuedList($condition,$pagesize=10,$paginate=[]) {
         $condition['issued_status'] = 1;
         $commont = Config::parse(APP_PATH.'/admin/config/documents.ini','ini');
-        $res = db($this->issued_db)->where($condition)
+        $res = db($this->issued_db)->where($condition)->order('issued_create_time desc')
             ->paginate($pagesize,false,$paginate)->each(function($item,$key) use($commont) {
                 $item['issued_typeStr'] = $commont['type'][$item['issued_type']];
                 //人员
@@ -248,7 +273,7 @@ class Documents extends Model {
     public function getRecycleList($condition,$pagesize=10,$paginate=[]) {
         $condition['recycle.recycle_status'] = 1;
         $commont = Config::parse(APP_PATH.'/admin/config/documents.ini','ini');
-        $res = db($this->recycle_db)->where($condition)->alias('recycle')
+        $res = db($this->recycle_db)->where($condition)->alias('recycle')->order('recycle_create_time desc')
             ->join($this->db.' add','recycle.add_id=add.add_id')
             ->join($this->issued_db.' issued','recycle.issued_id=issued.issued_id')
             ->paginate($pagesize,false,$paginate)->each(function($item,$key) use($commont) {

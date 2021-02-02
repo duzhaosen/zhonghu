@@ -27,7 +27,7 @@ class Overall extends Common {
             if($value && empty($this->param[$key])) {
                 $data = array();
                 $data['code'] = 100001;
-                $data['msg'] = $res['addquotationcomment'][$key].'不可为空';
+                $data['msg'] = $res['addoverallcomment'][$key].'不可为空';
                 return json($data);
             }
         }
@@ -356,6 +356,11 @@ class Overall extends Common {
         if ($info[0]['is_issued'] == 2) {
             $data['code'] = 100001;
             $data['msg'] = "该打印单号已被使用";
+            return json($data);
+        }
+        if ($info[0]['is_issued'] == 3) {
+            $data['code'] = 100001;
+            $data['msg'] = "该打印单号已被回收";
             return json($data);
         }
         //修改主表，同步单证详情表为已使用

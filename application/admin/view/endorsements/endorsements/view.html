@@ -165,7 +165,7 @@
                     </div>
                     <div class=" search-item-div col-xs-3">
                         <label class="text-center search-item-label">审核日期:</label>
-                        <input type="text" class="form-control" readonly  style="width:100%" value="{if isset($list.financial_review_time)}{:date('Y/m/d',$list.review_time)}{/if}">
+                        <input type="text" class="form-control" readonly  style="width:100%" value="{if isset($list.financial_review_time)}{:date('Y/m/d',$list.financial_review_time)}{/if}">
 
                     </div>
                 </div>
@@ -718,7 +718,14 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                    {volist name="list.pay" id="value" key="key"}
+                    <tr>
+                        <td>{$key}</td>
+                        <td>{:$value.overall_type == 1 ? '统筹单' : '批单'}</td>
+                        <td>{$value.pay_money}</td>
+                        <td>{:date('Y-m-d H:i:s',$value.create_time)}</td>
+                    </tr>
+                    {/volist}
                     </tbody>
                 </table>
             </div>

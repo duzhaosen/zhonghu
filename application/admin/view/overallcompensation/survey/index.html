@@ -106,6 +106,7 @@
                         <th class="center">其他费用</th>
                         <th class="center">案件状态</th>
                         <th class="center">车损</th>
+                        <th class="center">人伤</th>
                         <th class="center">操作</th>
                     </tr>
                     </thead>
@@ -125,6 +126,7 @@
                         <td>{:date('Y-m-d H:i:s',$value.end_time)}</td>
                         <td>{$value.survey_userStr}</td>
                         <td></td>
+                        <td></td>
                         <td>{$value.report_typeStr}</td>
                         <td>{$value.car_damage_typeStr}</td>
                         <td>{$value.human_injury_typeStr}</td>
@@ -143,6 +145,25 @@
 {include file="public/export" /}
 <script>
     jQuery(function($) {
+        layui.use('laydate', function() {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#start_time' //交强起期
+                , format: 'yyyy/MM/dd'
+                , done: function (value, date, endDate) {
+                    $("#start_time").val(value);
+                }
+            });
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#end_time' //交强起期
+                , format: 'yyyy/MM/dd'
+                , done: function (value, date, endDate) {
+                    $("#end_time").val(value);
+                }
+            });
+        });
         $(".add").on('click',function() {
             var report_id = $(this).parents('tr').attr("data-id");
             window.location.href="/admin/Overallcompensation/survey/add?report_id="+report_id;
