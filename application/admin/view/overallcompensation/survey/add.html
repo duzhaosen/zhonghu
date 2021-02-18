@@ -609,19 +609,21 @@
             </div>
             <div id="showImages" style="margin-top:15rem">
                 {if isset($list.attach)}
+                <input type="hidden" value="{$total = 0}">
                     {volist name="$report_list.attach" id="value"}
                     <div class="widget-box  collapsed">
-                        <div class="widget-header">
+                        <div class="widget-header" data-type="1">
                             <h5 class="widget-title">{$key}</h5>
+                            <input type="hidden" value="{$total ++}">
                         </div>
-                        <div class="widget-body" style="display:none;">
-                            <div style="display: flex;flex-direction:row;margin:2rem;">
-                                {volist name="$value" id="v"}
-                                <div id="img134" style="height:100px;width:10%;">
+                        <div class="widget-body" id="file_show_{$total}" style="display:none;">
+                            <div style="display: flex;flex-direction:row;flex-wrap:wrap;">
+                                {volist name="$value" id="v" key="k"}
+                                <div id="img{$v.id}" style="height:100px;width:10%;margin-top:2rem;">
                                     <a data-magnify="gallery" data-src="" data-group="{$v.folder}" href="{$v.url}">
                                         <img src="{$v.url}" style="padding:2px;" width="100%" height="100%">
                                     </a>
-                                    <div class="del-icon" data-id="{$v.id}"></div>
+                                    <div class="del-icon" data-class1="{$total}" data-class2="{$k-1}" data-id="{$v.id}"></div>
                                 </div>
                                 {/volist}
                             </div>
@@ -690,7 +692,7 @@
                                 </div>
                                 <div class=" search-item-div col-xs-3">
                                     <label class="text-center search-item-label">审核日期:</label>
-                                    <input type="text" class="form-control" readonly  style="width:100%" value="{if isset($list.financial_review_time)}{:date('Y/m/d',$list.review_time)}{/if}">
+                                    <input type="text" class="form-control" readonly  style="width:100%" value="{if isset($list.financial_review_time)}{:date('Y/m/d',$list.financial_review_time)}{/if}">
 
                                 </div>
                             </div>
@@ -2199,10 +2201,10 @@ jQuery(function($) {
             urlArr[i].url = [];
             urlArr[i].id = [];
             urlArr[i].name = urlArrObject[i].name;
-            for (let k in urlArrObject[i].url) {
+            for (let k = 0; k < urlArrObject[i].url.length; k++) {
                 urlArr[i].url.push(urlArrObject[i].url[k])
             }
-            for (let k in urlArrObject[i].id) {
+            for (let k = 0; k < urlArrObject[i].id.length; k++) {
                 urlArr[i].id.push(urlArrObject[i].id[k])
             }
         } else {
@@ -2250,20 +2252,29 @@ jQuery(function($) {
                     layer.msg("上传文件个数：" + obj.total + "成功个数：" + obj.successful + "失败个数：" + obj.aborted);
                     var html = '';
                     for (var k = 1; k <= urlArr.length; k++) {
-                        console.log(urlArr[k]);
                         if (urlArr[k]) {
                             if (urlArr[k].name != undefined) {
-                                html += '<div class="form-inline form-group col-xs-12">';
-                                html += '<div class="titles"><p><font></font>' + urlArr[k].name + '</p></div>';
-                                html += '<div class="conts">';
-                                for (var j = 0; j < urlArr[k].url.length; j++) {
-                                    html += '<div class="search-item-div col-xs-1" id="img' + urlArr[k].id[j] + '" style="height:100px;">'
-                                    html += '<a data-magnify="gallery" data-src="" data-group="default' + i + '" href="' + urlArr[k].url[j] + '">';
-                                    html += '<img src="' + urlArr[k].url[j] + '"  style="padding:2px;" width="100%" height="100%">';
-                                    html += '</a>';
-                                    html += '<div class="del-icon" data-id="' + urlArr[k].id[j] + '" ></div>';
-                                    html += '</div>';
+                                html += '<div class="widget-box"> <div class="widget-header">';
+                                html += '<h5 class="widget-title">' + urlArr[k].name + '</h5></div>';
+                                //判断是否展示
+                                var is_show = $("#file_show_"+k).is(":hidden");
+                                if(is_show == true) {
+                                    var style = 'style="display:none;"';
+                                }else{
+                                    var style = '';
                                 }
+                                html += '<div class="widget-body" '+style+' id="file_show_'+k+'" >  <div style="display: flex;flex-direction:row;flex-wrap:wrap;">';
+                                for (var j = 0; j < urlArr[k].url.length; j++) {
+                                    if(urlArr[k].id[j] != undefined) {
+                                        html += '<div id="img' + urlArr[k].id[j] + '"= style="height:100px;width:10%;margin-top:2rem;">'
+                                        html += '<a data-magnify="gallery" data-src="" data-group="default' + i + '" href="' + urlArr[k].url[j] + '">';
+                                        html += '<img src="' + urlArr[k].url[j] + '"  style="padding:2px;" width="100%" height="100%">';
+                                        html += '</a>';
+                                        html += '<div class="del-icon" data-class1="'+k+'" data-class2="'+j+'" data-id="' + urlArr[k].id[j] + '" ></div>';
+                                        html += '</div>';
+                                    }
+                                }
+                                html += '</div>';
                                 html += '</div>';
                                 html += '</div>';
                             }
@@ -2279,6 +2290,16 @@ jQuery(function($) {
             });
         });
     }
+    //未来元素展示与否
+    $("#showImages").on("click",".widget-header",function() {
+        if($(this).parents(".widget-box").find(".widget-body").css('display') === 'none') {
+            $(this).parents(".widget-box").removeClass("collapsed");
+            $(this).parents(".widget-box").find(".widget-body").fadeIn();
+        }else{
+            $(this).parents(".widget-box").addClass("collapsed");
+            $(this).parents(".widget-box").find(".widget-body").fadeOut();
+        }
+    })
     //上传
     $("#addUpload").on('click', function () {
         var val = $("#upload_total").val();
@@ -2293,6 +2314,8 @@ jQuery(function($) {
     $("#showImages").on('click', ".del-icon", function () {
         var id = $(this).attr("data-id");
         var but = $(this);
+        var class1 = $(this).attr("data-class1");
+        var class2 = $(this).attr("data-class2");
         but.attr("disabled", "disabled");
         layer.confirm('是否确认删除?', function (index) {
             $.ajax('/admin/ajax/upload/delFile', {
@@ -2304,6 +2327,7 @@ jQuery(function($) {
                     but.removeAttr("disabled");
                     if (data.code == 100000) {
                         layer.msg(data.msg);
+                        delete urlArr[class1]['id'][class2];
                         $("#img" + id).remove();
                     } else {
                         layer.msg(data.msg);

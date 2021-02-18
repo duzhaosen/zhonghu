@@ -12,6 +12,7 @@ namespace app\admin\controller\endorsements;
 use app\admin\controller\Common;
 
 class Newcar extends Common {
+    protected $power = 45;
     public function index() {
         $this->fetch();
     }

@@ -16,6 +16,11 @@ use think\Session;
 
 class Structure extends Common
 {
+    protected $power = 27;
+
+    /** 组织结构
+     * @param Request $request
+     */
     public function index(Request $request) {
         $condition = array();
         $list = Model('Structure')->getList($condition);

@@ -85,7 +85,7 @@
                         </div>
                         <div class=" search-item-div col-xs-3 " style="margin-top:2rem;">
                             <button class="layui-btn layui-btn-radius layui-btn-normal" id="search">查询</button>
-                            <button class="layui-btn layui-btn-radius layui-btn-normal" id="reset" value="reset">重置</button>
+                            <button class="layui-btn layui-btn-radius layui-btn-normal" type="reset" value="reset">重置</button>
                         </div>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
                     </thead>
                     <tbody>
                     {volist name="$list" id="value" key="key"}
-                    <tr data-id="{$value.id}" data-status="{$value.status}" data-documents="{$value.documents_id}">
+                    <tr data-id="{$value.temporary_id}" data-status="{$value.status}" data-documents="{$value.documents_id}">
                         <td><input type="checkbox" name="overall_check" class="overall_check" value="{$value.temporary_id}"></td>
                         <td><a href="/admin/Overall/overall/view?temporary_id={$value.temporary_id}" target="_blank">{$value.temporary_id}</a></td>
                         <td>{$value.overall_id}</td>
@@ -139,7 +139,7 @@
                         <td>{$value.attribution_userStr}</td>
                         <td>{$value.financial_review_user}</td>
                         <td>{$value.statusStr}</td>
-                        <td>{if isset($value.financial_review_time)}{:date('Y-m-d H:i:s',$value.financial_review_time)}{/if}</td>
+                        <td>{if $value.financial_review_time neq 0}{:date('Y-m-d H:i:s',$value.financial_review_time)}{/if}</td>
                         <td>
                             <div class="hidden-sm hidden-xs action-buttons">
                                 <a class="green" href="/admin/Overall/overall/edit?temporary_id={$value.temporary_id}">

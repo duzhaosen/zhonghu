@@ -70,7 +70,7 @@ class Endorsements extends Common {
         }
         $res = Model('Endorsements')->getList($condition,'*',$this->param['pagesize'],['page'=>$page,'query'=>$this->param]);
         if($total) {
-            writLog("财务审核导出批单".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,32);
+            writLog("财务审核导出批单".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,43);
             return ceil($res->total()/$this->param['pagesize']);
         }
         $line = '';

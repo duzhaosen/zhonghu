@@ -33,7 +33,7 @@ class Upload extends Common {
         }
         if($file) {
             $path = Config::parse(APP_PATH.'/admin/config/upload.ini','ini');
-            $info = $file->move(ROOT_PATH . 'public' . DS . 'imagePath' . DS . 'image' . DS . $result['folder']);
+            $info = $file->move(ROOT_PATH . 'public' . $path['url']['path'] . $result['folder']);
             if($info){
                 $url =  $info->getSaveName();
                 $param = array();

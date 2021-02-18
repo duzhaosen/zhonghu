@@ -47,7 +47,7 @@ class Endorsements extends Model {
         Config::parse(APP_PATH.'/admin/config/car.ini','ini');
         Config::parse(APP_PATH.'/admin/config/endorsements.ini','ini');
         $commont = Config::parse(APP_PATH.'/admin/config/Structure.ini','ini');
-        $result = Db($this->db)->field($field)->where($condition)->alias('endorsements')
+        $result = Db($this->db)->field($field)->where($condition)->order('endorsements.endorsements_time desc')->alias('endorsements')
             ->join($this->car_db.' car','endorsements.p_temporary_id=car.related_id')
             ->join($this->overall_db." overall_planning",'endorsements.p_temporary_id=overall_planning.related_id')
             ->join($this->traffic_db." traffic", "endorsements.p_temporary_id=traffic.related_id")
@@ -60,6 +60,7 @@ class Endorsements extends Model {
                 $attribution_user = Model('User')->getList(['id'=>$item['attribution_user']]);
                 $item['attribution_userStr'] = isset($attribution_user[0]) ? $attribution_user[0]['name'] : '';
                 $item['colorStr'] = $commont['color'][$item['color']];
+                $item['endorsements_typeStr'] = $commont['endorsements_type'][$item['endorsements_type']];
                 $item['use_natureStr'] = $commont['use_nature'][$item['use_nature']];
                 $item['speciesStr'] = $commont['species'][$item['species']];
                 $item['colorStr'] = $commont['color'][$item['color']];
@@ -448,8 +449,9 @@ class Endorsements extends Model {
                 foreach($attach as $key=>$value) {
                     foreach($value as $item) {
                         //复制图片
-                        $old_url = substr($item['attach_url'],9);
-                        $new_url = date('Ymd').'/'.$old_url;
+                        $old_url = substr($item['attach_url'],9,-8).'copy';
+                        $file_suffix = substr($item['attach_url'],-4);
+                        $new_url = date('Ymd').'/'.$old_url.$file_suffix;
                         //判断 文件夹
                         if(!is_dir(ROOT_PATH.'public'.$path['url']['path'].$item['folder'])) {
                             mkdir(ROOT_PATH.'public'.$path['url']['path'].$item['folder'],0755,true);
@@ -815,7 +817,9 @@ class Endorsements extends Model {
     {
         $condition['op_user'] = getAdminInfo();
         $condition['op_time'] = time();
-        return db($this->db)->update($condition);
+        $p_temporary_id = $condition['p_temporary_id'];
+        unset($condition['p_temporary_id']);
+        return db($this->db)->where(['p_temporary_id'=>$p_temporary_id])->update($condition);
     }
 
     /** 生成统批单号禁止跳号
@@ -839,7 +843,7 @@ class Endorsements extends Model {
                return $result.'000000001';
             }else{
                 $str = substr($res[0]['endorsements_id'],-13) + 1;
-                return 'ZH'.$str;
+                return 'PZH'.$str;
             }
         }
         return false;
@@ -858,7 +862,8 @@ class Endorsements extends Model {
         if(empty($res)) {
             return $result.'00001';
         }else{
-            return $res[0]['p_temporary_id'] + 1;
+            $str = substr($res[0]['p_temporary_id'],1) + 1;
+            return 'P' . $str;
         }
         return false;
 

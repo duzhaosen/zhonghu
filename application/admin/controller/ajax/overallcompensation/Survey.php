@@ -60,7 +60,7 @@ class Survey extends Common {
         }
         $res = Model('Report')->getList($condition,$this->param['pagesize'],['page'=>$page,'query'=>$this->param]);
         if($total) {
-            writLog("导出查勘中心".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,36);
+            writLog("导出查勘中心".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,58);
             return ceil($res->total()/$this->param['pagesize']);
         }
         $line = '';

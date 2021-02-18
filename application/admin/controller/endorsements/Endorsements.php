@@ -16,6 +16,17 @@ use think\Request;
 class Endorsements extends Common {
     private $param;
     private $pagesize = 10;
+    protected $power;
+    public function __construct(Request $request = null)
+    {
+        if($request->action() == 'index') {
+            $this->power = 47;
+        }
+        else if($request->action() == 'view') {
+            $this->power = 76;
+        }
+        parent::__construct($request);
+    }
     public function index(Request $request) {
         //导出字段
         $res = Config::parse(APP_PATH.'/admin/config/endorsements.ini','ini');

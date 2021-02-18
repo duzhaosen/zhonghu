@@ -99,7 +99,7 @@ class Quotation extends Model {
             $param['car_name'] = $condition['car_name'];
             $param['date_time'] = $condition['date_time'];
             $param['short_term_coefficient'] = $condition['short_term_coefficient'];
-            db($this->db)->insert($param);
+            DB::table($this->db)->insert($param);
             //车辆信息
             $car = array();
             $car['related_id'] = $param['id'];
@@ -138,7 +138,7 @@ class Quotation extends Model {
             $car['coefficient'] = $condition['coefficient'];
             $car['remarks'] = $condition['remarks'];
             $car['rating'] = $condition['rating'];
-            db($this->car_db)->insert($car);
+            DB::table($this->car_db)->insert($car);
             //统筹项目
             $overall = array();
             if(isset($condition['vehicle_loss'])) {
@@ -230,9 +230,22 @@ class Quotation extends Model {
         } catch (\Exception $e) {
             // 回滚事务
             Db::rollback();
+            print_r($e);die;
             return false;
         }
         return true;
+    }
+
+    /** 单独修改报价表
+     *
+     */
+    public function editQuodationOnly($condition) {
+        $condition['op_user'] = getAdminInfo();
+        $condition['op_time'] = time();
+        $id = $condition['id'];
+        if($id == false) return false;
+        unset($condition['id']);
+        return db($this->db)->where(['id'=>$id])->update($condition);
     }
 
     /**修改报价单

@@ -96,7 +96,7 @@
                     </thead>
                     <tbody>
                     {volist name="$list" id="value"}
-                    <tr data-documents="{$value.documents_id}" data-status="{$value.status}">
+                    <tr data-documents="{$value.documents_id}" data-status="{$value.status}"  data-id="{$value.p_temporary_id}">
                         <td><input type="checkbox" name="endorsement_check" class="endorsement_check" value="{$value.p_temporary_id}"></td>
                         <td><a href="/admin/Endorsements/endorsements/view?p_temporary_id={$value.p_temporary_id}">{$value.p_temporary_id}</a> </td>
                         <td>{$value.endorsements_id}</td>
@@ -108,16 +108,16 @@
                         <td>{$value.coordinated_name}</td>
                         <td>{:date('Y-m-d',$value.endorsements_time)}</td>
                         <td>{:date('Y-m-d',$value.create_time)}</td>
-                        <td>-</td>
+                        <td>{$value.endorsements_typeStr}</td>
                         <td>{$value.statusStr}</td>
-                        <td>{if isset($value.financial_review_time)}{:date('Y-m-d H:i:s',$value.financial_review_time)}{/if}</td>
+                        <td>{if $value.financial_review_time neq 0}{:date('Y-m-d H:i:s',$value.financial_review_time)}{/if}</td>
                         <td>
                             <div class="hidden-sm hidden-xs action-buttons">
                                 <a class="green" href="/admin/Endorsements/fullorder/editEndorsements?p_temporary_id={$value.p_temporary_id}">
                                     <i class="ace-icon fa fa-pencil bigger-130"></i>
                                 </a>
 
-                                <a class="red delOverall" href="">
+                                <a class="red delEndorsements" href="">
                                     <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                 </a>
                             </div>
@@ -134,7 +134,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="red delOverall" href="#">
+                                            <a class="red delEndorsements" href="#">
                                                 <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                             </a>
                                         </li>
@@ -300,6 +300,37 @@
                     layer.msg("系统错误");
                 }
             });
+        })
+        //删除
+        $(".delEndorsements").on('click',function() {
+            var endorsements = $(this).parents('tr').attr("data-id");
+            var but = $(this);
+            but.attr("disabled","disabled");
+            layer.confirm('是否确认删除?', function(index){
+                var id = but.parents('tr').attr("data-id");
+                $.ajax('/admin/ajax/Endorsements/endorsements/delEndorsements',{
+                    dataType: 'json', // type of response data
+                    timeout: 500,     // timeout milliseconds
+                    method: "post",
+                    data: {id:endorsements},
+                    success: function (data,status,xhr) {   // success callback function
+                        but.removeAttr("disabled");
+                        if(data.code == 100000) {
+                            layer.msg(data.msg);
+                            setTimeout(function() {
+                                location.reload();
+                            },300);
+                        }else{
+                            layer.msg(data.msg);
+                        }
+                    },
+                    error: function() {
+                        layer.msg("系统错误");
+                    }
+                });
+                layer.close(index);
+            });
+            return false;
         })
     });
 </script>

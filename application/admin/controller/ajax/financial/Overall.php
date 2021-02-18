@@ -70,7 +70,7 @@ class Overall extends Common {
         }
         $res = Model('Overall')->getList($condition,'*',$this->param['pagesize'],['page'=>$page,'query'=>$this->param]);
         if($total) {
-            writLog("财务审核导出统筹单".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,30);
+            writLog("财务审核导出统筹单".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,41);
             return ceil($res->total()/$this->param['pagesize']);
         }
         $line = '';

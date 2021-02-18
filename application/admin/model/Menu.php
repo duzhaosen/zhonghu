@@ -40,10 +40,10 @@ class Menu extends Model {
                 if(isset($value['isshow'])) {
                     $res[$key]['isshowStr'] = $value['isshow'] == 1 ? '展示' : '不展示';
                 }
-                if(isset($value['op_time'])) {
+                if(isset($value['op_time']) && $value['op_time'] != 0) {
                     $res[$key]['op_time'] = date('Y-m-d H:i:s',$value['op_time']);
                 }
-                if(isset($value['create_time'])) {
+                if(isset($value['create_time']) && $value['create_time'] != 0) {
                     $res[$key]['create_time'] = date('Y-m-d H:i:s',$value['create_time']);
                 }
             }

@@ -16,6 +16,7 @@ use think\Request;
 class Warehousing extends Common {
     private $pagesize = 10;
     private $param;
+    protected $power = 53;
 
     /** 单证入库
      * @param Request $request

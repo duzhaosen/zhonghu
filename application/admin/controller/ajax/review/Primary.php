@@ -26,7 +26,7 @@ class Primary extends Controller {
         }
         $res = Model('ReviewLog')->review($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("审核统筹单".http_build_query($this->param)."结果：".$result,AUDIT_LOGS,25);
+        writLog("审核统筹单".http_build_query($this->param)."结果：".$result,AUDIT_LOGS,48);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;

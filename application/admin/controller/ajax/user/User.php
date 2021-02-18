@@ -32,7 +32,7 @@ class User extends Common {
         $this->param['passwd'] = md5($this->param['passwd']);
         $res = Model('User')->addUser($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("添加用户".http_build_query($this->param)."结果：".$result,ADD_LOGS,10);
+        writLog("添加用户".http_build_query($this->param)."结果：".$result,ADD_LOGS,89);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -60,7 +60,7 @@ class User extends Common {
         }
         $res = Model('User')->editUser($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("修改用户".http_build_query($this->param)."结果：".$result,EDIT_LOGS,10);
+        writLog("修改用户".http_build_query($this->param)."结果：".$result,EDIT_LOGS,90);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -86,7 +86,7 @@ class User extends Common {
         $this->param['type'] = 2;
         $res = Model('User')->editUser($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("删除用户".http_build_query($this->param)."结果：".$result,DEL_LOGS,10);
+        writLog("删除用户".http_build_query($this->param)."结果：".$result,DEL_LOGS,28);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -211,7 +211,7 @@ class User extends Common {
         $condition['passwd'] = md5($this->param['password']);
         $res = Model('User')->editUser($condition);
         $result = $res == true? '成功': '失败';
-        writLog("修改密码".http_build_query($condition)."结果：".$result,EDIT_LOGS,10);
+        writLog("修改密码".http_build_query($condition)."结果：".$result,EDIT_LOGS,28);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;

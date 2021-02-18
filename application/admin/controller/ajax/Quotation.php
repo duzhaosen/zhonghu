@@ -47,7 +47,7 @@ class Quotation extends Common {
         //格式化数据
         $res = Model('Quotation')->addQuotation($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("添加报价单".http_build_query($this->param)."结果：".$result,ADD_LOGS,18);
+        writLog("添加报价单".http_build_query($this->param)."结果：".$result,ADD_LOGS,31);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -71,9 +71,9 @@ class Quotation extends Common {
             $data['msg'] = 'id 不可为空';
             return json($data);
         }
-        $res = Model('Quotation')->editQuotation(['id'=>$id,'type' => 2]);
+        $res = Model('Quotation')->editQuodationOnly(['id'=>$id,'type' => 2]);
         $result = $res == true? '成功': '失败';
-        writLog("删除报价单".http_build_query($this->param)."结果：".$result,DEL_LOGS,21);
+        writLog("删除报价单:id={$id}结果：".$result,DEL_LOGS,30);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -117,7 +117,7 @@ class Quotation extends Common {
         //格式化数据
         $res = Model('Quotation')->editQuotation($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("修改报价单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,21);
+        writLog("修改报价单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,70);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -171,7 +171,7 @@ class Quotation extends Common {
         }
         $res = Model('Quotation')->getList($condition,'quotation.id as quotation_id,quotation.*,car.*,overall.*',$param['pagesize'],['page'=>$page,'query'=>$param]);
         if($total) {
-            writLog("导出报价单".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,19);
+            writLog("导出报价单".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,33);
             return ceil($res->total()/$param['pagesize']);
         }
         $line = '';

@@ -16,7 +16,30 @@ use think\Request;
 
 class Overall extends Common {
     private $param;
+    protected $power;
     private $pagesize = 10;
+    public function __construct(Request $request = null)
+    {
+        if($request->action() == 'index') {
+            $this->power = 38;
+        }
+        else if($request->action() == 'add') {
+            $this->power = 37;
+        }
+        else if($request->action() == 'edit') {
+            $this->power = 81;
+        }
+        else if($request->action() == 'copy') {
+            $this->power = 82;
+        }
+        else if($request->action() == 'view') {
+            $this->power = 83;
+        }
+        else if($request->action() == 'quotationPdf') {
+            $this->power = 84;
+        }
+        parent::__construct($request);
+    }
     public function add(Request $request) {
         $res = Config::parse(APP_PATH.'/admin/config/structure.ini','ini');
         $this->assign('sourceList',$res['source']);
@@ -143,8 +166,8 @@ class Overall extends Common {
         $imageArr = [];
         //定义上传文件夹
         $uploadArr = range(0,10);
-        if(!empty($res[0]) && !empty($res[0]['attach'])) {
-            foreach($res[0]['attach'] as $key=>$value) {
+        if(!empty($list[0]) && !empty($list[0]['attach'])) {
+            foreach($list[0]['attach'] as $key=>$value) {
                 if(!empty($value)) {
                     foreach ($value as $v) {
                         $k = substr($v['folder'],-1);

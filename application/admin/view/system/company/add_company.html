@@ -1,0 +1,101 @@
+<div class="row">
+    <form style="margin-top:2rem" name="addCompany">
+        <div class="form-inline form-group col-xs-12">
+            <div class="form-group search-item-div col-xs-4">
+                <label for="name" class="text-center search-item-label">公司名称:</label>
+                <input class="form-control" type="text" id="name" name="name" style="width:100%" value="">
+            </div>
+            <div class="form-group search-item-div col-xs-4">
+                <label for="address" class="text-center search-item-label">公司地址:</label>
+                <input class="form-control" type="text" id="address" name="address" style="width:100%" value="">
+            </div>
+        </div>
+        <div class="form-inline form-group col-xs-12">
+            <div class="form-group search-item-div col-xs-4">
+                <label for="customer_phone" class="text-center search-item-label">客服电话:</label>
+                <input class="form-control" type="text" id="customer_phone" name="customer_phone" style="width:100%" value="">
+            </div>
+            <div class="form-group search-item-div col-xs-4">
+                <label for="office" class="text-center search-item-label">邮局电话:</label>
+                <input class="form-control" type="text" id="office" name="office" style="width:100%" value="">
+            </div>
+        </div>
+        <div class="form-inline form-group col-xs-12">
+            <div class="form-group search-item-div col-xs-4">
+                <label for="chapter" class="text-center search-item-label">公司章:</label>
+                <input type="hidden" name="chapter" id="chapter" value="">
+                <button type="button" class="layui-btn" style="width:100%" id="chapterFile">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+            <div class="form-group search-item-div col-xs-4">
+                <img src="" id="chapterShow" width="100px" height="100px" alt="">
+            </div>
+        </div>
+        <button style="margin-left:2rem;margin-bottom: 1rem;" id="addCompany" class="layui-btn layui-btn-radius layui-btn-normal">提交</button>
+    </form>
+</div>
+<script>
+    jQuery(function($) {
+        layui.use('upload', function(){
+            var upload = layui.upload;
+
+            //执行实例
+            var uploadInst = upload.render({
+                elem: '#chapterFile' //绑定元素
+                ,url: '/admin/ajax/System/company/uploadChapter/' //上传接口
+                ,acceptMime: 'image/*'
+                ,size: 5120
+                ,before: function() {
+                    layer.load(); //上传loading
+                }
+                ,done: function(res){
+                    //上传完毕回调
+                    if(res.code == 100000) {
+                        layer.msg("上传成功");
+                        $("#chapter").val(res.data.chapter);
+                        $("#chapterShow").attr("src",res.data.url);
+                    }else{
+                        layer.msg("上传失败");
+                    }
+                    layer.closeAll('loading'); //关闭loading
+                }
+                ,error: function(){
+                    //请求异常回调
+                    layer.msg("上传失败");
+                    layer.closeAll('loading'); //关闭loading
+                }
+            });
+        });
+        //添加公司
+        $("#addCompany").on('click',function() {
+            var but = $(this);
+            but.attr("disabled", "disabled");
+            var form = $("form[name=addCompany]").serializeArray();
+            var url = '/admin/ajax/System/company/addCompany';
+            $.ajax(url, {
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: form,
+                success: function (data, status, xhr) {   // success callback function
+                    console.log(data);
+                    but.removeAttr("disabled");
+                    if (data.code == 100000) {
+                        layer.msg(data.msg);
+                        setTimeout(function () {
+                            location.reload();
+                        }, 300);
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function () {
+                    but.removeAttr("disabled");
+                    layer.msg("系统错误");
+                }
+            });
+            return false;
+        })
+    })
+</script>

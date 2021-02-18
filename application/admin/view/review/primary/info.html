@@ -915,7 +915,7 @@
                     if(data.code == 100000) {
                         layer.msg(data.msg);
                         setTimeout(function() {
-                            location.reload();
+                            window.location.href="/admin/Review/primary/review";
                         },300);
                     }else{
                         layer.msg(data.msg);

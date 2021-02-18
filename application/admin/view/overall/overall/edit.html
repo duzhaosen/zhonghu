@@ -956,16 +956,18 @@
                     </div>
                     <div id="showImages">
                         {if isset($list.attach)}
+                        <input type="hidden" value="{$total = 0}">
                             {volist name="$list.attach" id="value"}
                             <div class="form-inline form-group col-xs-12">
                                 <div class="titles"><p><font></font>{$key}</p></div>
+                                <input type="hidden" value="{$total ++}">
                                     <div class="conts">
-                                        {volist name="$value" id="v"}
+                                        {volist name="$value" id="v" key="k"}
                                         <div class="search-item-div col-xs-1" id="img{$v.id}" style="height:100px;">
                                             <a data-magnify="gallery" data-src="" data-group="{$v.folder}" href="{$v.url}">
                                                 <img src="{$v.url}" style="padding:2px;" width="100%" height="100%">
                                             </a>
-                                            <div class="del-icon" data-id="{$v.id}"></div>
+                                            <div class="del-icon" data-class1="{$total}" data-class2="{$k-1}" data-id="{$v.id}"></div>
                                         </div>
                                         {/volist}
                                     </div>
@@ -1140,7 +1142,63 @@
                     $("#date_time").val(take_effect);
                     //短期系数 = 生效日期/起期+1年
                     var num = take_effect/date;
-                    $("#short_term_coefficient").val(num.toFixed(2));
+                    var short_term_coefficient = num.toFixed(2);
+                    $("#short_term_coefficient").val(short_term_coefficient);
+
+                    //统筹项目计算
+                    var standard_price = 0;
+                    var payable_price = 0;
+                    $(".all_check").each(function() {
+                        if($(this).val() != 'all') {
+                            if(this.checked) {
+                                var value = $(this).val();
+                                var standard = $("#"+value+"_standard").val();
+                                if(standard == '') {
+                                    standard = 0;
+                                }
+                                standard_price += parseFloat(standard);
+                                var discount = $("#total_discount").val();
+                                if(discount == '') {
+                                    discount = 1;
+                                }else{
+                                    discount = discount/100;
+                                }
+                                var payable = standard * short_term_coefficient * discount;
+                                payable_price = parseFloat(payable_price) + parseFloat(payable.toFixed(2));
+                                //应缴统筹费
+                                $("#"+value+"_payable").val(payable.toFixed(2));
+                            }
+                        }
+                    })
+                    //附加
+                    $(".all_check_attch").each(function() {
+                        if($(this).val() != 'all') {
+                            if(this.checked) {
+                                var value = $(this).val();
+                                var standard = $("#"+value+"_standard").val();
+                                if(standard == '') {
+                                    standard = 0;
+                                }
+                                standard_price += parseFloat(standard);
+                                var discount = $("#total_discount").val();
+                                if(discount == '') {
+                                    discount = 1;
+                                }else{
+                                    discount = discount/100;
+                                }
+                                var payable = standard * short_term_coefficient * discount;
+                                payable_price = parseFloat(payable_price) + parseFloat(payable.toFixed(2));
+                                //应缴统筹费
+                                $("#"+value+"_payable").val(payable.toFixed(2));
+                            }
+                        }
+                    })
+
+
+                    //基准统筹费
+                    $("#benchmarking").val(parseFloat(standard_price).toFixed(2));
+                    //统筹费（合计）
+                    $("#total_planning").val(parseFloat(payable_price).toFixed(2));
                 }
             });
         });
@@ -1153,10 +1211,10 @@
                 urlArr[i].url = [];
                 urlArr[i].id = [];
                 urlArr[i].name = urlArrObject[i].name;
-                for(let k in urlArrObject[i].url){
+                for(var k = 0; k< urlArrObject[i].url.length; k++){
                     urlArr[i].url.push(urlArrObject[i].url[k])
                 }
-                for(let k in urlArrObject[i].id){
+                for(var k = 0; k< urlArrObject[i].id.length; k++){
                     urlArr[i].id.push(urlArrObject[i].id[k])
                 }
             }else{
@@ -1174,7 +1232,7 @@
                     ,acceptMime: 'image/*'
                     ,size: 5120
                     ,data: {
-                        temporary_id: function() {
+                        related_id: function() {
                             return $("#temporary_id").val();
                         },
                         folder: 'default'+i,
@@ -1203,26 +1261,29 @@
                     ,allDone: function(obj){ //当文件全部被提交后，才触发
                         layer.msg("上传文件个数："+obj.total+"成功个数："+obj.successful+"失败个数："+obj.aborted);
                         var html = '';
-                        for (var k = 1; k <= urlArr.length; k++) {
-                            console.log(urlArr[k]);
+                        console.log(urlArr);
+                        for (var k = 1; k < urlArr.length; k++) {
                             if(urlArr[k]) {
                                 if(urlArr[k].name != undefined) {
                                     html += '<div class="form-inline form-group col-xs-12">';
                                     html += '<div class="titles"><p><font></font>'+urlArr[k].name+'</p></div>';
                                     html += '<div class="conts">';
                                     for(var j=0;j < urlArr[k].url.length;j++){
-                                        html += '<div class="search-item-div col-xs-1" id="img'+urlArr[k].id[j]+'" style="height:100px;">'
-                                        html += '<a data-magnify="gallery" data-src="" data-group="default'+i+'" href="'+urlArr[k].url[j]+'">';
-                                        html += '<img src="'+urlArr[k].url[j]+'"  style="padding:2px;" width="100%" height="100%">';
-                                        html += '</a>';
-                                        html += '<div class="del-icon" data-id="'+urlArr[k].id[j]+'" ></div>';
-                                        html += '</div>';
+                                        if(urlArr[k].id[j] != undefined) {
+                                            html += '<div class="search-item-div col-xs-1" id="img'+urlArr[k].id[j]+'" style="height:100px;">'
+                                            html += '<a data-magnify="gallery" data-src="" data-group="default'+i+'" href="'+urlArr[k].url[j]+'">';
+                                            html += '<img src="'+urlArr[k].url[j]+'"  style="padding:2px;" width="100%" height="100%">';
+                                            html += '</a>';
+                                            html += '<div class="del-icon" data-class1="'+k+'" data-class2="'+j+'" data-id="'+urlArr[k].id[j]+'" ></div>';
+                                            html += '</div>';
+                                        }
                                     }
                                     html += '</div>';
                                     html += '</div>';
                                 }
                             }
                         }
+                        console.log(html);
                         $("#showImages").html("");
                         $("#showImages").html(html);
                     }
@@ -1247,6 +1308,8 @@
         $("#showImages").on('click',".del-icon",function() {
             var id = $(this).attr("data-id");
             var but = $(this);
+            var class1 = $(this).attr("data-class1");
+            var class2 = $(this).attr("data-class2");
             but.attr("disabled","disabled");
             layer.confirm('是否确认删除?', function(index){
                 $.ajax('/admin/ajax/upload/delFile',{
@@ -1258,6 +1321,7 @@
                         but.removeAttr("disabled");
                         if(data.code == 100000) {
                             layer.msg(data.msg);
+                            delete urlArr[class1]['id'][class2];
                             $("#img"+id).remove();
                         }else{
                             layer.msg(data.msg);

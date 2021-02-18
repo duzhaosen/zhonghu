@@ -15,6 +15,20 @@ use think\Request;
 
 class Fullorder extends Common {
     private $param;
+    protected $power;
+    public function __construct(Request $request = null)
+    {
+        if($request->action() == 'correction') {
+            $this->power = 46;
+        }
+        else if($request->action() == 'endorsements') {
+            $this->power = 75;
+        }
+        else if($request->action() == 'editEndorsements') {
+            $this->power = 77;
+        }
+        parent::__construct($request);
+    }
     public function correction() {
         $this->fetch();
     }
@@ -31,6 +45,30 @@ class Fullorder extends Common {
             $this->error("请输入有效统筹单号");
         }
         $this->assign('list',$res[0]);
+
+        //影像资料
+        $imageArr = [];
+        //定义上传文件夹
+        $uploadArr = range(0,10);
+        if(!empty($res[0]) && !empty($res[0]['attach'])) {
+            foreach($res[0]['attach'] as $key=>$value) {
+                if(!empty($value)) {
+                    foreach ($value as $v) {
+                        $k = substr($v['folder'],-1);
+                        $imageArr[$k]['name'] = $v['name'];
+                        $imageArr[$k]['url'][] = $v['url'];
+                        $imageArr[$k]['id'][] = $v['id'];
+                    }
+                }
+            }
+        }
+        $this->assign('imageArr',json_encode($imageArr));
+        $this->assign('image',$imageArr);
+        $this->assign('upload',$uploadArr);
+        $this->assign('uploadTotal',11);
+
+        //批单暂存号
+        $this->assign('p_temporary_id',Model('Endorsements')->generatePTemporaryId());
 
         $res = Config::parse(APP_PATH.'/admin/config/structure.ini','ini');
         $this->assign('sourceList',$res['source']);
@@ -62,27 +100,6 @@ class Fullorder extends Common {
         //特别约定
         $res = Config::parse(APP_PATH.'/admin/config/overall.ini','ini');
         $this->assign('agreement',$res['agreement']);
-
-        //影像资料
-        $imageArr = [];
-        //定义上传文件夹
-        $uploadArr = range(0,10);
-        if(!empty($res[0]) && !empty($res[0]['attach'])) {
-            foreach($res[0]['attach'] as $key=>$value) {
-                if(!empty($value)) {
-                    foreach ($value as $v) {
-                        $k = substr($v['folder'],-1);
-                        $imageArr[$k]['name'] = $v['name'];
-                        $imageArr[$k]['url'][] = $v['url'];
-                        $imageArr[$k]['id'][] = $v['id'];
-                    }
-                }
-            }
-        }
-        $this->assign('imageArr',json_encode($imageArr));
-        $this->assign('image',$imageArr);
-        $this->assign('upload',$uploadArr);
-        $this->assign('uploadTotal',11);
 
         $this->fetch();
     }
@@ -102,6 +119,26 @@ class Fullorder extends Common {
             $this->error("请输入有效批单号");
         }
         $this->assign('list',$res[0]);
+        //影像资料
+        $imageArr = [];
+        //定义上传文件夹
+        $uploadArr = range(0,10);
+        if(!empty($res[0]) && !empty($res[0]['attach'])) {
+            foreach($res[0]['attach'] as $key=>$value) {
+                if(!empty($value)) {
+                    foreach ($value as $v) {
+                        $k = substr($v['folder'],-1);
+                        $imageArr[$k]['name'] = $v['name'];
+                        $imageArr[$k]['url'][] = $v['url'];
+                        $imageArr[$k]['id'][] = $v['id'];
+                    }
+                }
+            }
+        }
+        $this->assign('imageArr',json_encode($imageArr));
+        $this->assign('image',$imageArr);
+        $this->assign('upload',$uploadArr);
+        $this->assign('uploadTotal',11);
 
         $res = Config::parse(APP_PATH.'/admin/config/structure.ini','ini');
         $this->assign('sourceList',$res['source']);
@@ -134,28 +171,7 @@ class Fullorder extends Common {
         $res = Config::parse(APP_PATH.'/admin/config/overall.ini','ini');
         $this->assign('agreement',$res['agreement']);
 
-        //影像资料
-        $imageArr = [];
-        //定义上传文件夹
-        $uploadArr = range(0,10);
-        if(!empty($res[0]) && !empty($res[0]['attach'])) {
-            foreach($res[0]['attach'] as $key=>$value) {
-                if(!empty($value)) {
-                    foreach ($value as $v) {
-                        $k = substr($v['folder'],-1);
-                        $imageArr[$k]['name'] = $v['name'];
-                        $imageArr[$k]['url'][] = $v['url'];
-                        $imageArr[$k]['id'][] = $v['id'];
-                    }
-                }
-            }
-        }
-        $this->assign('imageArr',json_encode($imageArr));
-        $this->assign('image',$imageArr);
-        $this->assign('upload',$uploadArr);
-        $this->assign('uploadTotal',11);
 
-        $this->fetch();
         $this->fetch();
     }
 }

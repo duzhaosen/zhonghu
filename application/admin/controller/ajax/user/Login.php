@@ -55,7 +55,7 @@ class Login extends Controller {
             }
             $this->getSession($res);
 
-            writLog("登陆成功",LOGIN_LOGS,33);
+            writLog("登陆成功",LOGIN_LOGS,80);
             $data = array();
             $data['code'] = 100000;
             $data['msg'] = '登录成功';

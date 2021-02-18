@@ -17,6 +17,20 @@ use \think\Session;
 class User extends Common
 {
     private $param;
+    protected $power;
+    public function __construct(Request $request = null)
+    {
+        if($request->action() == 'index') {
+            $this->power = 28;
+        }
+        else if($request->action() == 'addUser') {
+            $this->power = 89;
+        }
+        else if($request->action() == 'editUser') {
+            $this->power = 90;
+        }
+        parent::__construct($request);
+    }
     public function index(Request $request)
     {
         $this->param = $request->param();
@@ -59,7 +73,29 @@ class User extends Common
     /**添加人员
      *
      */
-    public function addUser(Request $request) {
+    public function addUser() {
+        //角色
+        $list = Model('Roles')->getRoles();
+        $this->assign('rolesList',json_encode($list));
+        //组织
+        $structureList = Model('Structure')->getList();
+        $this->assign('structureList', json_encode(getTree($structureList, [])));
+        $cityIds = '';
+        if(isset($user[0]) && isset($user[0]['city'])) {
+            $cityIds = $user[0]['city'];
+        }
+        $this->assign('cityList', json_encode(cityTree($cityIds)));
+
+        //经办人
+        $manager = Model('user')->getList(['manager'=>1]);
+        $this->assign('managerList', $manager);
+        $this->fetch();
+    }
+
+    /** 修改人员
+     * @param Request $request
+     */
+    public function editUser(Request $request) {
         $this->param = $request->param();
         if(!empty($this->param)) {
             $user = Model('User')->getList($this->param);

@@ -76,7 +76,7 @@ class User extends Model {
                 $res[$key]['salesmanStr'] = $value['salesman'] == 1 ? '业务员' : '非业务员';
                 $res[$key]['managerStr'] = $value['manager'] == 1 ? '经办人' : '非经办人';
                 $res[$key]['sexStr'] = $value['sex'] == 1 ? '男' : '女';
-                $res[$key]['create_time'] = date('Y-m-d H:i:s', $value['create_time']);
+                $res[$key]['create_time'] = $value['create_time'] == 0 ? '' : date('Y-m-d H:i:s', $value['create_time']);
                 $res[$key]['op_time'] = $value['op_time'] == 0 ? '' : date('Y-m-d H:i:s', $value['op_time']);
 
                 //详细信息字段

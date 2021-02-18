@@ -208,13 +208,7 @@
             var but = $(this);
             but.attr("disabled", "disabled");
             var form = $("form[name=addUserForm]").serializeArray();
-            var id = $("#id").val();
-            if (id != false) {
-                var url = '/admin/ajax/user/user/editUser';
-                replaceForm(form, 'id', id);
-            } else {
-                var url = '/admin/ajax/user/user/addUser';
-            }
+            var url = '/admin/ajax/user/user/addUser';
             var structure = $("#structure").GetSelect().split(',');
             var structure_length = structure.length;
             if (structure_length > 1 && structure[structure_length - 1] == "") {

@@ -14,6 +14,17 @@ use think\Request;
 
 class Primary extends Common {
     private $param;
+    protected $power;
+    public function __construct(Request $request = null)
+    {
+        if($request->action() == 'review') {
+            $this->power = 49;
+        }
+        else if($request->action() == 'info') {
+            $this->power = 72;
+        }
+        parent::__construct($request);
+    }
     public function review(Request $request) {
         $this->param = $request->param();
         if(isset($this->param['plate'])){

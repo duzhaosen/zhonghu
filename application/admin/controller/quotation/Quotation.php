@@ -19,10 +19,22 @@ class Quotation extends Common {
     public function __construct(Request $request = null)
     {
         if($request->action() == 'index') {
-            $this->power = 32;
+            $this->power = 33;
         }
         else if($request->action() == 'add') {
             $this->power = 31;
+        }
+        else if($request->action() == 'edit') {
+            $this->power = 70;
+        }
+        else if($request->action() == 'copy') {
+            $this->power = 71;
+        }
+        else if($request->action() == 'view') {
+            $this->power = 34;
+        }
+        else if($request->action() == 'quotationPdf') {
+            $this->power = 35;
         }
         parent::__construct($request);
     }
@@ -183,7 +195,6 @@ class Quotation extends Common {
             writLog("查询条件".http_build_query($condition),"search_quotation",'search');
         }
         $quotationList = Model('Quotation')->getList($condition,'quotation.id as quotation_id,quotation.*,car.*,overall.*',$this->pagesize,['page'=>$page,'query'=>$param]);
-//        print_r($quotationList);die;
         $this->assign('quotationList',$quotationList);
         $res = Config::parse(APP_PATH.'/admin/config/quotation.ini','ini');
         $this->assign('export',$res['export']);

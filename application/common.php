@@ -221,3 +221,17 @@ function writLog($content, $logType, $power_id=0){
     }
 }
 
+/** 判断权限
+ *
+ */
+function isPower($power) {
+    $admin = Session::get('user_admin');
+    if($admin == false) {
+        $powerIds = Session::get('user_powers');
+        if(!in_array($power, $powerIds)) {
+            return false;
+        }
+    }
+    return true;
+}
+

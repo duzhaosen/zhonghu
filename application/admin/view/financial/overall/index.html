@@ -129,7 +129,7 @@
                         <td>{$value.attribution_userStr}</td>
                         <td>{$value.op_user}</td>
                         <td>{$value.statusStr}</td>
-                        <td>{$value.financial_review_time}</td>
+                        <td>{if $value.financial_review_time neq 0 }{:date('Y-m-d H:i:s',$value.financial_review_time)}{/if}</td>
                         <td>
                             <div class="hidden-sm hidden-xs action-buttons">
                                 <a class="green" href="/admin/Overall/overall/edit?temporary_id={$value.temporary_id}">

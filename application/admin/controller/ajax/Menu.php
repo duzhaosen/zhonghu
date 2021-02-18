@@ -35,7 +35,7 @@ class Menu extends Common {
         }
         $res = Model('Menu')->addMenu($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("添加菜单".http_build_query($this->param)."结果：".$result,ADD_LOGS,6);
+        writLog("添加菜单".http_build_query($this->param)."结果：".$result,ADD_LOGS,32);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -61,7 +61,7 @@ class Menu extends Common {
         }
         $res = Model('Menu')->editMenu(['id'=>$id,'type' => 2]);
         $result = $res == true? '成功': '失败';
-        writLog("删除菜单ID-".$id."结果：".$result,DEL_LOGS,5);
+        writLog("删除菜单ID-".$id."结果：".$result,DEL_LOGS,25);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -89,7 +89,7 @@ class Menu extends Common {
         }
         $res = Model('Menu')->editMenu($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("修改菜单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,7);
+        writLog("修改菜单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,91);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -115,7 +115,7 @@ class Menu extends Common {
         }
         $res = Model('Menu')->editMenu($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("菜单排序".http_build_query($this->param)."结果：".$result,EDIT_LOGS,7);
+        writLog("菜单排序".http_build_query($this->param)."结果：".$result,EDIT_LOGS,91);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;

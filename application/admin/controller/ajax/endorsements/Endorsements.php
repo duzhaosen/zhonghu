@@ -44,12 +44,11 @@ class Endorsements extends Common {
             }
         }
         //格式化数据
-        $this->param['p_temporary_id'] = Model('Endorsements')->generatePTemporaryId();
         $this->param['endorsements_id'] = Model('Endorsements')->generatePId();
         $this->param['status'] = 2;
         $res = Model('Endorsements')->addEndorsements($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("添加批单".http_build_query($this->param)."结果：".$result,ADD_LOGS,15);
+        writLog("添加批单".http_build_query($this->param)."结果：".$result,ADD_LOGS,46);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -93,7 +92,7 @@ class Endorsements extends Common {
         }
         $this->param['status'] = 2;
         $result = $res == true? '成功': '失败';
-        writLog("修改批单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,40);
+        writLog("修改批单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,77);
         $res = Model('Endorsements')->editEndorsements($this->param);
         if($res == false) {
             $data = array();
@@ -103,6 +102,36 @@ class Endorsements extends Common {
         }
         $data['code'] = 100000;
         $data['msg'] = '批单修改成功';
+        return json($data);
+    }
+
+
+
+    /** 删除统批单
+     * @param Request $request
+     * @return \think\response\Json
+     */
+    public function delEndorsements(Request $request) {
+        $this->param = $request->param();
+        if(!isset($this->param['id']) || empty($this->param['id'])) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '批单号不可为空';
+            return json($data);
+        }
+        $condition = [];
+        $condition['p_temporary_id'] = $this->param['id'];
+        $condition['type'] = 2;
+        $res = Model('Endorsements')->delEndorsements($condition);
+        if($res) {
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = '删除成功';
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100001;
+        $data['msg'] = '删除失败';
         return json($data);
     }
 
@@ -154,7 +183,7 @@ class Endorsements extends Common {
         }
         $res = Model('Endorsements')->getList($condition,'*',$this->param['pagesize'],['page'=>$page,'query'=>$this->param]);
         if($total) {
-            writLog("导出批单".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,16);
+            writLog("导出批单".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,47);
             return ceil($res->total()/$this->param['pagesize']);
         }
         $line = '';

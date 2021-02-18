@@ -70,7 +70,7 @@
                         <td>{$value.frame}</td>
                         <td>{$value.participate_name}</td>
                         <td>{$value.coordinated_name}</td>
-                        <td>{:date('Y-m-d h:i:s',$value.financial_review_time)}</td>
+                        <td>{if $value.financial_review_time neq 0}{date('Y-m-d h:i:s',$value.financial_review_time)}{/if}</td>
                         <td>{:date('Y-m-d h:i:s',$value.start_time)}</td>
                         <td>{$value.attribution_userStr}</td>
                         <td>{$value.op_user}</td>

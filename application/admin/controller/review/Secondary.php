@@ -13,6 +13,23 @@ use app\admin\controller\Common;
 use think\Request;
 
 class Secondary extends Common {
+    protected $power;
+    public function __construct(Request $request = null)
+    {
+        if($request->action() == 'overall') {
+            $this->power = 50;
+        }
+        else if($request->action() == 'overallInfo') {
+            $this->power = 73;
+        }
+        else if($request->action() == 'endorsements') {
+            $this->power = 51;
+        }
+        else if($request->action() == 'endorsementsInfo') {
+            $this->power = 86;
+        }
+        parent::__construct($request);
+    }
     /** 二级审核（统筹单）列表页
      * @param Request $request
      */

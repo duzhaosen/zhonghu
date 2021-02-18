@@ -791,7 +791,9 @@ class Overall extends Model {
     {
         $condition['op_user'] = getAdminInfo();
         $condition['op_time'] = time();
-        return db($this->db)->update($condition);
+        $temporary_id = $condition['temporary_id'];
+        unset($condition['temporary_id']);
+        return db($this->db)->where(['temporary_id'=>$temporary_id])->update($condition);
     }
 
     /** 生成统筹单号禁止跳号
@@ -848,6 +850,7 @@ class Overall extends Model {
             $condition['op_time'] = time();
             $temporary_id = $condition['temporary_id'];
             unset($condition['overall_id']);
+            unset($condition['temporary_id']);
             db($this->db)->where(['temporary_id'=>$temporary_id])->update($condition);
             db($this->car_db)->where(['related_id'=>$temporary_id])->update($condition);
             // 提交事务

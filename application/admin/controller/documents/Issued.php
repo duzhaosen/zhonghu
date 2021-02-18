@@ -16,6 +16,7 @@ use think\Request;
 class Issued extends Common {
     private $pagesize = 10;
     private $param;
+    protected $power = 54;
     public function issued(Request $request) {
         $this->param = array_filter($request->param());
         //归属人查询

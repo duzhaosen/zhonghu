@@ -1,0 +1,274 @@
+<script  src="/static/ace1.4/assets/js/select-treeview.js"></script>
+<link rel="stylesheet" href="/static/ace1.4/assets/css/chosen.min.css">
+<script src="/static/ace1.4/assets/js/chosen.jquery.min.js"></script>
+<button class="btn btn-success pull-right " onclick="javascript:window.location.href = '/admin/user/user/index'">返回列表</button>
+<div class="col-xs-12">
+    <input type="hidden" id="id" value="{$userlist.id|default=''}" />
+    <form class="form-horizontal col-lg-offset-2" role="form" name="addUserForm" id="addUserForm">
+        <div class="space-4"></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">登录名</label>
+
+            <div class="col-sm-9">
+                <input type="text" placeholder="登录名" name="username" value="{$userlist.username|default=''}" />
+            </div>
+        </div>
+
+
+        {if $Request.get.id eq ""}
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">密码</label>
+
+                <div class="col-sm-9">
+                    <input type="password"  placeholder="密码" name="passwd" value="{$userlist.passwd|default=''}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">确认密码</label>
+
+                <div class="col-sm-9">
+                    <input type="password" name="confirmPasswd"  placeholder="再次确认密码" value="{$userlist.passwd|default=''}" />
+                </div>
+            </div>
+        {/if}
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-5">身份证号</label>
+
+            <div class="col-sm-9">
+                <div class="clearfix">
+                    <input type="text" id="form-field-5" name="identity" placeholder="身份证号" value="{$userlist.identity|default=''}" />
+                </div>
+
+                <div class="space-2"></div>
+
+                <div class="help-block" id="input-span-slider"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-tags">手机号</label>
+
+            <div class="col-sm-9">
+                <div class="inline">
+                    <input type="number" id="form-field-tags" name="phone" placeholder="手机号" value="{$userlist.phone|default=''}" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-tags">姓名</label>
+
+            <div class="col-sm-9">
+                <div class="inline">
+                    <input type="text" name="name" placeholder="姓名" value="{$userlist.name|default=''}" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-tags">姓名英文</label>
+
+            <div class="col-sm-9">
+                <div class="inline">
+                    <input type="text" name="pinyin_name" placeholder="姓名英文" value="{$userlist.pinyin_name|default=''}" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-tags">性别</label>
+
+            <div class="col-sm-9">
+                <label class="radio-inline">
+                    <input type="radio" name="sex" checked value="1" {if isset($userlist.sex)} {if $userlist.sex eq 1} checked{/if} {/if}>男
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="sex" value="2" {if isset($userlist.sex)} {if $userlist.sex eq 2} checked{/if} {/if}> 女
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-tags">业务员</label>
+
+            <div class="col-sm-9">
+                <label class="radio-inline">
+                    <input type="radio" name="salesman" checked value="1" {if isset($userlist.salesman)} {if $userlist.salesman eq 1} checked{/if} {/if}> 是
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="salesman" value="2" {if isset($userlist.salesman)} {if $userlist.salesman eq 2} checked{/if} {/if}> 否
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-tags">经办人</label>
+
+            <div class="col-sm-9">
+                <label class="radio-inline">
+                    <input type="radio" name="manager" checked value="1" {if isset($userlist.manager)} {if $userlist.manager eq 1} checked{/if} {/if}> 是
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="manager" value="2" {if isset($userlist.manager)} {if $userlist.manager eq 2} checked{/if} {/if}> 否
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">组织</label>
+            <div class="col-sm-6 form-inline" id="structure">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">角色</label>
+            <div class="col-sm-6 form-inline" id="roles">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">地区</label>
+            <div class="col-sm-6 form-inline" id="city">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">经办人</label>
+            <div class="col-sm-6 form-inline" id="">
+                <select name="manager_id" class="chosen-select " id="manager_id">
+                    <option value="0">请选择经办人</option>
+                    {volist name="managerList" id="value" key="key"}
+                    <option value="{$value.id}" {if isset($userlist.manager_id) } {if $userlist.manager_id eq $value.id} selected{/if} {/if}>{$value.all_name}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+    </form>
+    <!-- PAGE CONTENT BEGINS -->
+
+    <div class="clearfix form-actions">
+        <div class="col-md-offset-4 col-md-9">
+            <button class="btn btn-info" type="button" id="addUser">
+                <i class="ace-icon fa fa-check bigger-110"></i>
+                提交
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const structure_data = {$structureList};
+    const role_data = {$rolesList};
+    const cityList_data = {$cityList};
+
+    $(function() {
+        $('.chosen-select').chosen({allow_single_deselect:true});
+        var options = {
+            data: structure_data,
+            id: "id",
+            text: "text",
+            nodes: "nodes",
+            checked: "checked",
+            name: "structure",
+        };
+        /**
+         * 提初始化树组织结构
+         */
+        $('#structure').AddSelect(options);
+        var options = {
+            data: role_data,
+            id: "id",
+            text: "text",
+            nodes: "nodes",
+            checked: "checked",
+            name: "roles",
+        };
+        /**
+         * 提初始化树角色结构
+         */
+        $('#roles').AddSelect(options);
+        var options = {
+            data: cityList_data,
+            id: "id",
+            text: "text",
+            nodes: "nodes",
+            checked: "checked",
+            name: "city",
+        };
+        /**
+         * 提初始化树城市地区结构
+         */
+        $('#city').AddSelect(options);
+
+        //提交
+        /**
+         * 提交方法
+         */
+        $("#addUser").on('click',function() {
+            var but = $(this);
+            but.attr("disabled", "disabled");
+            var form = $("form[name=addUserForm]").serializeArray();
+            var id = $("#id").val();
+            var url = '/admin/ajax/user/user/editUser';
+            replaceForm(form, 'id', id);
+            var structure = $("#structure").GetSelect().split(',');
+            var structure_length = structure.length;
+            if (structure_length > 1 && structure[structure_length - 1] == "") {
+                replaceForm(form, 'structure', structure[structure_length - 2]);
+            }
+            var roles = $("#roles").GetSelect().split(',');
+            var roles_length = roles.length;
+            if (roles_length > 1 && roles[roles_length - 1] == "") {
+                replaceForm(form, 'roles', roles[roles_length - 2]);
+            }
+            var city = $("#city").GetSelect().split(',');
+            var city_length = city.length;
+            if (city_length > 1 && city[city_length - 1] == "") {
+                replaceForm(form, 'city', city[city_length - 2]);
+            }
+            $.ajax(url,{
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: format(form),
+                success: function (data, status, xhr) {   // success callback function
+                    but.removeAttr("disabled");
+                    if (data.code == 100000) {
+                        layer.msg(data.msg);
+                        setTimeout(function () {
+                            location.reload();
+                        }, 300);
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function () {
+                    but.removeAttr("disabled");
+                    layer.msg("系统错误");
+                }
+            });
+
+        })
+        var replaceForm = function (arr, name, value) {
+            var replace = false;
+            for (i = 0; i < arr.length; i++) {
+                if (arr[i]['name'] == name) {
+                    replace = true;
+                    arr[i]['value'] = value
+                }
+            }
+            if (!replace) {
+                var obj = {"name": name, "value": value};
+                arr.push(obj)
+            }
+        };
+        var format = function (arr) {
+            for (i = 0; i < arr.length; i++) {
+                if (arr[i]['value'] == "") {
+                    delete arr[i];
+                }
+            }
+            return arr;
+        }
+    });
+</script>

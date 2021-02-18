@@ -23,6 +23,9 @@ class Menu extends Common {
         else if($request->action() == 'add') {
             $this->power = 32;
         }
+        else if($request->action() == 'edit') {
+            $this->power = 91;
+        }
         parent::__construct($request);
     }
 

@@ -14,7 +14,21 @@ use think\Config;
 use think\Request;
 
 class Endorsements extends Common {
+    protected $power;
     private $pagesize = 10;
+    public function __construct(Request $request = null)
+    {
+        if($request->action() == 'review') {
+            $this->power = 42;
+        }
+        else if($request->action() == 'reviewInfo') {
+            $this->power = 85;
+        }
+        else if($request->action() == 'index') {
+            $this->power = 43;
+        }
+        parent::__construct($request);
+    }
     /** 财务审核（批单） 列表页
      * @param Request $request
      */

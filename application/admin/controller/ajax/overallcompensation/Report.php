@@ -34,10 +34,11 @@ class Report extends Common {
         $this->param['end_time'] = strtotime($this->param['end_time']);
         $this->param['report_time'] = strtotime($this->param['report_time']);
         $this->param['out_danger_time'] = strtotime($this->param['out_danger_time']);
+        $this->param['nuclear_system_time'] = strtotime($this->param['nuclear_system_time']);
         $this->param['report_type'] = 1;
         $res = Model('Report')->addReport($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("添加报案单".http_build_query($this->param)."结果：".$result,ADD_LOGS,37);
+        writLog("添加报案单".http_build_query($this->param)."结果：".$result,ADD_LOGS,78);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -71,7 +72,7 @@ class Report extends Common {
         $this->param['report_type'] = 1;
         $res = Model('Report')->editReport(['report_id'=>$this->param['report_id']],$this->param);
         $result = $res == true? '成功': '失败';
-        writLog("修改报案单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,46);
+        writLog("修改报案单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,87);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -122,7 +123,7 @@ class Report extends Common {
         }
         $res = Model('Report')->getList($condition,$this->param['pagesize'],['page'=>$page,'query'=>$this->param]);
         if($total) {
-            writLog("导出报案单".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,35);
+            writLog("导出报案单".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,57);
             return ceil($res->total()/$this->param['pagesize']);
         }
         $line = '';

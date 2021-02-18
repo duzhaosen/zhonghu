@@ -68,7 +68,7 @@
         </div><!-- /.span -->
     </div>
     <div class="col-xs-12">
-        <button class="layui-btn layui-btn-radius layui-btn-normal pull-right " onclick="javascript:window.location.href = '/admin/user/user/addUser'">添加</button>
+        <button class="layui-btn layui-btn-radius layui-btn-normal pull-right " style="margin:1rem" onclick="javascript:window.location.href = '/admin/user/user/addUser'">添加</button>
         <table id="simple-table" class="table  table-bordered table-hover">
             <thead>
             <tr>
@@ -188,7 +188,7 @@
        //点击修改跳转
         $(".editUser").on('click',function() {
             var id = $(this).parents('tr').attr("data-id");
-            window.location.href="/admin/user/user/addUser?id="+id;
+            window.location.href="/admin/user/user/editUser?id="+id;
         });
         //删除人员
         $(".delUser").on('click', function() {

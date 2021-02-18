@@ -42,9 +42,9 @@
                                 <td>{$value.url}</td>
                                 <td>{$value.isshowStr}</td>
                                 <td>{$value.create_user}</td>
-                                <td>{$value.create_time}</td>
+                                <td>{if $value.create_time neq 0}{$value.create_time}{/if}</td>
                                 <td class="hidden-480">{$value.op_user}</td>
-                                <td class="hidden-480">{$value.op_time}</td>
+                                <td class="hidden-480">{if $value.op_time neq 0}{$value.op_time}{/if}</td>
                                 <td>
                                     <div class="hidden-sm hidden-xs action-buttons">
 

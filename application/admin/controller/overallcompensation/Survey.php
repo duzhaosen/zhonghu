@@ -16,6 +16,17 @@ use think\Request;
 class Survey extends Common {
     private $param;
     private $pagesize = 10;
+    protected $power;
+    public function __construct(Request $request = null)
+    {
+        if($request->action() == 'index') {
+            $this->power = 58;
+        }
+        else if($request->action() == 'add') {
+            $this->power = 79;
+        }
+        parent::__construct($request);
+    }
     public function index(Request $request) {
         $this->param = array_filter($request->param());;
         $condition = [];

@@ -657,7 +657,37 @@
                     $("#date_time").val(take_effect);
                     //短期系数 = 生效日期/起期+1年
                     var num = take_effect/date;
-                    $("#short_term_coefficient").val(num.toFixed(2));
+                    var short_term_coefficient = num.toFixed(2);
+                    $("#short_term_coefficient").val(short_term_coefficient);
+                    //计算统筹项目相关
+                    var standard_price = 0;
+                    var payable_price = 0;
+                    $(".all_check").each(function() {
+                        if($(this).val() != 'all') {
+                            if(this.checked) {
+                                var value = $(this).val();
+                                var standard = $("#"+value+"_standard").val();
+                                if(standard == '') {
+                                    standard = 0;
+                                }
+                                standard_price += parseFloat(standard);
+                                var discount = $("#total_discount").val();
+                                if(discount == '') {
+                                    discount = 1;
+                                }else{
+                                    discount = discount/100;
+                                }
+                                var payable = standard * short_term_coefficient * discount;
+                                payable_price = parseFloat(payable_price) + parseFloat(payable.toFixed(2));
+                                //应缴统筹费
+                                $("#"+value+"_payable").val(payable.toFixed(2));
+                            }
+                        }
+                    })
+                    //基准统筹费
+                    $("#benchmarking").val(parseFloat(standard_price).toFixed(2));
+                    //统筹费（合计）
+                    $("#total_planning").val(parseFloat(payable_price).toFixed(2));
                 }
             });
             //执行一个laydate实例

@@ -62,7 +62,7 @@ class Recycle extends Common {
         //格式化数据
         $res = Model('Documents')->addRecycle($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("添加单证回收".http_build_query($this->param)."结果：".$result,ADD_LOGS,50);
+        writLog("添加单证回收".http_build_query($this->param)."结果：".$result,ADD_LOGS,55);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -88,7 +88,7 @@ class Recycle extends Common {
         }
         $res = Model('Documents')->delRecycle($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("删除单证回收".http_build_query($this->param)."结果：".$result,DEL_LOGS,50);
+        writLog("删除单证回收".http_build_query($this->param)."结果：".$result,DEL_LOGS,55);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -133,7 +133,7 @@ class Recycle extends Common {
         }
         $res= Model('Documents')->getRecycleList($condition,$this->param['pagesize'],['page'=>$page,'query'=>$this->param]);
         if($total) {
-            writLog("单证入库导出".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,50);
+            writLog("单证入库导出".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,55);
             return ceil($res->total()/$this->param['pagesize']);
         }
         $line = '';

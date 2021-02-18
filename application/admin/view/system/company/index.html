@@ -1,0 +1,128 @@
+<link rel="stylesheet" href="/static/ace1.4/assets/css/jquery.magnify.css">
+<script src="/static/ace1.4/assets/js/jquery.magnify.js"></script>
+<div class="col-xs-12">
+    <button class="layui-btn layui-btn-radius layui-btn-normal pull-right " style="margin:1rem" onclick="javascript:window.location.href = '/admin/System/company/addCompany'">添加</button>
+    <table id="simple-table" class="table  table-bordered table-hover">
+        <thead>
+        <tr>
+            <th class="center">编号</th>
+            <th class="center">公司名称</th>
+            <th class="center">公司地址</th>
+            <th class="center">客服电话</th>
+            <th class="center">邮局电话</th>
+            <th class="center">章</th>
+            <th class="center">状态</th>
+            <th class="center">添加人</th>
+            <th class="center">添加时间</th>
+            <th class="center">最后操作人</th>
+            <th class="center">最后操作时间</th>
+            <th class="center">操作</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {volist name="list" id="value"}
+        <tr data-id="{$value.id}">
+            <td class="center">{$value.id}</td>
+            <td class="center">{$value.name}</td>
+            <td class="center">{$value.address}</td>
+            <td class="center">{$value.customer_phone}</td>
+            <td class="center">{$value.office}</td>
+            <td class="center" style="width:10%">
+                <a data-magnify="gallery" data-src="" href="{$value.url}">
+                    <img src="{$value.url}" style="padding:2px;" width="100%">
+                </a></td>
+            <td class="center">{$value.typeStr}</td>
+            <td class="center">{$value.create_user}</td>
+            <td class="center">{if $value.create_time neq 0}{:date("Y-m-d H:i:s",$value.create_time)}{/if}</td>
+            <td class="center">{$value.op_user}</td>
+            <td class="center">{if $value.op_time neq 0}{:date("Y-m-d H:i:s",$value.op_time)}{/if}</td>
+            <td class="center">
+                <div class="hidden-sm hidden-xs btn-group">
+
+                    <button class="btn btn-xs btn-info editCompany">
+                        <i class="ace-icon fa fa-pencil bigger-120"></i>
+                    </button>
+
+                    <button class="btn btn-xs btn-danger delCompany">
+                        <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                    </button>
+                </div>
+
+                <div class="hidden-md hidden-lg">
+                    <div class="inline pos-rel">
+                        <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
+                            <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+
+                            <li>
+                                <a href="#" class="tooltip-success editCompany" data-rel="tooltip" title="Edit">
+                                                <span class="green">
+                                                    <i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+                                                </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#" class="tooltip-error delCompany" data-rel="tooltip" title="Delete">
+                                                <span class="red">
+                                                    <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                                </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+</div>
+</div>
+
+<script>
+    $(function() {
+        //编辑公司
+        $(".editCompany").on('click',function() {
+            var but = $(this);
+            var id = but.parents('tr').attr("data-id");
+            window.location.href="/admin/System/company/editCompany?id="+id;
+            return false;
+        })
+        //删除公司
+        $(".delCompany").on('click', function() {
+            var but = $(this);
+            but.attr("disabled","disabled");
+            layer.confirm('是否确认删除?', function(index){
+                var id = but.parents('tr').attr("data-id");
+                $.ajax('/admin/ajax/System/company/delCompany',{
+                    dataType: 'json', // type of response data
+                    timeout: 500,     // timeout milliseconds
+                    method: "post",
+                    data: {id:id},
+                    success: function (data,status,xhr) {   // success callback function
+                        but.removeAttr("disabled");
+                        if(data.code == 100000) {
+                            layer.msg(data.msg);
+                            setTimeout(function() {
+                                location.reload();
+                            },300);
+                        }else{
+                            layer.msg(data.msg);
+                        }
+                    },
+                    error: function() {
+                        layer.msg("系统错误");
+                        layer.msg(data.msg);
+                    }
+                });
+                layer.close(index);
+            });
+            layer.msg(data.msg);
+            return false;
+        })
+    });
+</script>

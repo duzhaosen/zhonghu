@@ -49,7 +49,7 @@ class Temporary extends Common {
         $this->param['status'] = 1;
         $res = Model('Overall')->addOverall($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("添加暂存统筹单".http_build_query($this->param)."结果：".$result,ADD_LOGS,2);
+        writLog("添加暂存统筹单".http_build_query($this->param)."结果：".$result,ADD_LOGS,37);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -75,7 +75,7 @@ class Temporary extends Common {
         }
         $res = Model('Quotation')->editQuotation(['id'=>$id,'type' => 2]);
         $result = $res == true? '成功': '失败';
-        writLog("删除暂存统筹单id=".$id."结果：".$result,DEL_LOGS,23);
+        writLog("删除暂存统筹单id=".$id."结果：".$result,DEL_LOGS,36);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -120,7 +120,7 @@ class Temporary extends Common {
         $this->param['status'] = 1;
         $res = Model('Overall')->editOverall($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("修改暂存统筹单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,23);
+        writLog("修改暂存统筹单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,81);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;

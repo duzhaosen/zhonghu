@@ -16,6 +16,23 @@ use think\Request;
 class Report extends Common {
     private $param;
     private $pagesize = 20;
+    protected $power;
+    public function __construct(Request $request = null)
+    {
+        if($request->action() == 'index') {
+            $this->power = 57;
+        }
+        else if($request->action() == 'add') {
+            $this->power = 78;
+        }
+        else if($request->action() == 'edit') {
+            $this->power = 87;
+        }
+        else if($request->action() == 'view') {
+            $this->power = 88;
+        }
+        parent::__construct($request);
+    }
 
     /** 报案中心首页
      * @param Request $request

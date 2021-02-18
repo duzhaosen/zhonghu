@@ -48,7 +48,7 @@ class Issued extends Common {
         //格式化数据
         $res = Model('Documents')->addIssued($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("添加单证下发".http_build_query($this->param)."结果：".$result,ADD_LOGS,50);
+        writLog("添加单证下发".http_build_query($this->param)."结果：".$result,ADD_LOGS,54);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -74,7 +74,7 @@ class Issued extends Common {
         }
         $res = Model('Documents')->delIssued($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("删除单证下发".http_build_query($this->param)."结果：".$result,DEL_LOGS,50);
+        writLog("删除单证下发".http_build_query($this->param)."结果：".$result,DEL_LOGS,54);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -132,7 +132,7 @@ class Issued extends Common {
         }
         $res = Model('Documents')->getIssuedList($condition,$this->param['pagesize'],['page'=>$page,'query'=>$this->param]);
         if($total) {
-            writLog("单证入库导出".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,49);
+            writLog("单证入库导出".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,54);
             return ceil($res->total()/$this->param['pagesize']);
         }
         $line = '';

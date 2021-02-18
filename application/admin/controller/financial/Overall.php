@@ -14,7 +14,21 @@ use think\Config;
 use think\Request;
 
 class Overall extends Common {
+    protected $power;
     private $pagesize = 10;
+    public function __construct(Request $request = null)
+    {
+        if($request->action() == 'review') {
+            $this->power = 40;
+        }
+        else if($request->action() == 'reviewInfo') {
+            $this->power = 74;
+        }
+        else if($request->action() == 'index') {
+            $this->power = 41;
+        }
+        parent::__construct($request);
+    }
     /** 财务审核（统筹单） 列表页
      * @param Request $request
      */

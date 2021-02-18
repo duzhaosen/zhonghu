@@ -56,7 +56,7 @@ class Overall extends Common {
             $res = Model('Overall')->addOverall($this->param);
         }
         $result = $res == true? '成功': '失败';
-        writLog("添加统筹单".http_build_query($this->param)."结果：".$result,ADD_LOGS,2);
+        writLog("添加统筹单".http_build_query($this->param)."结果：".$result,ADD_LOGS,37);
         if($res == true) {
             $data = array();
             $data['code'] = 100000;
@@ -102,7 +102,7 @@ class Overall extends Common {
         $this->param['status'] = 3;
         $res = Model('Overall')->editOverall($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("修改统筹单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,23);
+        writLog("修改统筹单".http_build_query($this->param)."结果：".$result,EDIT_LOGS,81);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
@@ -111,6 +111,34 @@ class Overall extends Common {
         }
         $data['code'] = 100000;
         $data['msg'] = '统筹单修改成功';
+        return json($data);
+    }
+
+    /** 删除统筹单
+     * @param Request $request
+     * @return \think\response\Json
+     */
+    public function delOverall(Request $request) {
+        $this->param = $request->param();
+        if(!isset($this->param['id']) || empty($this->param['id'])) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '统筹单号不可为空';
+            return json($data);
+        }
+        $condition = [];
+        $condition['temporary_id'] = $this->param['id'];
+        $condition['type'] = 2;
+        $res = Model('Overall')->delOverall($this->param);
+        if($res) {
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = '删除成功';
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100001;
+        $data['msg'] = '删除失败';
         return json($data);
     }
 
@@ -216,7 +244,7 @@ class Overall extends Common {
                     <tbody>';
             foreach($res as $key=>$value) {
                 $html .= '<tr>
-                            <td><input type="checkbox" class="overallId" name="overallId" value="'.$value['id'].'"></td>
+                            <td><input type="checkbox" class="overallId" name="overallId" value="'.$value['temporary_id'].'"></td>
                             <td>'.$value['overall_id'].'</td>
                             <td>'.$value['frame'].'</td>
                             <td>'.$value['plate'].'</td>
@@ -243,7 +271,7 @@ class Overall extends Common {
             $data['msg'] = '请输入统筹单ID';
             return json($data);
         }
-        $res = Model('Overall')->getList(['overall.id'=>$this->param['id']]);
+        $res = Model('Overall')->getList(['overall.temporary_id'=>$this->param['id']]);
         if(empty($res)) {
             $data = array();
             $data['code'] = 100001;
@@ -276,6 +304,7 @@ class Overall extends Common {
                 $data['msg'] = "请勿重复上牌";
                 return json($data);
             }
+            $this->param['temporary_id'] = $list[0]['temporary_id'];
         }else{
             $data = array();
             $data['code'] = 100001;
@@ -298,7 +327,7 @@ class Overall extends Common {
         }
         $res = Model('Overall')->editPlate($this->param);
         $result = $res == true? '成功': '失败';
-        writLog("新车上牌".http_build_query($this->param)."结果：".$result,EDIT_LOGS,14);
+        writLog("新车上牌".http_build_query($this->param)."结果：".$result,EDIT_LOGS,45);
         if($res) {
             $data = array();
             $data['code'] = 100000;
@@ -366,7 +395,7 @@ class Overall extends Common {
         //修改主表，同步单证详情表为已使用
         $res = Model('Overall')->editDocuments($this->param);
         $result = $res == true ? '成功' : '失败';
-        writLog("打印" . http_build_query($this->param) . "结果：" . $result, EDIT_LOGS, 1);
+        writLog("打印" . http_build_query($this->param) . "结果：" . $result, EDIT_LOGS, 36);
         if ($res) {
             $data = array();
             $data['code'] = 100000;
@@ -436,7 +465,7 @@ class Overall extends Common {
         }
         $res = Model('Overall')->getList($condition,'*',$this->param['pagesize'],['page'=>$page,'query'=>$this->param]);
         if($total) {
-            writLog("统筹单导出".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,3);
+            writLog("统筹单导出".http_build_query($condition)."总条数：".$res->total(),EXPORT_LOGS,38);
             return ceil($res->total()/$this->param['pagesize']);
         }
         $line = '';

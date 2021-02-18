@@ -16,6 +16,7 @@ use think\Request;
 class Recycle extends Common {
     private $pagesize = 10;
     private $param;
+    protected $power = 55;
     public function recycle(Request $request) {
         $this->param = array_filter($request->param());
         //归属人查询
