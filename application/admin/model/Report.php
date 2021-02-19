@@ -42,6 +42,7 @@ class Report extends Model {
     public function addReport($condition) {
         $condition['create_user'] = getAdminInfo();
         $condition['create_time'] = time();
+        $condition['report_code'] = str_replace('A','C',$condition['report_id']);
         return db($this->db)->insert($condition);
     }
 

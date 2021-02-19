@@ -28,8 +28,8 @@
         height: 15px;
         border: 1px solid #444;
         border-radius: 50%;
-        top: -12rem;
-        right: -10rem;
+        top: -10rem;
+        right: -15rem;
         transform: rotate(45deg);
 
     }
@@ -1435,32 +1435,35 @@
                                 </thead>
 
                                 <tbody>
-                                <tr>
-                                    <td><input class="col-xs-12" type="text" name="damage_plate" id="damage_plate" value="{$list.plate}"></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_brand" id="damage_brand" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_model" id="damage_model" value="{$list.label_signal}"></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_year" id="damage_year" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_frame" id="damage_frame" value="{$list.frame}"></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_engine" id="damage_engine" value="{$list.engine}"></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_driver" id="damage_driver" value="{$report_list.driver}"></td>
-                                    <td>
-                                        <select class="col-xs-12" name="damage_sex" id="damage_sex">
-                                            <option value="-1">请选择性别</option>
-                                            <option value="1">男</option>
-                                            <option value="2">女</option>
-                                        </select>
-                                    </td>
-                                    <td><input class="col-xs-12" type="text" name="damage_phone" id="damage_phone" value="{$report_list.phone}"></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_repairer" id="damage_repairer" value=""></td>
-                                </tr>
+                                <form name="addCarFormDamage">
+                                    <tr>
+                                        <td><input class="col-xs-12" type="text" name="damage_plate" id="damage_plate" value="{$carDamageList[0]['damage_plate']|default=$list.plate}"></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_brand" id="damage_brand" value="{$carDamageList[0]['damage_brand']|default=''}"></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_model" id="damage_model" value="{$carDamageList[0]['damage_model']|default=$list.label_signal}"></td>
+                                        <td><input class="col-xs-12" type="number" name="damage_year" id="damage_year" value="{$carDamageList[0]['damage_year']|default=''}"></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_frame" id="damage_frame" value="{$carDamageList[0]['damage_frame']|default=$list.frame}"></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_engine" id="damage_engine" value="{$carDamageList[0]['damage_engine']|default=$list.engine}"></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_driver" id="damage_driver" value="{$carDamageList[0]['damage_driver']|default=$report_list.driver}"></td>
+                                        <td>
+                                            <select class="col-xs-12" name="damage_sex" id="damage_sex">
+                                                <option value="0">请选择性别</option>
+                                                <option value="1" {if isset($carDamageList[0]['damage_sex']) && $carDamageList[0]['damage_sex'] == 1} selected {/if}>男</option>
+                                                <option value="2" {if isset($carDamageList[0]['damage_sex']) && $carDamageList[0]['damage_sex'] == 2} selected {/if}>女</option>
+                                            </select>
+                                        </td>
+                                        <td><input class="col-xs-12" type="text" name="damage_phone" id="damage_phone" value="{$carDamageList[0]['damage_phone"']|default=$report_list.phone}"></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_repairer" id="damage_repairer" value="{$carDamageList[0]['damage_driver']|default=''}"></td>
+                                    </tr>
+                                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addCarForm" style="margin-left:1rem;margin-top:2rem;margin-bottom: 2rem">保存数据</button>
+                                </form>
                                 </tbody>
                             </table>
 <!--                           配件定损开始-->
                             <div class="titles"><p><font></font>配件定损</p></div>
-                            <form action="" class="tablesForm" name="addAccessories" style="margin-top:1rem;margin-left:1rem">
-                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="accessories" data-num="1">增加</button>
-                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
-                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                            <form action="" class="tablesForm" id="addAccessories" name="addAccessories" style="margin-top:1rem;margin-left:1rem">
+                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="accessories" data-num="0">增加</button>
+                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable"  data-value="accessories">删除</button>
+                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveTable"  data-type="1" data-value="addAccessories">保存数据</button>
                                 <table class="table  table-bordered table-hover" style="margin-top:1rem;">
                                     <thead>
                                     <tr>
@@ -1479,33 +1482,35 @@
                                     </thead>
 
                                     <tbody>
-                                    <tr id="accessories_1">
-                                        <td><input type="checkbox" name="accessories" value="accessories"></td>
-                                        <td><input class="col-xs-12" type="text" value="1"></td>
-                                        <td>
-                                            <select class="col-xs-12" name="damage_sex">
-                                                <option value="-1">请选择</option>
-                                                {volist name="$damage_overall_type" id="value" key="key"}
-                                                <option value="{$key-1}">{$value}</option>
-                                                {/volist}
-                                            </select>
-                                        </td>
-                                        <td><input class="col-xs-12" type="text" name="damage_name" value=""></td>
-                                        <td>
-                                            <select class="col-xs-12" name="price_program">
-                                                <option value="-1">请选择</option>
-                                                {volist name="$price_program" id="value" key="key"}
-                                                <option value="{$key-1}">{$value}</option>
-                                                {/volist}
-                                            </select>
-                                        </td>
-                                        <td><input class="col-xs-12" type="text" name="damage_price" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="damage_num" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="damage_money" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="damage_discount" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="damage_approved" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="damage_remark" value=""></td>
-                                    </tr>
+                                    {for start="0" end="20"}
+                                        <tr id="accessories_{$i}" {if $i != 0 && !isset($accessoriesList[$i])} style="display:none" {/if}>
+                                            <td><input type="checkbox" class="accessories" name="accessories[]" data-num="{$i}" value="accessories"></td>
+                                            <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
+                                            <td>
+                                                <select class="col-xs-12" name="damage_overall[]">
+                                                    <option value="-1">请选择</option>
+                                                    {volist name="$damage_overall_type" id="value" key="key"}
+                                                    <option value="{$key-1}" {if isset($accessoriesList[$i]['damage_overall']) && $accessoriesList[$i]['damage_overall'] == $key-1} selected {/if}>{$value}</option>
+                                                    {/volist}
+                                                </select>
+                                            </td>
+                                            <td><input class="col-xs-12" type="text" name="damage_name[]" value="{$accessoriesList[$i]['damage_name']|default=''}"></td>
+                                            <td>
+                                                <select class="col-xs-12" name="price_program[]">
+                                                    <option value="-1">请选择</option>
+                                                    {volist name="$price_program" id="value" key="key"}
+                                                    <option value="{$key-1}" {if isset($accessoriesList[$i]['price_program']) && $accessoriesList[$i]['price_program'] == $key-1} selected {/if}>{$value}</option>
+                                                    {/volist}
+                                                </select>
+                                            </td>
+                                            <td><input class="col-xs-12 price" data-value="accessories" data-num="{$i}" type="text" id="damage_price_{$i}" name="damage_price[]" value="{$accessoriesList[$i]['damage_price']|default=''}"></td>
+                                            <td><input class="col-xs-12 num" data-value="accessories" data-num="{$i}" type="text" id="damage_num_{$i}" name="damage_num[]" value="{$accessoriesList[$i]['damage_num']|default=''}"></td>
+                                            <td><input class="col-xs-12" readonly type="text" id="damage_money_{$i}" name="damage_money[]" value="{$accessoriesList[$i]['damage_money']|default=0}"></td>
+                                            <td><input class="col-xs-12 discount" data-value="accessories" data-num="{$i}" type="text" id="damage_discount_{$i}" name="damage_discount[]" value="{$accessoriesList[$i]['damage_discount']|default=100}"></td>
+                                            <td><input class="col-xs-12" type="text" readonly id="damage_approved_{$i}" name="damage_approved[]" value="{$accessoriesList[$i]['damage_approved']|default=0}"></td>
+                                            <td><input class="col-xs-12" type="text" name="damage_remark[]" value="{$accessoriesList[$i]['damage_remark']|default=''}"></td>
+                                        </tr>
+                                    {/for}
                                     <tr>
                                         <td>小计</td>
                                         <td><input class="col-xs-12" readonly type="text" value=""></td>
@@ -1514,9 +1519,9 @@
                                         <td><input class="col-xs-12" readonly type="text" value=""></td>
                                         <td><input class="col-xs-12" readonly type="text" value=""></td>
                                         <td><input class="col-xs-12" readonly type="text" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="accessories_money" value=""></td>
+                                        <td><input class="col-xs-12" type="text" readonly id="accessories_money" name="accessories_money" value="{$carDamageList[0]['accessories_money']|default=''}"></td>
                                         <td><input class="col-xs-12" readonly type="text" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="accessories_approved" value=""></td>
+                                        <td><input class="col-xs-12" type="text" readonly id="accessories_approved" name="accessories_approved" value="{$carDamageList[0]['accessories_approved']|default=''}"></td>
                                         <td><input class="col-xs-12" readonly type="text" value=""></td>
                                     </tr>
                                     </tbody>
@@ -1524,38 +1529,26 @@
                                 <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                                     <div style="margin-left: 2rem;width:20%">
                                         <label class="text-center search-item-label">合计:</label>
-                                        <input type="text" class="form-control input-sm" name="accessories_total" id="accessories_total" style="width:100%" value="">
+                                        <input type="text" class="form-control input-sm" name="accessories_total" id="accessories_total" style="width:100%" value="{$carDamageList[0]['accessories_total']|default=''}">
 
                                     </div>
                                     <div style="margin-left: 2rem;width:20%">
                                         <label class="text-center search-item-label">残值:</label>
-                                        <input type="text" class="form-control input-sm" style="width:100%" name="accessories_residual" id="accessories_residual" value="0">
+                                        <input type="text" class="form-control input-sm" style="width:100%" name="accessories_residual" id="accessories_residual" value="{$carDamageList[0]['accessories_residual']|default=0}">
                                     </div>
                                     <div style="margin-left: 2rem;width:20%">
                                         <label class="text-center search-item-label">总计:</label>
-                                        <input type="text" class="form-control input-sm" id="accessories_all" name="accessories_all" style="width:100%" value="">
+                                        <input type="text" class="form-control input-sm" id="accessories_all" name="accessories_all" style="width:100%" value="{$carDamageList[0]['accessories_all']|default=''}">
                                     </div>
                                 </div>
                             </form>
-                            <script>
-                                jQuery(function($){
-                                    $(".addTable").on('click',function() {
-                                        var num = $(this).attr("data-num");
-                                        var next = parseInt(num) + 1;
-                                        var val = $(this).attr("data-value");
-                                        var html = $(this).parents('.tablesForm').find("#"+val+"_"+num).html();
-                                        console.log(html);
-                                        return false;
-                                    })
-                                })
-                            </script>
 <!--                           配件定损结束-->
 <!--                           本车工时开始-->
                             <div class="titles"><p><font></font>本车工时核定</p></div>
-                            <form action="" name="addWork" style="margin-top:1rem;margin-left:1rem">
-                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
-                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
-                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                            <form action="" name="addWork" id="addWork" style="margin-top:1rem;margin-left:1rem">
+                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="work" data-num="0">增加</button>
+                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable" data-value="work">删除</button>
+                                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveTable"  data-type="1" data-value="addWork">保存数据</button>
                                 <table class="table  table-bordered table-hover" style="margin-top:1rem;">
                                     <thead>
                                     <tr>
@@ -1574,33 +1567,35 @@
                                     </thead>
 
                                     <tbody>
-                                    <tr id="work_1">
-                                        <td><input type="checkbox" name="work" value="work"></td>
-                                        <td><input class="col-xs-12" type="text" value="1"></td>
+                                    {for start="0" end="20"}
+                                    <tr id="work_{$i}" {if $i != 0 && !isset($workList[$i])} style="display:none" {/if}>
+                                        <td><input type="checkbox" name="work" class="work" data-num="{$i}" value="work"></td>
+                                        <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
                                         <td>
-                                            <select class="col-xs-12" name="work_sex">
+                                            <select class="col-xs-12" name="damage_overall[]">
                                                 <option value="-1">请选择</option>
                                                 {volist name="$damage_overall_type" id="value" key="key"}
-                                                <option value="{$key-1}">{$value}</option>
+                                                <option value="{$key-1}" {if isset($workList[$i]['damage_overall']) && $workList[$i]['damage_overall'] == $key-1} selected {/if}>{$value}</option>
                                                 {/volist}
                                             </select>
                                         </td>
-                                        <td><input class="col-xs-12" type="text" name="damage_name" value=""></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_name[]" value="{$workList[$i]['damage_name']|default=''}"></td>
                                         <td>
-                                            <select class="col-xs-12" name="price_program">
+                                            <select class="col-xs-12" name="price_program[]">
                                                 <option value="-1">请选择</option>
                                                 {volist name="$price_program" id="value" key="key"}
-                                                <option value="{$key-1}">{$value}</option>
+                                                <option value="{$key-1}" {if isset($workList[$i]['price_program']) && $workList[$i]['price_program'] == $key-1} selected {/if}>{$value}</option>
                                                 {/volist}
                                             </select>
                                         </td>
-                                        <td><input class="col-xs-12" type="text" name="damage_price" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="damage_num" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="damage_money" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="damage_discount" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="damage_approved" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="damage_remark" value=""></td>
+                                        <td><input class="col-xs-12 price"  data-value="work" data-num="{$i}" id="work_price_{$i}" type="text" name="damage_price[]" value="{$workList[$i]['damage_price']|default=''}"></td>
+                                        <td><input class="col-xs-12 num" data-value="work" data-num="{$i}" id="work_num_{$i}" type="text" name="damage_num[]" value="{$workList[$i]['damage_num']|default=''}"></td>
+                                        <td><input class="col-xs-12" readonly id="work_money_{$i}" type="text" name="damage_money[]" value="{$workList[$i]['damage_money']|default=''}"></td>
+                                        <td><input class="col-xs-12 discount" data-value="work" data-num="{$i}" id="work_discount_{$i}" type="text" name="damage_discount[]" value="{$workList[$i]['damage_discount']|default=100}"></td>
+                                        <td><input class="col-xs-12" type="text" readonly id="work_approved_{$i}" name="damage_approved[]" value="{$workList[$i]['damage_approved']|default=''}"></td>
+                                        <td><input class="col-xs-12" type="text" name="damage_remark[]" value="{$workList[$i]['damage_remark']|default=''}"></td>
                                     </tr>
+                                    {/for}
                                     <tr>
                                         <td>小计</td>
                                         <td><input class="col-xs-12" readonly type="text" value=""></td>
@@ -1609,9 +1604,9 @@
                                         <td><input class="col-xs-12" readonly type="text" value=""></td>
                                         <td><input class="col-xs-12" readonly type="text" value=""></td>
                                         <td><input class="col-xs-12" readonly type="text" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="work_money" value=""></td>
+                                        <td><input class="col-xs-12" readonly id="work_money" type="text" name="work_money" value="{$carDamageList[0]['work_money']|default=''}"></td>
                                         <td><input class="col-xs-12" readonly type="text" value=""></td>
-                                        <td><input class="col-xs-12" type="text" name="work_approved" value=""></td>
+                                        <td><input class="col-xs-12" readonly id="work_approved" type="text" name="work_approved" value="{$carDamageList[0]['work_approved']|default=''}"></td>
                                         <td><input class="col-xs-12" readonly type="text" value=""></td>
                                     </tr>
                                     </tbody>
@@ -1619,28 +1614,28 @@
                                 <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                                     <div style="margin-left: 2rem;width:20%">
                                         <label class="text-center search-item-label">施救费:</label>
-                                        <input type="text" class="form-control input-sm" name="work_rescue" id="work_rescue" style="width:100%" value="">
+                                        <input type="text" class="form-control input-sm" name="work_rescue" id="work_rescue" style="width:100%" value="{$carDamageList[0]['work_rescue']|default=''}">
 
                                     </div>
                                     <div style="margin-left: 2rem;width:20%">
                                         <label class="text-center search-item-label">总计:</label>
-                                        <input type="text" class="form-control input-sm" style="width:100%" name="work_all" id="work_all" value="">
+                                        <input type="text" class="form-control input-sm" style="width:100%" name="work_all" id="work_all" value="{$carDamageList[0]['work_all']|default=''}">
                                     </div>
                                 </div>
                                 <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                                     <div style="margin-left: 2rem;width:20%">
                                         <label class="text-center search-item-label">费用合计:</label>
-                                        <input type="text" class="form-control input-sm" id="work_total" name="work_total" style="width:100%" value="">
+                                        <input type="text" class="form-control input-sm" id="work_total" name="work_total" style="width:100%" value="{$carDamageList[0]['work_total']|default=''}">
                                     </div>
                                 </div>
                             </form>
 <!--                           本车工时结束-->
 <!--                           本车财务开始-->
                             <div class="titles"><p><font></font>本车财务定损</p></div>
-                            <form action="" name="addFinance" style="margin-top:1rem;margin-left:1rem">
-                                        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
-                                        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
-                                        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                            <form action="" name="addFinance" id="addFinance" style="margin-top:1rem;margin-left:1rem">
+                                        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="finance" data-num="0">增加</button>
+                                        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable" data-value="finance">删除</button>
+                                        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveTable"  data-type="1" data-value="addFinance">保存数据</button>
                                         <table class="table  table-bordered table-hover" style="margin-top:1rem;">
                                             <thead>
                                             <tr>
@@ -1659,33 +1654,35 @@
                                             </thead>
 
                                             <tbody>
-                                            <tr id="finance_1">
-                                                <td><input type="checkbox" name="finance" value="finance"></td>
-                                                <td><input class="col-xs-12" type="text" value="1"></td>
+                                            {for start="0" end="20"}
+                                            <tr id="finance_{$i}" {if $i != 0 && !isset($financeList[$i])} style="display:none" {/if}>
+                                                <td><input type="checkbox" name="finance" data-num="{$i}" class="finance" value="finance"></td>
+                                                <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
                                                 <td>
-                                                    <select class="col-xs-12" name="damage_sex">
+                                                    <select class="col-xs-12" name="damage_overall[]">
                                                         <option value="-1">请选择</option>
                                                         {volist name="$damage_overall_type" id="value" key="key"}
-                                                        <option value="{$key-1}">{$value}</option>
+                                                        <option value="{$key-1}" {if isset($financeList[$i]['damage_overall']) && $financeList[$i]['damage_overall'] == $key-1} selected {/if}>{$value}</option>
                                                         {/volist}
                                                     </select>
                                                 </td>
-                                                <td><input class="col-xs-12" type="text" name="damage_name" value=""></td>
+                                                <td><input class="col-xs-12" type="text" name="damage_name[]" value="{$financeList[$i]['damage_name']|default=''}"></td>
                                                 <td>
-                                                    <select class="col-xs-12" name="price_program">
+                                                    <select class="col-xs-12" name="price_program[]">
                                                         <option value="-1">请选择</option>
                                                         {volist name="$price_program" id="value" key="key"}
-                                                        <option value="{$key-1}">{$value}</option>
+                                                        <option value="{$key-1}" {if isset($financeList[$i]['price_program']) && $financeList[$i]['price_program'] == $key-1} selected {/if}>{$value}</option>
                                                         {/volist}
                                                     </select>
                                                 </td>
-                                                <td><input class="col-xs-12" type="text" name="damage_price" value=""></td>
-                                                <td><input class="col-xs-12" type="text" name="damage_num" value=""></td>
-                                                <td><input class="col-xs-12" type="text" name="damage_money" value=""></td>
-                                                <td><input class="col-xs-12" type="text" name="damage_discount" value=""></td>
-                                                <td><input class="col-xs-12" type="text" name="damage_approved" value=""></td>
-                                                <td><input class="col-xs-12" type="text" name="damage_remark" value=""></td>
+                                                <td><input class="col-xs-12 price" data-value="finance" data-num="{$i}" id="finance_price_{$i}" type="text" name="damage_price[]" value="{$financeList[$i]['damage_price']|default=''}"></td>
+                                                <td><input class="col-xs-12 num" data-value="finance" data-num="{$i}" id="finance_num_{$i}" type="text" name="damage_num[]" value="{$financeList[$i]['damage_num']|default=''}"></td>
+                                                <td><input class="col-xs-12" readonly id="finance_money_{$i}" type="text" name="damage_money[]" value="{$financeList[$i]['damage_money']|default=''}"></td>
+                                                <td><input class="col-xs-12 discount" data-value="finance" data-num="{$i}" id="finance_discount_{$i}" type="text" name="damage_discount[]" value="{$financeList[$i]['damage_discount']|default=100}"></td>
+                                                <td><input class="col-xs-12" readonly id="finance_approved_{$i}" type="text" name="damage_approved[]" value="{$financeList[$i]['damage_approved']|default=''}"></td>
+                                                <td><input class="col-xs-12" type="text" name="damage_remark[]" value="{$financeList[$i]['damage_remark']|default=''}"></td>
                                             </tr>
+                                            {/for}
                                             <tr>
                                                 <td>小计</td>
                                                 <td><input class="col-xs-12" readonly type="text" value=""></td>
@@ -1694,9 +1691,9 @@
                                                 <td><input class="col-xs-12" readonly type="text" value=""></td>
                                                 <td><input class="col-xs-12" readonly type="text" value=""></td>
                                                 <td><input class="col-xs-12" readonly type="text" value=""></td>
-                                                <td><input class="col-xs-12" type="text" name="finance_money" value=""></td>
+                                                <td><input class="col-xs-12" type="text" id="finance_money" name="finance_money" value="{$carDamageList[0]['work_total']|default=''}"></td>
                                                 <td><input class="col-xs-12" readonly type="text" value=""></td>
-                                                <td><input class="col-xs-12" type="text" name="finance_approved" value=""></td>
+                                                <td><input class="col-xs-12" type="text" id="finance_approved" name="finance_approved" value="{$carDamageList[0]['work_total']|default=''}"></td>
                                                 <td><input class="col-xs-12" readonly type="text" value=""></td>
                                             </tr>
                                             </tbody>
@@ -1704,62 +1701,63 @@
                                         <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                                             <div style="margin-left: 2rem;width:20%">
                                                 <label class="text-center search-item-label">合计:</label>
-                                                <input type="text" class="form-control input-sm" name="finance_total" id="finance_total" style="width:100%" value="">
+                                                <input type="text" class="form-control input-sm" name="finance_total" id="finance_total" style="width:100%" value="{$carDamageList[0]['finance_total']|default=''}">
 
                                             </div>
                                             <div style="margin-left: 2rem;width:20%">
                                                 <label class="text-center search-item-label">残值:</label>
-                                                <input type="text" class="form-control input-sm" style="width:100%" name="finance_residual" id="finance_residual" value="0">
+                                                <input type="text" class="form-control input-sm" style="width:100%" name="finance_residual" id="finance_residual" value="{$carDamageList[0]['finance_residual']|default=0}">
                                             </div>
                                             <div style="margin-left: 2rem;width:20%">
                                                 <label class="text-center search-item-label">财务总计:</label>
-                                                <input type="text" class="form-control input-sm" id="finance_all" name="finance_all" style="width:100%" value="">
+                                                <input type="text" class="form-control input-sm" id="finance_all" name="finance_all" style="width:100%" value="{$carDamageList[0]['finance_all']|default=''}">
                                             </div>
                                         </div>
                                         <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                                             <div style="margin-left: 2rem;width:20%">
                                                 <label class="text-center search-item-label">诉讼费:</label>
-                                                <input type="text" class="form-control input-sm" name="finance_litigation" id="finance_litigation" style="width:100%" value="">
+                                                <input type="text" class="form-control input-sm" name="finance_litigation" id="finance_litigation" style="width:100%" value="{$carDamageList[0]['finance_litigation']|default=''}">
 
                                             </div>
                                             <div style="margin-left: 2rem;width:20%">
                                                 <label class="text-center search-item-label">鉴定费:</label>
-                                                <input type="text" class="form-control input-sm" style="width:100%" name="finance_identification" id="finance_identification" value="">
+                                                <input type="text" class="form-control input-sm" style="width:100%" name="finance_identification" id="finance_identification" value="{$carDamageList[0]['finance_identification']|default=''}">
                                             </div>
                                             <div style="margin-left: 2rem;width:20%">
                                                 <label class="text-center search-item-label">公估费:</label>
-                                                <input type="text" class="form-control input-sm" id="finance_appraisal" name="finance_appraisal" style="width:100%" value="">
+                                                <input type="text" class="form-control input-sm" id="finance_appraisal" name="finance_appraisal" style="width:100%" value="{$carDamageList[0]['finance_appraisal']|default=''}">
                                             </div>
                                             <div style="margin-left: 2rem;width:20%">
                                                 <label class="text-center search-item-label">住宿费:</label>
-                                                <input type="text" class="form-control input-sm" id="finance_stay" name="finance_stay" style="width:100%" value="">
+                                                <input type="text" class="form-control input-sm" id="finance_stay" name="finance_stay" style="width:100%" value="{$carDamageList[0]['finance_stay']|default=''}">
                                             </div>
                                         </div>
                                         <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                                             <div style="margin-left: 2rem;width:20%">
                                                 <label class="text-center search-item-label">路桥费:</label>
-                                                <input type="text" class="form-control input-sm" name="finance_road" id="finance_road" style="width:100%" value="">
+                                                <input type="text" class="form-control input-sm" name="finance_road" id="finance_road" style="width:100%" value="{$carDamageList[0]['finance_road']|default=''}">
 
                                             </div>
                                             <div style="margin-left: 2rem;width:20%">
                                                 <label class="text-center search-item-label">燃油费:</label>
-                                                <input type="text" class="form-control input-sm" style="width:100%" name="finance_fuel" id="finance_fuel" value="">
+                                                <input type="text" class="form-control input-sm" style="width:100%" name="finance_fuel" id="finance_fuel" value="{$carDamageList[0]['finance_fuel']|default=''}">
                                             </div>
                                             <div style="margin-left: 2rem;width:20%">
                                                 <label class="text-center search-item-label">其他:</label>
-                                                <input type="text" class="form-control input-sm" id="finance_other" name="finance_other" style="width:100%" value="">
+                                                <input type="text" class="form-control input-sm" id="finance_other" name="finance_other" style="width:100%" value="{$carDamageList[0]['finance_other']|default=''}">
                                             </div>
                                             <div style="margin-left: 2rem;width:20%">
                                                 <label class="text-center search-item-label">汇总:</label>
-                                                <input type="text" class="form-control input-sm" id="finance_summary" name="finance_summary" style="width:100%" value="">
+                                                <input type="text" class="form-control input-sm" id="finance_summary" name="finance_summary" style="width:100%" value="{$carDamageList[0]['finance_summary']|default=''}">
                                             </div>
                                         </div>
                                         <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                                             <div style="margin-left: 2rem;width:20%">
                                                 <label class="text-center search-item-label">备注说明:</label>
-                                                <textarea name="finance_remark" id="finance_remark" cols="120" rows="10"></textarea>
+                                                <textarea name="finance_remark" id="finance_remark" cols="120" rows="10">{$carDamageList[0]['finance_remark']|default=''}</textarea>
                                             </div>
                                         </div>
+
                                     </form>
 <!--                           本车财务结束-->
                         </div>
@@ -1769,10 +1767,10 @@
                         <h5 class="widget-title">三者车车损失</h5>
                     </div>
                     <div class="widget-body" style="display:none">
-                        <form action="" name="addOthercar" style="margin-top:1rem;margin-left:1rem">
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                        <form action="" name="addOtherCarForm" id="addOtherCarForm" style="margin-top:1rem;margin-left:1rem">
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="other_car" data-num="0">增加</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable"  data-value="other_car">删除</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveTable" data-type="2" data-value="addOtherCarForm">保存数据</button>
                             <table class="table  table-bordered table-hover" style="margin-top:1rem;">
                                 <thead>
                                 <tr>
@@ -1796,31 +1794,32 @@
                                 </thead>
 
                                 <tbody>
-                                <tr id="other_car">
-                                    <td><input type="checkbox" name="othercar" value="othercar"></td>
-                                    <td><input class="col-xs-12" type="text" value="1"></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_plate" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_driver" value=""></td>
+                                {for start="0" end="20"}
+                                <tr id="other_car_{$i}" {if $i != 0} style="display:none" {/if}>
+                                    <td><input type="checkbox" class="other_car" data-num="{$i}" name="other_car" value="other_car"></td>
+                                    <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
+                                    <td><input class="col-xs-12" type="text" id="other_plate" name="damage_plate" style="color:#0000ff" value="{$elseCarDamageList[0]['damage_plate']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_driver" value="{$elseCarDamageList[0]['damage_driver']|default=''}"></td>
                                     <td>
                                         <select class="col-xs-12" name="damage_sex">
-                                            <option value="-1">请选择</option>
-                                            {volist name="$damage_overall_type" id="value" key="key"}
-                                            <option value="{$key-1}">{$value}</option>
-                                            {/volist}
+                                            <option value="0">请选择性别</option>
+                                            <option value="1" {if isset($elseCarDamageList[0]['damage_sex']) && $carDamageList[0]['damage_sex'] == 1} selected {/if}>男</option>
+                                            <option value="2" {if isset($elseCarDamageList[0]['damage_sex']) && $carDamageList[0]['damage_sex'] == 2} selected {/if}>女</option>
                                         </select>
                                     </td>
-                                    <td><input class="col-xs-12" type="text" name="damage_phone" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_brand" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_model" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_year" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_frame" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_engine" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_repairer" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="work_total" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="finance_all" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="finance_summary" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_status" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_phone" value="{$elseCarDamageList[0]['damage_phone']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_brand" value="{$elseCarDamageList[0]['damage_brand']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_model" value="{$elseCarDamageList[0]['damage_model']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="number" name="damage_year" value="{$elseCarDamageList[0]['damage_year']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_frame" value="{$elseCarDamageList[0]['damage_frame']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_engine" value="{$elseCarDamageList[0]['damage_engine']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_repairer" value="{$elseCarDamageList[0]['damage_repairer']|default=''}"></td>
+                                    <td><input class="col-xs-12" readonly type="text" name="work_total" value="{$elseCarDamageList[0]['work_total']|default=''}"></td>
+                                    <td><input class="col-xs-12" readonly type="text" name="finance_all" value="{$elseCarDamageList[0]['finance_all']|default=''}"></td>
+                                    <td><input class="col-xs-12" readonly type="text" name="finance_summary" value="{$elseCarDamageList[0]['finance_summary']|default=''}"></td>
+                                    <td><input class="col-xs-12" readonly type="text" name="damage_status" value="{$elseCarDamageList[0]['damage_status']|default=''}"></td>
                                 </tr>
+                                {/for}
                                 </tbody>
                             </table>
                         </form>
@@ -1839,9 +1838,9 @@
                     </div>
                     <div class="widget-body" style="display:none">
                         <form action="" name="addHuman" style="margin-top:1rem;margin-left:1rem">
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="human" data-num="0">增加</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable"  data-value="human">删除</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveHumanTable">保存数据</button>
                             <table class="table  table-bordered table-hover" style="margin-top:1rem;">
                                 <thead>
                                 <tr>
@@ -1860,17 +1859,18 @@
                                 </thead>
 
                                 <tbody>
-                                <tr id="human_1">
-                                    <td><input type="checkbox" name="human" value="human"></td>
+                                {for start="0" end="20"}
+                                <tr id="human_{$i}" {if $i != 0} style="display:none" {/if}>
+                                    <td><input type="checkbox" name="human" class="human" data-num="{$i}" value="human"></td>
                                     <td>
-                                        <select class="col-xs-12" name="damage_sex">
+                                        <select class="col-xs-12" name="injury_sex">
                                             <option value="-1">请选择</option>
                                             {volist name="$human_overall_type" id="value" key="key"}
                                             <option value="{$key-1}">{$value}</option>
                                             {/volist}
                                         </select>
                                     </td>
-                                    <td><input class="col-xs-12" type="text" name="injury_name" value=""></td>
+                                    <td><input class="col-xs-12" type="text" style="color:blue" name="injury_name" value=""></td>
                                     <td>
                                         <select class="col-xs-12" name="injury_sex">
                                             <option value="-1">请选择</option>
@@ -1883,10 +1883,11 @@
                                     <td><input class="col-xs-12" type="text" name="injury_domicile" value=""></td>
                                     <td><input class="col-xs-12" type="text" name="injury_medical" value=""></td>
                                     <td><input class="col-xs-12" type="text" name="injury_record" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="injury_money" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="injury_approved" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" name="injury_money" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" name="injury_approved" value=""></td>
                                     <td><input class="col-xs-12" type="text" name="injury_remarks" value=""></td>
                                 </tr>
+                                {/for}
                                 <tr>
                                     <td>小计</td>
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
@@ -1896,8 +1897,8 @@
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="human_money" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="human_approved" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" name="human_money" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" name="human_approved" value=""></td>
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
                                 </tr>
                                 </tbody>
@@ -1927,7 +1928,7 @@
                                     <input type="text" class="form-control input-sm" name="human_stay" id="human_stay" style="width:100%" value="">
                                 </div>
                             </div>
-                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;margin-bottom: 1rem">
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">路桥费:</label>
                                     <input type="text" class="form-control input-sm" name="human_road" id="human_road" style="width:100%" value="">
@@ -1943,12 +1944,6 @@
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">合计:</label>
                                     <input type="text" class="form-control input-sm" name="human_total" id="human_total" style="width:100%" value="">
-                                </div>
-                            </div>
-                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
-                                <div style="margin-left: 2rem;width:20%">
-                                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">提交</button>
-                                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存</button>
                                 </div>
                             </div>
                         </form>
@@ -2188,6 +2183,423 @@
         <!--补偿款信息结束-->
     </div>
 </div>
+<!--三者车modal开始-->
+<div class="modal fade" id="elseCarModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" style="width:80%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">三者车信息</h4>
+            </div>
+            <div class="modal-body">
+
+                <!--                           配件定损开始-->
+                <div class="titles"><p><font></font>配件定损</p></div>
+                <form action="" class="tablesForm" id="ElseaddAccessories" name="ElseaddAccessories" style="margin-top:1rem;margin-left:1rem">
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="Elseaccessories" data-num="0">增加</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable"  data-value="Elseaccessories">删除</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveTable" data-type="2" data-value="ElseaddAccessories">保存数据</button>
+                    <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+                        <thead>
+                        <tr>
+                            <th class="center">选择</th>
+                            <th class="center">序号</th>
+                            <th class="center">统筹种类</th>
+                            <th class="center">配件名称</th>
+                            <th class="center">价格方案</th>
+                            <th class="center">价格</th>
+                            <th class="center">数量</th>
+                            <th class="center">金额</th>
+                            <th class="center">折扣(%)</th>
+                            <th class="center">核定金额</th>
+                            <th class="center">备注</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {for start="0" end="20"}
+                        <tr id="Elseaccessories_{$i}" {if $i != 0 && !isset($elseAccessoriesList[$i])} style="display:none" {/if}>
+                        <td><input type="checkbox" class="Elseaccessories" name="accessories[]" data-num="{$i}" value="Elseaccessories"></td>
+                        <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
+                        <td>
+                            <select class="col-xs-12" name="damage_overall[]">
+                                <option value="-1">请选择</option>
+                                {volist name="$damage_overall_type" id="value" key="key"}
+                                <option value="{$key-1}" {if isset($elseAccessoriesList[$i]['damage_overall']) && $elseAccessoriesList[$i]['damage_overall'] == $key-1} selected {/if}>{$value}</option>
+                                {/volist}
+                            </select>
+                        </td>
+                        <td><input class="col-xs-12" type="text" name="damage_name[]" value="{$elseAccessoriesList[$i]['damage_name']|default=''}"></td>
+                        <td>
+                            <select class="col-xs-12" name="price_program[]">
+                                <option value="-1">请选择</option>
+                                {volist name="$price_program" id="value" key="key"}
+                                <option value="{$key-1}" {if isset($elseAccessoriesList[$i]['price_program']) && $elseAccessoriesList[$i]['price_program'] == $key-1} selected {/if}>{$value}</option>
+                                {/volist}
+                            </select>
+                        </td>
+                        <td><input class="col-xs-12 price" data-value="Elseaccessories" data-num="{$i}" type="text" id="Elsedamage_price_{$i}" name="damage_price[]" value="{$elseAccessoriesList[$i]['damage_price']|default=''}"></td>
+                        <td><input class="col-xs-12 num" data-value="Elseaccessories" data-num="{$i}" type="text" id="Elsedamage_num_{$i}" name="damage_num[]" value="{$elseAccessoriesList[$i]['damage_num']|default=''}"></td>
+                        <td><input class="col-xs-12" readonly type="text" id="Elsedamage_money_{$i}" name="damage_money[]" value="{$elseAccessoriesList[$i]['damage_money']|default=0}"></td>
+                        <td><input class="col-xs-12 discount" data-value="Elseaccessories" data-num="{$i}" type="text" id="Elsedamage_discount_{$i}" name="damage_discount[]" value="{$elseAccessoriesList[$i]['damage_discount']|default=100}"></td>
+                        <td><input class="col-xs-12" type="text" readonly id="Elsedamage_approved_{$i}" name="damage_approved[]" value="{$elseAccessoriesList[$i]['damage_approved']|default=0}"></td>
+                        <td><input class="col-xs-12" type="text" name="damage_remark[]" value="{$elseAccessoriesList[$i]['damage_remark']|default=''}"></td>
+                        </tr>
+                        {/for}
+                        <tr>
+                            <td>小计</td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" type="text" readonly id="Elseaccessories_money" name="accessories_money" value="{$elseCarDamageList[0]['accessories_money']|default=''}"></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" type="text" readonly id="Elseaccessories_approved" name="accessories_approved" value="{$elseCarDamageList[0]['accessories_approved']|default=''}"></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">合计:</label>
+                            <input type="text" class="form-control input-sm" name="accessories_total" id="Elseaccessories_total" style="width:100%" value="{$elseCarDamageList[0]['accessories_total']|default=''}">
+
+                        </div>
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">残值:</label>
+                            <input type="text" class="form-control input-sm" style="width:100%" name="accessories_residual" id="Elseaccessories_residual" value="{$elseCarDamageList[0]['accessories_residual']|default=0}">
+                        </div>
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">总计:</label>
+                            <input type="text" class="form-control input-sm" id="Elseaccessories_all" name="accessories_all" style="width:100%" value="{$elseCarDamageList[0]['accessories_all']|default=''}">
+                        </div>
+                    </div>
+                </form>
+                <!--                           配件定损结束-->
+                <!--                           本车工时开始-->
+                <div class="titles"><p><font></font>本车工时核定</p></div>
+                <form action="" name="ElseaddWork" id="ElseaddWork" style="margin-top:1rem;margin-left:1rem">
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="Elsework" data-num="0">增加</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable" data-value="Elsework">删除</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveTable" data-type="2 data-value="ElseaddWork">保存数据</button>
+                    <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+                        <thead>
+                        <tr>
+                            <th class="center">选择</th>
+                            <th class="center">序号</th>
+                            <th class="center">统筹种类</th>
+                            <th class="center">配件名称</th>
+                            <th class="center">价格方案</th>
+                            <th class="center">价格</th>
+                            <th class="center">数量</th>
+                            <th class="center">金额</th>
+                            <th class="center">折扣(%)</th>
+                            <th class="center">核定金额</th>
+                            <th class="center">备注</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {for start="0" end="20"}
+                        <tr id="Elsework_{$i}" {if $i != 0 && !isset($elseWorkList[$i])} style="display:none" {/if}>
+                        <td><input type="checkbox" name="work" class="Elsework" data-num="{$i}" value="work"></td>
+                        <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
+                        <td>
+                            <select class="col-xs-12" name="damage_overall[]">
+                                <option value="-1">请选择</option>
+                                {volist name="$damage_overall_type" id="value" key="key"}
+                                <option value="{$key-1}" {if isset($elseWorkList[$i]['damage_overall']) && $elseWorkList[$i]['damage_overall'] == $key-1} selected {/if}>{$value}</option>
+                                {/volist}
+                            </select>
+                        </td>
+                        <td><input class="col-xs-12" type="text" name="damage_name[]" value="{$workList[$i]['damage_name']|default=''}"></td>
+                        <td>
+                            <select class="col-xs-12" name="price_program[]">
+                                <option value="-1">请选择</option>
+                                {volist name="$price_program" id="value" key="key"}
+                                <option value="{$key-1}" {if isset($elseWorkList[$i]['price_program']) && $elseWorkList[$i]['price_program'] == $key-1} selected {/if}>{$value}</option>
+                                {/volist}
+                            </select>
+                        </td>
+                        <td><input class="col-xs-12 price"  data-value="Elsework" data-num="{$i}" id="Elsework_price_{$i}" type="text" name="damage_price[]" value="{$elseWorkList[$i]['damage_price']|default=''}"></td>
+                        <td><input class="col-xs-12 num" data-value="Elsework" data-num="{$i}" id="Elsework_num_{$i}" type="text" name="damage_num[]" value="{$elseWorkList[$i]['damage_num']|default=''}"></td>
+                        <td><input class="col-xs-12" readonly id="Elsework_money_{$i}" type="text" name="damage_money[]" value="{$elseWorkList[$i]['damage_money']|default=''}"></td>
+                        <td><input class="col-xs-12 discount" data-value="Elsework" data-num="{$i}" id="Elsework_discount_{$i}" type="text" name="damage_discount[]" value="{$elseWorkList[$i]['damage_discount']|default=100}"></td>
+                        <td><input class="col-xs-12" type="text" readonly id="Elsework_approved_{$i}" name="damage_approved[]" value="{$elseWorkList[$i]['damage_approved']|default=''}"></td>
+                        <td><input class="col-xs-12" type="text" name="damage_remark[]" value="{$elseWorkList[$i]['damage_remark']|default=''}"></td>
+                        </tr>
+                        {/for}
+                        <tr>
+                            <td>小计</td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly id="Elsework_money" type="text" name="work_money" value="{$elseCarDamageList[0]['work_money']|default=''}"></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly id="Elsework_approved" type="text" name="work_approved" value="{$elseCarDamageList[0]['work_approved']|default=''}"></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">施救费:</label>
+                            <input type="text" class="form-control input-sm" name="work_rescue" id="Elsework_rescue" style="width:100%" value="{$elseCarDamageList[0]['work_rescue']|default=''}">
+
+                        </div>
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">总计:</label>
+                            <input type="text" class="form-control input-sm" style="width:100%" name="work_all" id="Elsework_all" value="{$elseCarDamageList[0]['work_all']|default=''}">
+                        </div>
+                    </div>
+                    <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">费用合计:</label>
+                            <input type="text" class="form-control input-sm" id="Elsework_total" name="work_total" style="width:100%" value="{$elseCarDamageList[0]['work_total']|default=''}">
+                        </div>
+                    </div>
+                </form>
+                <!--                           本车工时结束-->
+                <!--                           本车财务开始-->
+                <div class="titles"><p><font></font>三者车财务定损</p></div>
+                <form action="" name="ElseaddFinance" id="ElseaddFinance" style="margin-top:1rem;margin-left:1rem">
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="Elsefinance" data-num="0">增加</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable" data-value="Elsefinance">删除</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveTable" data-type="2" data-value="ElseaddFinance">保存数据</button>
+                    <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+                        <thead>
+                        <tr>
+                            <th class="center">选择</th>
+                            <th class="center">序号</th>
+                            <th class="center">统筹种类</th>
+                            <th class="center">配件名称</th>
+                            <th class="center">价格方案</th>
+                            <th class="center">价格</th>
+                            <th class="center">数量</th>
+                            <th class="center">金额</th>
+                            <th class="center">折扣(%)</th>
+                            <th class="center">核定金额</th>
+                            <th class="center">备注</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {for start="0" end="20"}
+                        <tr id="Elsefinance_{$i}" {if $i != 0 && !isset($elseFinanceList[$i])} style="display:none" {/if}>
+                        <td><input type="checkbox" name="finance" data-num="{$i}" class="Elsefinance" value="finance"></td>
+                        <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
+                        <td>
+                            <select class="col-xs-12" name="damage_overall[]">
+                                <option value="-1">请选择</option>
+                                {volist name="$damage_overall_type" id="value" key="key"}
+                                <option value="{$key-1}" {if isset($elseFinanceList[$i]['damage_overall']) && $elseFinanceList[$i]['damage_overall'] == $key-1} selected {/if}>{$value}</option>
+                                {/volist}
+                            </select>
+                        </td>
+                        <td><input class="col-xs-12" type="text" name="damage_name[]" value="{$financeList[$i]['damage_name']|default=''}"></td>
+                        <td>
+                            <select class="col-xs-12" name="price_program[]">
+                                <option value="-1">请选择</option>
+                                {volist name="$price_program" id="value" key="key"}
+                                <option value="{$key-1}" {if isset($elseFinanceList[$i]['price_program']) && $elseFinanceList[$i]['price_program'] == $key-1} selected {/if}>{$value}</option>
+                                {/volist}
+                            </select>
+                        </td>
+                        <td><input class="col-xs-12 price" data-value="Elsefinance" data-num="{$i}" id="Elsefinance_price_{$i}" type="text" name="damage_price[]" value="{$elseFinanceList[$i]['damage_price']|default=''}"></td>
+                        <td><input class="col-xs-12 num" data-value="Elsefinance" data-num="{$i}" id="Elsefinance_num_{$i}" type="text" name="damage_num[]" value="{$elseFinanceList[$i]['damage_num']|default=''}"></td>
+                        <td><input class="col-xs-12" readonly id="Elsefinance_money_{$i}" type="text" name="damage_money[]" value="{$elseFinanceList[$i]['damage_money']|default=''}"></td>
+                        <td><input class="col-xs-12 discount" data-value="Elsefinance" data-num="{$i}" id="Elsefinance_discount_{$i}" type="text" name="damage_discount[]" value="{$elseFinanceList[$i]['damage_discount']|default=100}"></td>
+                        <td><input class="col-xs-12" readonly id="Elsefinance_approved_{$i}" type="text" name="damage_approved[]" value="{$elseFinanceList[$i]['damage_approved']|default=''}"></td>
+                        <td><input class="col-xs-12" type="text" name="damage_remark[]" value="{$elseFinanceList[$i]['damage_remark']|default=''}"></td>
+                        </tr>
+                        {/for}
+                        <tr>
+                            <td>小计</td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" type="text" id="Elsefinance_money" name="finance_money" value="{$elseCarDamageList[0]['work_total']|default=''}"></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" type="text" id="Elsefinance_approved" name="finance_approved" value="{$elseCarDamageList[0]['work_total']|default=''}"></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">合计:</label>
+                            <input type="text" class="form-control input-sm" name="finance_total" id="Elsefinance_total" style="width:100%" value="{$elseCarDamageList[0]['finance_total']|default=''}">
+
+                        </div>
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">残值:</label>
+                            <input type="text" class="form-control input-sm" style="width:100%" name="finance_residual" id="Elsefinance_residual" value="{$elseCarDamageList[0]['finance_residual']|default=0}">
+                        </div>
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">财务总计:</label>
+                            <input type="text" class="form-control input-sm" id="Elsefinance_all" name="finance_all" style="width:100%" value="{$elseCarDamageList[0]['finance_all']|default=''}">
+                        </div>
+                    </div>
+                    <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">诉讼费:</label>
+                            <input type="text" class="form-control input-sm" name="finance_litigation" id="Elsefinance_litigation" style="width:100%" value="{$elseCarDamageList[0]['finance_litigation']|default=''}">
+
+                        </div>
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">鉴定费:</label>
+                            <input type="text" class="form-control input-sm" style="width:100%" name="finance_identification" id="Elsefinance_identification" value="{$elseCarDamageList[0]['finance_identification']|default=''}">
+                        </div>
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">公估费:</label>
+                            <input type="text" class="form-control input-sm" id="Elsefinance_appraisal" name="finance_appraisal" style="width:100%" value="{$elseCarDamageList[0]['finance_appraisal']|default=''}">
+                        </div>
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">住宿费:</label>
+                            <input type="text" class="form-control input-sm" id="Elsefinance_stay" name="finance_stay" style="width:100%" value="{$elseCarDamageList[0]['finance_stay']|default=''}">
+                        </div>
+                    </div>
+                    <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">路桥费:</label>
+                            <input type="text" class="form-control input-sm" name="finance_road" id="Elsefinance_road" style="width:100%" value="{$elseCarDamageList[0]['finance_road']|default=''}">
+
+                        </div>
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">燃油费:</label>
+                            <input type="text" class="form-control input-sm" style="width:100%" name="finance_fuel" id="Elsefinance_fuel" value="{$elseCarDamageList[0]['finance_fuel']|default=''}">
+                        </div>
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">其他:</label>
+                            <input type="text" class="form-control input-sm" id="Elsefinance_other" name="finance_other" style="width:100%" value="{$elseCarDamageList[0]['finance_other']|default=''}">
+                        </div>
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">汇总:</label>
+                            <input type="text" class="form-control input-sm" id="Elsefinance_summary" name="finance_summary" style="width:100%" value="{$elseCarDamageList[0]['finance_summary']|default=''}">
+                        </div>
+                    </div>
+                    <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                        <div style="margin-left: 2rem;width:20%">
+                            <label class="text-center search-item-label">备注说明:</label>
+                            <textarea name="finance_remark" id="Elsefinance_remark" cols="120" rows="10">{$elseCarDamageList[0]['finance_remark']|default=''}</textarea>
+                        </div>
+                    </div>
+
+                </form>
+                <!--                           本车财务结束-->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--三者车modal结束-->
+
+
+<!--人伤modal开始-->
+<div class="modal fade" id="humanModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" style="width:80%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">人伤信息</h4>
+            </div>
+            <div class="modal-body">
+                <form action="" name="addHuman" style="margin-top:1rem;margin-left:1rem">
+                    <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                        <div class="search-item-div col-xs-3">
+                            <label for="invoice_name" class="text-center search-item-label">诊断病情:</label>
+                            <input type="text" class="form-control input-sm" style="width:100%" name="invoice_name" id="invoice_name" value="{$list.invoice_name|default=''}">
+
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="invoice_tax" class="text-center search-item-label">是否住院:</label>
+                            <input type="text" style="width:100%" name="invoice_tax" id="invoice_tax" value="{$list.invoice_tax|default=''}">
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="invoice_bank" class="text-center search-item-label">住院天数:</label>
+                            <input type="text" class="form-control input-sm" style="width:100%" name="invoice_bank" id="invoice_bank" value="{$list.invoice_bank|default=''}">
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="invoice_account" class="text-center search-item-label">是否残疾:</label>
+                            <input type="text" class="form-control input-sm" style="width:100%" name="invoice_account" id="invoice_account" value="{$list.invoice_account|default=''}">
+                        </div>
+                    </div>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="human" data-num="0">增加</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable"  data-value="human">删除</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                    <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+                        <thead>
+                        <tr>
+                            <th class="center">选择</th>
+                            <th class="center">序号</th>
+                            <th class="center">统筹种类</th>
+                            <th class="center">费用类型</th>
+                            <th class="center">金额</th>
+                            <th class="center">数量</th>
+                            <th class="center">总价</th>
+                            <th class="center">核价金额</th>
+                            <th class="center">备注</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {for start="0" end="20"}
+                        <tr id="human_{$i}" {if $i != 0} style="display:none" {/if}>
+                        <td><input type="checkbox" name="human" class="human" data-num="{$i}" value="human"></td>
+                        <td>
+                            <select class="col-xs-12" name="injury_sex">
+                                <option value="-1">请选择</option>
+                                {volist name="$human_overall_type" id="value" key="key"}
+                                <option value="{$key-1}">{$value}</option>
+                                {/volist}
+                            </select>
+                        </td>
+                        <td><input class="col-xs-12" type="text" name="injury_name" value=""></td>
+                        <td>
+                            <select class="col-xs-12" name="injury_sex">
+                                <option value="-1">请选择</option>
+                                {volist name="$survey_sex" id="value" key="key"}
+                                <option value="{$key-1}">{$value}</option>
+                                {/volist}
+                            </select>
+                        </td>
+                        <td><input class="col-xs-12" type="text" name="injury_age" value=""></td>
+                        <td><input class="col-xs-12" type="text" name="injury_domicile" value=""></td>
+                        <td><input class="col-xs-12" type="text" name="injury_medical" value=""></td>
+                        <td><input class="col-xs-12" type="text" name="injury_record" value=""></td>
+                        </tr>
+                        {/for}
+                        <tr>
+                            <td>小计</td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" type="text" name="human_money" value=""></td>
+                            <td><input class="col-xs-12" type="text" name="human_approved" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="humanSubmit">提交</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--人伤查询modal结束-->
 
 <script>
 const uploadTotal = {$uploadTotal};
@@ -2339,6 +2751,671 @@ jQuery(function($) {
             });
             layer.close(index);
         });
+    })
+    //车损人伤补偿款表格增加/删除
+    //增加
+    $(".addTable").on('click',function() {
+        var num = $(this).attr("data-num");
+        var value = $(this).attr("data-value");
+        var next = parseInt(num) + 1;
+        $("#"+value+"_"+next).show();
+        $(this).attr("data-num",next);
+        return false;
+    })
+    //删除
+    $(".delTable").on('click',function() {
+        var value = $(this).attr("data-value");
+        $("."+value).each(function() {
+            if(this.checked) {
+                var num = $(this).attr("data-num");
+                $("#"+value+"_"+num).remove();
+            }
+        })
+        return false;
+    })
+    //价格输入
+    $(".price").on('keyup',function() {
+        var value = $(this).attr("data-value");
+        var num = $(this).attr("data-num");
+        //配件定损
+        if(value == 'accessories') {
+            var damage_num = $("#damage_num_"+num).val();
+            if(damage_num != '') {
+                var price = $(this).val();
+                var discount = $("#damage_discount_" +num).val()/100;
+                $("#damage_money_"+num).val((price * damage_num).toFixed(2));
+                $("#damage_approved_"+num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for(var i = 0; i<=20; i++) {
+                    var money = $("#damage_money_"+i).val();
+                    var approved = $("#damage_approved_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#accessories_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#accessories_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#accessories_total").val(parseFloat(accessories_approved).toFixed(2));
+                var accessories_residual = $("#accessories_residual").val();
+                var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
+                $("#accessories_all").val(accessories_all);
+            }
+            //工时核定
+        }else if (value == 'work') {
+            var damage_num = $("#work_num_"+num).val();
+            if(damage_num != '') {
+                var price = $(this).val();
+                var discount = $("#work_discount_" +num).val()/100;
+                $("#work_money_"+num).val((price * damage_num).toFixed(2));
+                $("#work_approved_"+num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for(var i = 0; i<=20; i++) {
+                    var money = $("#work_money_"+i).val();
+                    var approved = $("#work_approved_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#work_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#work_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#work_all").val(parseFloat(accessories_approved).toFixed(2));
+                var work_rescue = $("#work_rescue").val();
+                var work_total = parseFloat(accessories_approved*1 + work_rescue*1).toFixed(2);
+                $("#work_total").val(work_total);
+            }
+            //财务定损
+        }else if(value == 'finance') {
+            var damage_num = $("#finance_num_"+num).val();
+            if(damage_num != '') {
+                var price = $(this).val();
+                var discount = $("#finance_discount_" +num).val()/100;
+                $("#finance_money_"+num).val((price * damage_num).toFixed(2));
+                $("#finance_approved_"+num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for(var i = 0; i<=20; i++) {
+                    var money = $("#finance_money_"+i).val();
+                    var approved = $("#finance_approved_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#finance_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#finance_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#finance_total").val(parseFloat(accessories_approved).toFixed(2));
+                var accessories_residual = $("#finance_residual").val();
+                var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
+                $("#finance_all").val(accessories_all);
+            }
+            //其他配件定损
+        }else if(value == 'Elseaccessories') {
+            var damage_num = $("#Elsedamage_num_"+num).val();
+            if(damage_num != '') {
+                var price = $(this).val();
+                var discount = $("#Elsedamage_discount_" +num).val()/100;
+                $("#Elsedamage_money_"+num).val((price * damage_num).toFixed(2));
+                $("#Elsedamage_approved_"+num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for(var i = 0; i<=20; i++) {
+                    var money = $("#Elsedamage_money_"+i).val();
+                    var approved = $("#Elsedamage_approved_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#Elseaccessories_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#Elseaccessories_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#Elseaccessories_total").val(parseFloat(accessories_approved).toFixed(2));
+                var accessories_residual = $("#Elseaccessories_residual").val();
+                var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
+                $("#Elseaccessories_all").val(accessories_all);
+            }
+            //其他工时核定
+        }else if (value == 'Elsework') {
+            var damage_num = $("#Elsework_num_"+num).val();
+            if(damage_num != '') {
+                var price = $(this).val();
+                var discount = $("#Elsework_discount_" +num).val()/100;
+                $("#Elsework_money_"+num).val((price * damage_num).toFixed(2));
+                $("#Elsework_approved_"+num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for(var i = 0; i<=20; i++) {
+                    var money = $("#Elsework_money_"+i).val();
+                    var approved = $("#Elsework_approved_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#Elsework_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#Elsework_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#Elsework_all").val(parseFloat(accessories_approved).toFixed(2));
+                var work_rescue = $("#Elsework_rescue").val();
+                var work_total = parseFloat(accessories_approved*1 + work_rescue*1).toFixed(2);
+                $("#Elsework_total").val(work_total);
+            }
+            //其他财务定损
+        }else if(value == 'Elsefinance') {
+            var damage_num = $("#Elsefinance_num_"+num).val();
+            if(damage_num != '') {
+                var price = $(this).val();
+                var discount = $("#Elsefinance_discount_" +num).val()/100;
+                $("#Elsefinance_money_"+num).val((price * damage_num).toFixed(2));
+                $("#Elsefinance_approved_"+num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for(var i = 0; i<=20; i++) {
+                    var money = $("#Elsefinance_money_"+i).val();
+                    var approved = $("#Elsefinance_approved_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#Elsefinance_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#Elsefinance_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#Elsefinance_total").val(parseFloat(accessories_approved).toFixed(2));
+                var accessories_residual = $("#Elsefinance_residual").val();
+                var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
+                $("#Elsefinance_all").val(accessories_all);
+            }
+        }
+    })
+    //数量输入
+    $(".num").on('keyup',function() {
+        var value = $(this).attr("data-value");
+        var num = $(this).attr("data-num");
+        //配件定损
+        if(value == 'accessories') {
+            var price = $("#damage_price_"+num).val();
+            if(price != '') {
+                var damage_num = $(this).val();
+                var discount = $("#damage_discount_" +num).val()/100;
+                $("#damage_money_"+num).val((price * damage_num).toFixed(2));
+                $("#damage_approved_"+num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for(var i = 0; i<=20; i++) {
+                    var money = $("#damage_money_"+i).val();
+                    var approved = $("#damage_approved_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#accessories_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#accessories_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#accessories_total").val(parseFloat(accessories_approved).toFixed(2));
+                var accessories_residual = $("#finance_residual").val();
+                var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
+                $("#accessories_all").val(accessories_all);
+            }
+            //工时核定
+        }else if (value == 'work') {
+            var price = $("#work_price_"+num).val();
+            if(price != '') {
+                var damage_num = $(this).val();
+                var discount = $("#work_discount_" +num).val()/100;
+                $("#work_money_"+num).val((price * damage_num).toFixed(2));
+                $("#work_approved_"+num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for(var i = 0; i<=20; i++) {
+                    var money = $("#work_money_"+i).val();
+                    var approved = $("#work_approved_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#work_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#work_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#work_all").val(parseFloat(accessories_approved).toFixed(2));
+                var work_rescue = $("#work_rescue").val();
+                var work_total = parseFloat(accessories_approved*1 + work_rescue*1).toFixed(2);
+                $("#work_total").val(work_total);
+            }
+            //财务定损
+        }else if(value == "finance") {
+            var price = $("#finance_price_"+num).val();
+            if(price != '') {
+                var damage_num = $(this).val();
+                var discount = $("#finance_discount_" +num).val()/100;
+                $("#dfinance_money_"+num).val((price * damage_num).toFixed(2));
+                $("#finance_approved_"+num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for(var i = 0; i<=20; i++) {
+                    var money = $("#finance_money_"+i).val();
+                    var approved = $("#finance_approved_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#finance_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#finance_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#finance_total").val(parseFloat(accessories_approved).toFixed(2));
+                var accessories_residual = $("#finance_residual").val();
+                var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
+                $("#finance_all").val(accessories_all);
+            }
+            //其他配件定损
+        }else if(value == 'Elseaccessories') {
+            var price = $("#Elsedamage_price_"+num).val();
+            if(price != '') {
+                var damage_num = $(this).val();
+                var discount = $("#Elsedamage_discount_" +num).val()/100;
+                $("#Elsedamage_money_"+num).val((price * damage_num).toFixed(2));
+                $("#Elsedamage_approved_"+num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for(var i = 0; i<=20; i++) {
+                    var money = $("#Elsedamage_money_"+i).val();
+                    var approved = $("#Elsedamage_approved_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#Elseaccessories_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#Elseaccessories_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#Elseaccessories_total").val(parseFloat(accessories_approved).toFixed(2));
+                var accessories_residual = $("#Elsefinance_residual").val();
+                var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
+                $("#Elseaccessories_all").val(accessories_all);
+            }
+            //其他工时核定
+        }else if (value == 'Elsework') {
+            var price = $("#Elsework_price_"+num).val();
+            if(price != '') {
+                var damage_num = $(this).val();
+                var discount = $("#Elsework_discount_" +num).val()/100;
+                $("#Elsework_money_"+num).val((price * damage_num).toFixed(2));
+                $("#Elsework_approved_"+num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for(var i = 0; i<=20; i++) {
+                    var money = $("#Elsework_money_"+i).val();
+                    var approved = $("#Elsework_approved_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#Elsework_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#Elsework_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#Elsework_all").val(parseFloat(accessories_approved).toFixed(2));
+                var work_rescue = $("#Elsework_rescue").val();
+                var work_total = parseFloat(accessories_approved*1 + work_rescue*1).toFixed(2);
+                $("#Elsework_total").val(work_total);
+            }
+            //其他财务定损
+        }else if(value == "Elsefinance") {
+            var price = $("#Elsefinance_price_"+num).val();
+            if(price != '') {
+                var damage_num = $(this).val();
+                var discount = $("#Elsefinance_discount_" +num).val()/100;
+                $("#Elsedfinance_money_"+num).val((price * damage_num).toFixed(2));
+                $("#Elsefinance_approved_"+num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for(var i = 0; i<=20; i++) {
+                    var money = $("#Elsefinance_money_"+i).val();
+                    var approved = $("#Elsefinance_approved_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#Elsefinance_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#Elsefinance_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#Elsefinance_total").val(parseFloat(accessories_approved).toFixed(2));
+                var accessories_residual = $("#Elsefinance_residual").val();
+                var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
+                $("#Elsefinance_all").val(accessories_all);
+            }
+        }
+    })
+    //折扣
+    $(".discount").on('keyup',function() {
+        var value = $(this).attr("data-value");
+        var num = $(this).attr("data-num");
+        //配件定损
+        if (value == 'accessories') {
+            var price = $("#damage_price_" + num).val();
+            var damage_num = $("#damage_num_" + num).val();
+            if (price != '' && damage_num != '') {
+                var discount = $(this).val() / 100;
+                $("#damage_money_" + num).val((price * damage_num).toFixed(2));
+                $("#damage_approved_" + num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for (var i = 0; i <= 20; i++) {
+                    var money = $("#damage_money_" + i).val();
+                    var approved = $("#damage_approved_" + i).val();
+                    if (money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#accessories_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#accessories_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#accessories_total").val(parseFloat(accessories_approved).toFixed(2));
+                var accessories_residual = $("#accessories_residual").val();
+                var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
+                $("#accessories_all").val(accessories_all);
+            }
+            //工时核定
+        } else if (value == 'work') {
+            var price = $("#work_price_" + num).val();
+            var damage_num = $("#work_num_" + num).val();
+            if (price != '' && damage_num != '') {
+                var discount = $(this).val() / 100;
+                $("#work_money_" + num).val((price * damage_num).toFixed(2));
+                $("#work_approved_" + num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for (var i = 0; i <= 20; i++) {
+                    var money = $("#work_money_" + i).val();
+                    var approved = $("#work_approved_" + i).val();
+                    if (money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#work_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#work_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#work_all").val(parseFloat(accessories_approved).toFixed(2));
+                var work_rescue = $("#work_rescue").val();
+                var work_total = parseFloat(accessories_approved*1 + work_rescue*1).toFixed(2);
+                $("#work_total").val(work_total);
+            }
+            //财务定损
+        }else if(value == "finance") {
+            var price = $("#finance_price_" + num).val();
+            var damage_num = $("#finance_num_" + num).val();
+            if (price != '' && damage_num != '') {
+                var discount = $(this).val() / 100;
+                $("#finance_money_" + num).val((price * damage_num).toFixed(2));
+                $("#finance_approved_" + num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for (var i = 0; i <= 20; i++) {
+                    var money = $("#finance_money_" + i).val();
+                    var approved = $("#finance_approved_" + i).val();
+                    if (money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#finance_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#finance_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#finance_total").val(parseFloat(accessories_approved).toFixed(2));
+                var accessories_residual = $("#finance_residual").val();
+                var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
+                $("#finance_all").val(accessories_all);
+            }
+            //其他配件定损
+        }else if (value == 'Elseaccessories') {
+            var price = $("#Elsedamage_price_" + num).val();
+            var damage_num = $("#Elsedamage_num_" + num).val();
+            if (price != '' && damage_num != '') {
+                var discount = $(this).val() / 100;
+                $("#Elsedamage_money_" + num).val((price * damage_num).toFixed(2));
+                $("#Elsedamage_approved_" + num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for (var i = 0; i <= 20; i++) {
+                    var money = $("#Elsedamage_money_" + i).val();
+                    var approved = $("#Elsedamage_approved_" + i).val();
+                    if (money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#Elseaccessories_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#Elseaccessories_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#Elseaccessories_total").val(parseFloat(accessories_approved).toFixed(2));
+                var accessories_residual = $("#Elseaccessories_residual").val();
+                var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
+                $("#Elseaccessories_all").val(accessories_all);
+            }
+            //其他工时核定
+        } else if (value == 'Elsework') {
+            var price = $("#Elsework_price_" + num).val();
+            var damage_num = $("#Elsework_num_" + num).val();
+            if (price != '' && damage_num != '') {
+                var discount = $(this).val() / 100;
+                $("#Elsework_money_" + num).val((price * damage_num).toFixed(2));
+                $("#Elsework_approved_" + num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for (var i = 0; i <= 20; i++) {
+                    var money = $("#Elsework_money_" + i).val();
+                    var approved = $("#Elsework_approved_" + i).val();
+                    if (money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#Elsework_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#Elsework_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#Elsework_all").val(parseFloat(accessories_approved).toFixed(2));
+                var work_rescue = $("#Elsework_rescue").val();
+                var work_total = parseFloat(accessories_approved*1 + work_rescue*1).toFixed(2);
+                $("#Elsework_total").val(work_total);
+            }
+            //其他财务定损
+        }else if(value == "finance") {
+            var price = $("#Elsefinance_price_" + num).val();
+            var damage_num = $("#Elsefinance_num_" + num).val();
+            if (price != '' && damage_num != '') {
+                var discount = $(this).val() / 100;
+                $("#Elsefinance_money_" + num).val((price * damage_num).toFixed(2));
+                $("#Elsefinance_approved_" + num).val((price * damage_num * discount).toFixed(2));
+                var accessories_money = 0;
+                var accessories_approved = 0;
+                for (var i = 0; i <= 20; i++) {
+                    var money = $("#Elsefinance_money_" + i).val();
+                    var approved = $("#Elsefinance_approved_" + i).val();
+                    if (money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_approved = parseFloat(accessories_approved) + parseFloat(approved);
+                    }
+                }
+                $("#Elsefinance_money").val(parseFloat(accessories_money).toFixed(2));
+                $("#Elsefinance_approved").val(parseFloat(accessories_approved).toFixed(2));
+                $("#Elsefinance_total").val(parseFloat(accessories_approved).toFixed(2));
+                var accessories_residual = $("#Elsefinance_residual").val();
+                var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
+                $("#Elsefinance_all").val(accessories_all);
+            }
+        }
+    });
+    //残值
+    $("#accessories_residual").on('keyup',function() {
+        var redidual = $(this).val();
+        var accessories_total = $("#accessories_total").val();
+        $("#accessories_all").val(accessories_total*1 - redidual*1);
+    })
+    //其他残值
+    $("#Elseaccessories_residual").on('keyup',function() {
+        var redidual = $(this).val();
+        var accessories_total = $("#Elseaccessories_total").val();
+        $("#Elseaccessories_all").val(accessories_total*1 - redidual*1);
+    })
+    //施救费
+    $("#work_rescue").on('keyup',function() {
+        var redidual = $(this).val();
+        var work_all = $("#work_all").val();
+        $("#work_total").val(parseFloat(redidual*1 + work_all*1).toFixed(2));
+    })
+    //其他施救费
+    $("#Elsework_rescue").on('keyup',function() {
+        var redidual = $(this).val();
+        var work_all = $("#Elsework_all").val();
+        $("#Elsework_total").val(parseFloat(redidual*1 + work_all*1).toFixed(2));
+    })
+    //财务残费
+    $("#finance_residual").on('keyup',function() {
+        var redidual = $(this).val();
+        var accessories_total = $("#finance_total").val();
+        $("#finance_all").val(accessories_total*1 - redidual*1);
+    })
+    //其他财务残费
+    $("#Elsefinance_residual").on('keyup',function() {
+        var redidual = $(this).val();
+        var accessories_total = $("#Elsefinance_total").val();
+        $("#Elsefinance_all").val(accessories_total*1 - redidual*1);
+    })
+    //保存车损数据
+    $(".saveTable").on('click',function() {
+        var value = $(this).attr("data-value");
+        var type = $(this).attr("data-type");
+        var but = $(this);
+        but.attr("disabled", "disabled");
+        //本车配件
+        if (value == 'addAccessories') {
+            var url = '/admin/ajax/overallcompensation/survey/addAccessories';
+            $("#addAccessories").find('tr').each(function () {
+                if ($(this).is(':hidden')) {
+                    $(this).remove();
+                }
+            })
+            var form = $("form[name=" + value + "]").serializeArray();
+            replaceForm(form, 'damage_type', 1);
+            //本车工时
+        } else if (value == 'addWork') {
+            var url = '/admin/ajax/overallcompensation/survey/addWork';
+            $("#addWork").find('tr').each(function () {
+                if ($(this).is(':hidden')) {
+                    $(this).remove();
+                }
+            })
+            var form = $("form[name=" + value + "]").serializeArray();
+            replaceForm(form, 'damage_type', 2);
+            //本车财务
+        } else if (value == 'addFinance') {
+            var url = '/admin/ajax/overallcompensation/survey/addFinance';
+            $("#addFinance").find('tr').each(function () {
+                if ($(this).is(':hidden')) {
+                    $(this).remove();
+                }
+            })
+            var form = $("form[name=" + value + "]").serializeArray();
+            replaceForm(form, 'damage_type', 3);
+            //三者车
+        }else if(value == 'addOtherCarForm'){
+            var url = '/admin/ajax/overallcompensation/survey/addCarForm';
+            $("#addOtherCarForm").find('tr').each(function () {
+                if ($(this).is(':hidden')) {
+                    $(this).remove();
+                }
+            })
+            var form = $("form[name=" + value + "]").serializeArray();
+            //三者车配件
+        }else if (value == 'ElseaddAccessories') {
+            var url = '/admin/ajax/overallcompensation/survey/addAccessories';
+            $("#ElseaddAccessories").find('tr').each(function () {
+                if ($(this).is(':hidden')) {
+                    $(this).remove();
+                }
+            })
+            var form = $("form[name=" + value + "]").serializeArray();
+            replaceForm(form, 'damage_type', 1);
+            //三者车工时
+        } else if (value == 'ElseaddWork') {
+            var url = '/admin/ajax/overallcompensation/survey/addWork';
+            $("#ElseaddWork").find('tr').each(function () {
+                if ($(this).is(':hidden')) {
+                    $(this).remove();
+                }
+            })
+            var form = $("form[name=" + value + "]").serializeArray();
+            replaceForm(form, 'damage_type', 2);
+            //三者车财务
+        } else if (value == 'ElseaddFinance') {
+            var url = '/admin/ajax/overallcompensation/survey/addFinance';
+            $("#ElseaddFinance").find('tr').each(function () {
+                if ($(this).is(':hidden')) {
+                    $(this).remove();
+                }
+            })
+            var form = $("form[name=" + value + "]").serializeArray();
+            replaceForm(form, 'damage_type', 3);
+        }else{
+            but.removeAttr("disabled");
+            return false;
+        }
+        replaceForm(form,'report_id',$("#report_id").val());
+        replaceForm(form,'this_car',type);
+        $.ajax(url, {
+            dataType: 'json', // type of response data
+            timeout: 500,     // timeout milliseconds
+            method: "post",
+            data: form,
+            success: function (data, status, xhr) {   // success callback function
+                but.removeAttr("disabled");
+                if (data.code == 100000) {
+                    layer.msg(data.msg);
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function () {
+                but.removeAttr("disabled");
+                layer.msg("系统错误");
+            }
+        });
+        return false;
+    })
+    //保存本车定损数据
+    $(".addCarForm").on('click',function() {
+        var but = $(this);
+        but.attr("disabled", "disabled");
+        var url = '/admin/ajax/overallcompensation/survey/addCarForm';
+        var form = $("form[name=addCarFormDamage]").serializeArray();
+        replaceForm(form,'this_car',1);
+        replaceForm(form,'report_id',$("#report_id").val());
+        $.ajax(url, {
+            dataType: 'json', // type of response data
+            timeout: 500,     // timeout milliseconds
+            method: "post",
+            data: form,
+            success: function (data, status, xhr) {   // success callback function
+                but.removeAttr("disabled");
+                if (data.code == 100000) {
+                    layer.msg(data.msg);
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function () {
+                but.removeAttr("disabled");
+                layer.msg("系统错误");
+            }
+        });
+        return false;
+    })
+    //三者车车牌点击
+    $("#other_plate").on('click',function() {
+        var value = $(this).val();
+        if(value != '') {
+            $("#elseCarModal").modal();
+        }
+    })
+    //本人人伤
+    $(".saveHumanTable").on('click',function() {
+
     })
 });
 </script>

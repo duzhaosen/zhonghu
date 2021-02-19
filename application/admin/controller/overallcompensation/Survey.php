@@ -154,6 +154,43 @@ class Survey extends Common {
         //车损
         $this->assign('damage_overall_type',$res['damage_overall_type']);
         $this->assign('price_program',$res['price_program']);
+        //车损主表
+        $damage_info = Model('Survey')->getDamageLordList(['related_id'=>$this->param['report_id'],'this_car'=>1]);
+        $this->assign('carDamageList',$damage_info);
+        $accessoriesList = [];
+        $workList = [];
+        $financeList = [];
+        if(!empty($damage_info)) {
+            $accessoriesList = Model('Survey')->getDamageList(['damage_type'=>1,'type'=>1,'related_id'=>$damage_info[0]['id']]);
+            $workList = Model('Survey')->getDamageList(['damage_type'=>2,'type'=>1,'related_id'=>$damage_info[0]['id']]);
+            $financeList = Model('Survey')->getDamageList(['damage_type'=>3,'type'=>1,'related_id'=>$damage_info[0]['id']]);
+        }
+        //配件
+        $this->assign('accessoriesList',$accessoriesList);
+        //工时
+        $this->assign('workList',$workList);
+        //财务
+        $this->assign('financeList',$financeList);
+        //三者车主表
+        $else_damage_info = Model('Survey')->getDamageLordList(['related_id'=>$this->param['report_id'],'this_car'=>2]);
+        $this->assign('elseCarDamageList',$else_damage_info);
+        $elseAccessoriesList = [];
+        $elseWorkList = [];
+        $elseFinanceList = [];
+        if(!empty($else_damage_info)) {
+            //三者车配件
+            $elseAccessoriesList = Model('Survey')->getDamageList(['damage_type'=>1,'type'=>1,'related_id'=>$else_damage_info[0]['id']]);
+            //三者车工时
+            $elseWorkList = Model('Survey')->getDamageList(['damage_type'=>2,'type'=>1,'related_id'=>$else_damage_info[0]['id']]);
+            //三者车财务
+            $elseFinanceList = Model('Survey')->getDamageList(['damage_type'=>3,'type'=>1,'related_id'=>$else_damage_info[0]['id']]);
+        }
+        //三者车配件
+        $this->assign('elseAccessoriesList',$elseAccessoriesList);
+        //三者车工时
+        $this->assign('elseWorkList',$elseWorkList);
+        //三者车财务
+        $this->assign('elseFinanceList',$elseFinanceList);
 
         //人伤
         $this->assign('human_overall_type',$res['human_overall_type']);

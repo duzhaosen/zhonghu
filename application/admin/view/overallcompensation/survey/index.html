@@ -113,7 +113,7 @@
                     <tbody>
                     {volist name="$res" id="value"}
                     <tr data-id="{$value.report_id}">
-                        <td></td>
+                        <td>{$value.report_code}</td>
                         <td><a href="/admin/Overallcompensation/report/view?report_id={$value.report_id}">{$value.report_id}</a></td>
                         <td>{:date('Y-m-d H:i:s',$value.report_time)}</td>
                         <td>{:date('Y-m-d H:i:s',$value.out_danger_time)}</td>

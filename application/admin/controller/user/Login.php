@@ -13,7 +13,6 @@ use app\admin\controller\Common;
 class Login extends Common
 {
     public function Login() {
-
         $this->fetch();
     }
 

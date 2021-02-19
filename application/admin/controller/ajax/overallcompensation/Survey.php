@@ -77,4 +77,239 @@ class Survey extends Common {
         }
         return $line;
     }
+
+    /** 车损本车添加数据
+     * @param Request $request
+     */
+    public function addCarForm(Request $request) {
+        $res = Config::parse(APP_PATH.'/admin/config/formValidator/addCarDamage.ini','ini');
+        foreach($res['addcar'] as $key => $value) {
+            $request->param($key) ? $this->param[$key] = $request->param($key) : "";
+            if($value && empty($this->param[$key])) {
+                $data = array();
+                $data['code'] = 100001;
+                $data['msg'] = $res['addcarcomment'][$key].'不可为空';
+                return json($data);
+            }
+        }
+        $res = Model('Survey')->addDamage($this->param);
+        if($res) {
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = '车辆信息保存成功';
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100001;
+        $data['msg'] = '车辆信息保存失败';
+        return json($data);
+    }
+
+    /** 车损配件添加
+     * @param Request $request
+     */
+    public function addAccessories(Request $request) {
+        $field = $request->param();
+        //格式化数据处理
+        $condition = array();
+        foreach ($field as $key => $value) {
+            if(is_array($value)){
+                foreach ($value as $k => $item) {
+                    $condition[$k][$key] = $item;
+                }
+            }else{
+                $condition[$key] = $value;
+            }
+        }
+        foreach ($condition as $key => $value) {
+            if(is_array($value)) {
+                $res = Config::parse(APP_PATH.'/admin/config/formValidator/addAccessories.ini','ini');
+                foreach($res['addaccessories'] as $k => $item) {
+                    if($item && empty($value[$k])) {
+                        $data = array();
+                        $data['code'] = 100001;
+                        $data['msg'] = $res['addaccessoriescomment'][$k].'不可为空';
+                        return json($data);
+                    }
+                }
+            }else{
+                $res = Config::parse(APP_PATH.'/admin/config/formValidator/addAccessories.ini','ini');
+                foreach($res['adddamage'] as $k => $item) {
+                    if($item && empty($condition[$k])) {
+                        $data = array();
+                        $data['code'] = 100001;
+                        $data['msg'] = $res['adddamagecomment'][$k].'不可为空';
+                        return json($data);
+                    }
+                }
+            }
+        }
+        $res = Model('Survey')->addDamage($condition);
+        if($res) {
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = '配件车损保存成功';
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100001;
+        $data['msg'] = '配件车损保存失败';
+        return json($data);
+    }
+
+    /** 工时添加
+     * @param Request $request
+     */
+    public function addWork(Request $request) {
+        $field = $request->param();
+        //格式化数据处理
+        $condition = array();
+        foreach ($field as $key => $value) {
+            if(is_array($value)){
+                foreach ($value as $k => $item) {
+                    $condition[$k][$key] = $item;
+                }
+            }else{
+                $condition[$key] = $value;
+            }
+        }
+        foreach ($condition as $key => $value) {
+            if(is_array($value)) {
+                $res = Config::parse(APP_PATH.'/admin/config/formValidator/addWork.ini','ini');
+                foreach($res['addwork'] as $k => $item) {
+                    if($item && empty($value[$k])) {
+                        $data = array();
+                        $data['code'] = 100001;
+                        $data['msg'] = $res['addworkcomment'][$k].'不可为空';
+                        return json($data);
+                    }
+                }
+            }else{
+                $res = Config::parse(APP_PATH.'/admin/config/formValidator/addWork.ini','ini');
+                foreach($res['adddamage'] as $k => $item) {
+                    if($item && empty($condition[$k])) {
+                        $data = array();
+                        $data['code'] = 100001;
+                        $data['msg'] = $res['adddamagecomment'][$k].'不可为空';
+                        return json($data);
+                    }
+                }
+            }
+        }
+        $res = Model('Survey')->addDamage($condition);
+        if($res) {
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = '工时车损保存成功';
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100001;
+        $data['msg'] = '工时车损保存失败';
+        return json($data);
+    }
+
+    /** 财务添加
+     * @param Request $request
+     */
+    public function addFinance(Request $request) {
+        $field = $request->param();
+        //格式化数据处理
+        $condition = array();
+        foreach ($field as $key => $value) {
+            if(is_array($value)){
+                foreach ($value as $k => $item) {
+                    $condition[$k][$key] = $item;
+                }
+            }else{
+                $condition[$key] = $value;
+            }
+        }
+        foreach ($condition as $key => $value) {
+            if(is_array($value)) {
+                $res = Config::parse(APP_PATH.'/admin/config/formValidator/addFinance.ini','ini');
+                foreach($res['addfinance'] as $k => $item) {
+                    if($item && empty($value[$k])) {
+                        $data = array();
+                        $data['code'] = 100001;
+                        $data['msg'] = $res['addfinancecomment'][$k].'不可为空';
+                        return json($data);
+                    }
+                }
+            }else{
+                $res = Config::parse(APP_PATH.'/admin/config/formValidator/addFinance.ini','ini');
+                foreach($res['adddamage'] as $k => $item) {
+                    if($item && empty($condition[$k])) {
+                        $data = array();
+                        $data['code'] = 100001;
+                        $data['msg'] = $res['adddamagecomment'][$k].'不可为空';
+                        return json($data);
+                    }
+                }
+            }
+        }
+        $res = Model('Survey')->addDamage($condition);
+        if($res) {
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = '财务车损保存成功';
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100001;
+        $data['msg'] = '财务车损保存失败';
+        return json($data);
+    }
+
+    /** 人伤添加
+     *
+     */
+    public function addHuman(Request $request) {
+        $field = $request->param();
+        //格式化数据处理
+        $condition = array();
+        foreach ($field as $key => $value) {
+            if(is_array($value)){
+                foreach ($value as $k => $item) {
+                    $condition[$k][$key] = $item;
+                }
+            }else{
+                $condition[$key] = $value;
+            }
+        }
+        foreach ($condition as $key => $value) {
+            if(is_array($value)) {
+                $res = Config::parse(APP_PATH.'/admin/config/formValidator/addHuman.ini','ini');
+                foreach($res['addhumaninfo'] as $k => $item) {
+                    if($item && empty($value[$k])) {
+                        $data = array();
+                        $data['code'] = 100001;
+                        $data['msg'] = $res['addhumaninfocomment'][$k].'不可为空';
+                        return json($data);
+                    }
+                }
+            }else{
+                $res = Config::parse(APP_PATH.'/admin/config/formValidator/addHuman.ini','ini');
+                foreach($res['addhuman'] as $k => $item) {
+                    if($item && empty($condition[$k])) {
+                        $data = array();
+                        $data['code'] = 100001;
+                        $data['msg'] = $res['addhumancomment'][$k].'不可为空';
+                        return json($data);
+                    }
+                }
+            }
+        }
+        $res = Model('Survey')->addHuman($this->param);
+        if($res) {
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = '人伤保存成功';
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100001;
+        $data['msg'] = '人伤保存失败';
+        return json($data);
+    }
 }
