@@ -218,12 +218,6 @@
                             </div>
                         </div>
 
-                        <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
-                            <div class=" search-item-div col-xs-3 col-lg-offset-5">
-                                <button class="layui-btn layui-btn-radius layui-btn-normal">提交审核</button>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -237,6 +231,7 @@
                         <h5 class="widget-title">查勘录入</h5>
                     </div>
                     <div class="widget-body">
+                        <form name="addSurvey">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class=" search-item-div col-xs-3">
                                 <label for="report_id" class="text-center search-item-label">报案单号:</label>
@@ -248,21 +243,21 @@
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="plate" class="text-center search-item-label">车牌号:</label>
-                                <input type="text" class="form-control" id="plate" name="plate" style="width:100%" placeholder="请输入车牌号" value="{$report_list.plate|default=''}">
+                                <input type="text" class="form-control" id="plate" name="plate" style="width:100%" placeholder="请输入车牌号" value="{$surveyList.plate|default=$report_list.plate}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="coordinated_name" class="text-center search-item-label">被统筹人:</label>
-                                <input type="text" class="form-control" id="coordinated_name" name="coordinated_name" style="width:100%" placeholder="请输入被统筹人" value="{$report_list.coordinated_name|default=''}">
+                                <input type="text" class="form-control" id="coordinated_name" name="coordinated_name" style="width:100%" placeholder="请输入被统筹人" value="{$surveyList.coordinated_name|default=$report_list.coordinated_name}">
                             </div>
                         </div>
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class=" search-item-div col-xs-3">
                                 <label for="phone" class="text-center search-item-label">联系电话:</label>
-                                <input type="text" class="form-control" id="phone" name="phone" placeholder="请输入联系电话" style="width:100%" value="{$report_list.phone|default=''}">
+                                <input type="text" class="form-control" id="phone" name="phone" placeholder="请输入联系电话" style="width:100%" value="{$surveyList.phone|default=$report_list.phone}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="driver" class="text-center search-item-label">驾驶员:</label>
-                                <input type="text" class="form-control" id="driver" name="driver" style="width:100%" value="{$report_list.driver|default=''}">
+                                <input type="text" class="form-control" id="driver" name="driver" style="width:100%" value="{$surveyList.driver|default=''}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="out_danger_time" class="text-center search-item-label">出险时间:</label>
@@ -270,7 +265,7 @@
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="actual_driver" class="text-center search-item-label">实际驾驶员:</label>
-                                <input type="text" class="form-control" id="actual_driver" name="actual_driver" style="width:100%" value="{$report_list.actual_driver|default=''}">
+                                <input type="text" class="form-control" id="actual_driver" name="actual_driver" style="width:100%" value="{$surveyList.actual_driver|default=''}">
                             </div>
                         </div>
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
@@ -279,20 +274,20 @@
                                 <select class="form-control" name="survey_sex" id="survey_sex" style="width:100%">
                                     <option value="-1">请选择性别</option>
                                     {volist name="$survey_sex" id="value" key="key"}
-                                    <option value="{$key-1}" >{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.survey_sex) && $surveyList.survey_sex == $key-1} selected{/if} >{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="driver_license" class="text-center search-item-label">驾驶证号:</label>
-                                <input type="text" class="form-control" id="driver_license" name="driver_license" style="width:100%" value="">
+                                <input type="text" class="form-control" id="driver_license" name="driver_license" style="width:100%" value="{$surveyList.driver_license|default=''}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="dirver_model" class="text-center search-item-label">准驾车型:</label>
                                 <select class="form-control" name="dirver_model" id="dirver_model" style="width:100%">
                                     <option value="-1">请选择准驾车型</option>
                                     {volist name="$dirver_model" id="value" key="key"}
-                                    <option value="{$key-1}" >{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.dirver_model) && $surveyList.dirver_model == $key-1} selected{/if} >{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -301,7 +296,7 @@
                                 <select class="form-control" name="cause_accident" id="cause_accident" style="width:100%">
                                     <option value="-1">请选择事故情况</option>
                                     {volist name="$cause_accident" id="value" key="key"}
-                                    <option value="{$key-1}" >{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.cause_accident) && $surveyList.cause_accident == $key-1} selected{/if} >{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -312,7 +307,7 @@
                                 <select name="cause_liability" class="form-control" style="width:100%" id="cause_liability">
                                     <option value="-1">请选择事故责任</option>
                                     {volist name="$cause_liability" id="value" key="key"}
-                                    <option value="{$key-1}" >{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.cause_liability) && $surveyList.cause_liability == $key-1} selected{/if} >{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -321,17 +316,17 @@
                                 <select name="process_type" class="form-control" style="width:100%" id="process_type">
                                     <option value="-1">请选择案件流程类型</option>
                                     {volist name="$process_type" id="value" key="key"}
-                                    <option value="{$key-1}" >{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.process_type) && $surveyList.process_type == $key-1} selected{/if} >{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="estimated_amount" class="text-center search-item-label">预估金额:</label>
-                                <input type="text" class="form-control" id="estimated_amount" placeholder="请输入预估金额" name="estimated_amount" style="width:100%" value="">
+                                <input type="text" class="form-control" id="estimated_amount" placeholder="请输入预估金额" name="estimated_amount" style="width:100%" value="{$surveyList.estimated_amount|default=''}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="cause_area" class="text-center search-item-label">事故区域:</label>
-                                <input type="text" class="form-control" name="cause_area" id="cause_area"style="width:100%" placeholder="请输入事故区域" value="">
+                                <input type="text" class="form-control" name="cause_area" id="cause_area"style="width:100%" placeholder="请输入事故区域" value="{$surveyList.cause_area|default=''}">
                             </div>
                         </div>
 
@@ -342,24 +337,24 @@
                                 <select name="cause_department" class="form-control" style="width:100%" id="cause_department">
                                     <option value="-1">请选择事故处理部门</option>
                                     {volist name="$cause_department" id="value" key="key"}
-                                    <option value="{$key-1}">{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.cause_department) && $surveyList.cause_department == $key-1} selected{/if}>{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="other_cause_department" class="text-center search-item-label">其他事故处理部门:</label>
-                                <input type="text" class="form-control" id="other_cause_department" name="other_cause_department" style="width:100%" placeholder="请输入其他事故处理部门" value="">
+                                <input type="text" class="form-control" id="other_cause_department" name="other_cause_department" style="width:100%" placeholder="请输入其他事故处理部门" value="{$surveyList.other_cause_department|default=''}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="casualties" class="text-center search-item-label">人员伤亡:</label>
-                                <input type="text" class="form-control" id="casualties" name="casualties" style="width:100%" placeholder="请输入人员伤亡" value="">
+                                <input type="text" class="form-control" id="casualties" name="casualties" style="width:100%" placeholder="请输入人员伤亡" value="{$surveyList.casualties|default=''}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="way_type" class="text-center search-item-label">道路类型:</label>
                                 <select name="way_type" class="form-control" style="width:100%" id="way_type">
                                     <option value="-1">请选择道路类型</option>
                                     {volist name="$way_type" id="value" key="key"}
-                                    <option value="{$key-1}">{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.way_type) && $surveyList.way_type == $key-1} selected{/if}>{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -372,7 +367,7 @@
                                 <select name="cause_type" class="form-control" style="width:100%" id="cause_type">
                                     <option value="-1">请选择事故类型</option>
                                     {volist name="$cause_type" id="value" key="key"}
-                                    <option value="{$key-1}" >{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.cause_type) && $surveyList.cause_type == $key-1} selected{/if} >{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -381,7 +376,7 @@
                                 <select name="major_case" class="form-control" style="width:100%" id="major_case">
                                     <option value="-1">请选择重大案件</option>
                                     {volist name="$major_case" id="value" key="key"}
-                                    <option value="{$key-1}" >{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.major_case) && $surveyList.major_case == $key-1} selected{/if} >{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -390,7 +385,7 @@
                                 <select name="case_type" class="form-control" style="width:100%" id="case_type">
                                     <option value="-1">请选择案件状态</option>
                                     {volist name="$case_type" id="value" key="key"}
-                                    <option value="{$key-1}">{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.case_type) && $surveyList.case_type == $key-1} selected{/if}>{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -399,7 +394,7 @@
                                 <select name="three_blame" class="form-control" style="width:100%" id="three_blame">
                                     <option value="-1">请选择三责伤</option>
                                     {volist name="$three_blame" id="value" key="key"}
-                                    <option value="{$key-1}">{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.three_blame) && $surveyList.three_blame == $key-1} selected{/if}>{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -412,7 +407,7 @@
                                 <select name="three_die" class="form-control" style="width:100%" id="three_die">
                                     <option value="-1">请选择三者亡</option>
                                     {volist name="$three_die" id="value" key="key"}
-                                    <option value="{$key-1}" >{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.three_die) && $surveyList.three_die == $key-1} selected{/if} >{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -421,7 +416,7 @@
                                 <select name="own_car_injury" class="form-control" style="width:100%" id="own_car_injury">
                                     <option value="-1">请选择本车伤</option>
                                     {volist name="$own_car_injury" id="value" key="key"}
-                                    <option value="{$key-1}" >{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.own_car_injury) && $surveyList.own_car_injury == $key-1} selected{/if} >{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -430,13 +425,13 @@
                                 <select name="own_car_die" class="form-control" style="width:100%" id="own_car_die">
                                     <option value="-1">请选择本车亡</option>
                                     {volist name="$own_car_die" id="value" key="key"}
-                                    <option value="{$key-1}">{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.own_car_die) && $surveyList.own_car_die == $key-1} selected{/if}>{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="three_vehicles" class="text-center search-item-label">三者车辆数:</label>
-                                <input type="text" class="form-control" name="three_vehicles" id="three_vehicles" style="width:100%" placeholder="请输入三者车辆数" value="">
+                                <input type="text" class="form-control" name="three_vehicles" id="three_vehicles" style="width:100%" placeholder="请输入三者车辆数" value="{$surveyList.three_vehicles|default=''}">
                             </div>
                         </div>
 
@@ -447,7 +442,7 @@
                                 <select name="rescue" class="form-control" style="width:100%" id="rescue">
                                     <option value="-1">请选择是否施救</option>
                                     {volist name="$rescue" id="value" key="key"}
-                                    <option value="{$key-1}" >{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.rescue) && $surveyList.rescue == $key-1} selected{/if} >{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -456,7 +451,7 @@
                                 <select name="responsible_death_cause" class="form-control" style="width:100%" id="responsible_death_cause">
                                     <option value="-1">请选择是否有责死亡事故</option>
                                         {volist name="$responsible_death_cause" id="value" key="key"}
-                                    <option value="{$key-1}" >{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.responsible_death_cause) && $surveyList.responsible_death_cause == $key-1} selected{/if} >{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -465,7 +460,7 @@
                                 <select name="road_cause" class="form-control" style="width:100%" id="road_cause">
                                     <option value="-1">请选择是否道路交通事故</option>
                                     {volist name="$road_cause" id="value" key="key"}
-                                    <option value="{$key-1}">{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.road_cause) && $surveyList.road_cause == $key-1} selected{/if}>{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -474,7 +469,7 @@
                                 <select name="small_quick_case" class="form-control" style="width:100%" id="small_quick_case">
                                     <option value="-1">请选择是否小额快赔案件</option>
                                     {volist name="$small_quick_case" id="value" key="key"}
-                                    <option value="{$key-1}">{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.small_quick_case) && $surveyList.small_quick_case == $key-1} selected{/if}>{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -487,7 +482,7 @@
                                 <select name="estimated_case" class="form-control" style="width:100%" id="estimated_case">
                                     <option value="-1">请选择预估案件</option>
                                     {volist name="$estimated_case" id="value" key="key"}
-                                    <option value="{$key-1}">{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.estimated_case) && $surveyList.estimated_case == $key-1} selected{/if}>{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -496,20 +491,20 @@
                                 <select name="cause_book" class="form-control" style="width:100%" id="cause_book">
                                     <option value="-1">请选择交管事故书</option>
                                     {volist name="$cause_book" id="value" key="key"}
-                                    <option value="{$key-1}">{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.cause_book) && $surveyList.cause_book == $key-1} selected{/if}>{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="cause_book_num" class="text-center search-item-label">事故书编号:</label>
-                                <input type="text" class="form-control" name="cause_book_num" id="cause_book_num"style="width:100%" placeholder="请输入事故书编号" value="">
+                                <input type="text" class="form-control" name="cause_book_num" id="cause_book_num" style="width:100%" placeholder="请输入事故书编号" value="{$surveyList.cause_book_num|default=''}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="subrogation" class="text-center search-item-label">代位求偿:</label>
                                 <select name="subrogation" class="form-control" style="width:100%" id="subrogation">
                                     <option value="-1">请选择代位求偿</option>
                                     {volist name="$subrogation" id="value" key="key"}
-                                    <option value="{$key-1}">{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.subrogation) && $surveyList.subrogation == $key-1} selected{/if}>{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -522,21 +517,21 @@
                                 <select name="first_scene" class="form-control" style="width:100%" id="first_scene">
                                     <option value="-1">请选择第一现场</option>
                                     {volist name="$first_scene" id="value" key="key"}
-                                    <option value="{$key-1}">{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.first_scene) && $surveyList.first_scene == $key-1} selected{/if}>{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="survey_agency" class="text-center search-item-label">查勘机构:</label>
-                                <input type="text" class="form-control" id="survey_agency" name="survey_agency" style="width:100%" value="{$list.survey_agencyStr|default=''}">
+                                <input type="text" class="form-control" id="survey_agency" name="survey_agency" style="width:100%" value="{$surveyList.survey_agency|default=''}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="survey_user" class="text-center search-item-label">查勘员:</label>
-                                <input type="text" class="form-control" id="survey_user" name="survey_user" style="width:100%" value="{$list.survey_userStr|default=''}">
+                                <input type="text" class="form-control" id="survey_user" name="survey_user" style="width:100%" value="{$surveyList.survey_user|default=''}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="survey_phone" class="text-center search-item-label">电话:</label>
-                                <input type="text" class="form-control" name="survey_phone" id="survey_phone"style="width:100%" value="{$list.survey_phone|default=''}">
+                                <input type="text" class="form-control" name="survey_phone" id="survey_phone"style="width:100%" value="{$surveyList.survey_phone|default=''}">
                             </div>
                         </div>
 
@@ -544,14 +539,14 @@
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class=" search-item-div col-xs-3">
                                 <label for="survey_time" class="text-center search-item-label">查勘时间:</label>
-                                <input type="text" class="form-control" id="survey_time" name="survey_time" style="width:100%" value="{$list.survey_time|default=''}">
+                                <input type="text" class="form-control" id="survey_time" name="survey_time" style="width:100%" value="{$surveyList.survey_time|default=''}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label for="survey_address" class="text-center search-item-label">查勘地点:</label>
                                 <select name="survey_address" class="form-control" style="width:100%" id="survey_address">
                                     <option value="-1">请选择查勘地点</option>
                                     {volist name="$survey_address" id="value" key="key"}
-                                    <option value="{$key-1}">{$value}</option>
+                                    <option value="{$key-1}" {if isset($surveyList.survey_address) && $surveyList.survey_address == $key-1} selected{/if}>{$value}</option>
                                     {/volist}
                                 </select>
                             </div>
@@ -563,20 +558,21 @@
                             <div class=" search-item-div col-xs-8">
                                 <label for="report_id" class="text-center search-item-label">案件详细经过:</label>
                                 <div id="risk_location" name="risk_location" disabled="disbled"></div>
-                                <input type="text" class="form-control" name="address" id="address"style="width:40%;margin-top:1rem;" placeholder="请输入出险地点" value="{$list.address|default=''}">
+                                <input type="text" class="form-control" name="case_details" id="case_details" style="width:40%;margin-top:1rem;" placeholder="请输入出险地点" value="{$surveyList.case_details|default=''}">
                             </div>
                         </div>
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class=" search-item-div col-xs-3">
                                 <label for="report_id" class="text-center search-item-label">备注:</label>
-                                <textarea name="description" id="description" cols="130" rows="10" placeholder="请输入出险描述">{$list.description|default=''}</textarea>
+                                <textarea name="remarks" id="remarks" cols="130" rows="10" placeholder="请输入出险描述">{$surveyList.remarks|default=''}</textarea>
                             </div>
                         </div>
+                        </form>
 
 
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class=" search-item-div col-xs-3 col-lg-offset-5">
-                                <button class="layui-btn layui-btn-radius layui-btn-normal">提交审核</button>
+                                <button class="layui-btn layui-btn-radius layui-btn-normal addSurvey">提交</button>
                             </div>
                         </div>
                     </div>
@@ -1482,8 +1478,8 @@
                                     </thead>
 
                                     <tbody>
-                                    {for start="0" end="20"}
-                                        <tr id="accessories_{$i}" {if $i != 0 && !isset($accessoriesList[$i])} style="display:none" {/if}>
+                                    {for start="0" end="100"}
+                                        <tr id="accessories_{$i}" {if $i != 0 && !isset($accessoriesList[$i])} style="display:none" {/if} data-num="{$i}">
                                             <td><input type="checkbox" class="accessories" name="accessories[]" data-num="{$i}" value="accessories"></td>
                                             <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
                                             <td>
@@ -1567,8 +1563,8 @@
                                     </thead>
 
                                     <tbody>
-                                    {for start="0" end="20"}
-                                    <tr id="work_{$i}" {if $i != 0 && !isset($workList[$i])} style="display:none" {/if}>
+                                    {for start="0" end="100"}
+                                    <tr id="work_{$i}" {if $i != 0 && !isset($workList[$i])} style="display:none" {/if} data-num="{$i}">
                                         <td><input type="checkbox" name="work" class="work" data-num="{$i}" value="work"></td>
                                         <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
                                         <td>
@@ -1654,8 +1650,8 @@
                                             </thead>
 
                                             <tbody>
-                                            {for start="0" end="20"}
-                                            <tr id="finance_{$i}" {if $i != 0 && !isset($financeList[$i])} style="display:none" {/if}>
+                                            {for start="0" end="100"}
+                                            <tr id="finance_{$i}" {if $i != 0 && !isset($financeList[$i])} style="display:none" {/if} data-num="{$i}">
                                                 <td><input type="checkbox" name="finance" data-num="{$i}" class="finance" value="finance"></td>
                                                 <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
                                                 <td>
@@ -1760,6 +1756,7 @@
 
                                     </form>
 <!--                           本车财务结束-->
+
                         </div>
                     </div>
                 <div class="widget-box  collapsed">
@@ -1794,30 +1791,32 @@
                                 </thead>
 
                                 <tbody>
-                                {for start="0" end="20"}
-                                <tr id="other_car_{$i}" {if $i != 0} style="display:none" {/if}>
+                                {for start="0" end="100"}
+                                <tr id="other_car_{$i}" {if $i != 0} style="display:none" {/if} data-num="{$i}" data-num="{$i}">
+                                    <input type="hidden" name="this_car[]" value="2">
+                                    <input type="hidden" name="id[]" value="{$elseCarDamageList[$i]['id']|default=''}">
                                     <td><input type="checkbox" class="other_car" data-num="{$i}" name="other_car" value="other_car"></td>
                                     <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
-                                    <td><input class="col-xs-12" type="text" id="other_plate" name="damage_plate" style="color:#0000ff" value="{$elseCarDamageList[0]['damage_plate']|default=''}"></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_driver" value="{$elseCarDamageList[0]['damage_driver']|default=''}"></td>
+                                    <td><input class="col-xs-12 other_plate" type="text" data-num="{$i}" id="other_plate_{$i}" name="damage_plate[]" data-id="{$elseCarDamageList[$i]['id']|default=''}" style="color:#0000ff" value="{$elseCarDamageList[$i]['damage_plate']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_driver[]" value="{$elseCarDamageList[$i]['damage_driver']|default=''}"></td>
                                     <td>
-                                        <select class="col-xs-12" name="damage_sex">
+                                        <select class="col-xs-12" name="damage_sex[]">
                                             <option value="0">请选择性别</option>
-                                            <option value="1" {if isset($elseCarDamageList[0]['damage_sex']) && $carDamageList[0]['damage_sex'] == 1} selected {/if}>男</option>
-                                            <option value="2" {if isset($elseCarDamageList[0]['damage_sex']) && $carDamageList[0]['damage_sex'] == 2} selected {/if}>女</option>
+                                            <option value="1" {if isset($elseCarDamageList[$i]['damage_sex']) && $carDamageList[$i]['damage_sex'] == 1} selected {/if}>男</option>
+                                            <option value="2" {if isset($elseCarDamageList[$i]['damage_sex']) && $carDamageList[$i]['damage_sex'] == 2} selected {/if}>女</option>
                                         </select>
                                     </td>
-                                    <td><input class="col-xs-12" type="text" name="damage_phone" value="{$elseCarDamageList[0]['damage_phone']|default=''}"></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_brand" value="{$elseCarDamageList[0]['damage_brand']|default=''}"></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_model" value="{$elseCarDamageList[0]['damage_model']|default=''}"></td>
-                                    <td><input class="col-xs-12" type="number" name="damage_year" value="{$elseCarDamageList[0]['damage_year']|default=''}"></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_frame" value="{$elseCarDamageList[0]['damage_frame']|default=''}"></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_engine" value="{$elseCarDamageList[0]['damage_engine']|default=''}"></td>
-                                    <td><input class="col-xs-12" type="text" name="damage_repairer" value="{$elseCarDamageList[0]['damage_repairer']|default=''}"></td>
-                                    <td><input class="col-xs-12" readonly type="text" name="work_total" value="{$elseCarDamageList[0]['work_total']|default=''}"></td>
-                                    <td><input class="col-xs-12" readonly type="text" name="finance_all" value="{$elseCarDamageList[0]['finance_all']|default=''}"></td>
-                                    <td><input class="col-xs-12" readonly type="text" name="finance_summary" value="{$elseCarDamageList[0]['finance_summary']|default=''}"></td>
-                                    <td><input class="col-xs-12" readonly type="text" name="damage_status" value="{$elseCarDamageList[0]['damage_status']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_phone[]" value="{$elseCarDamageList[$i]['damage_phone']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_brand[]" value="{$elseCarDamageList[$i]['damage_brand']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_model[]" value="{$elseCarDamageList[$i]['damage_model']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="number" name="damage_year[]" value="{$elseCarDamageList[$i]['damage_year']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_frame[]" value="{$elseCarDamageList[$i]['damage_frame']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_engine[]" value="{$elseCarDamageList[$i]['damage_engine']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="damage_repairer[]" value="{$elseCarDamageList[$i]['damage_repairer']|default=''}"></td>
+                                    <td><input class="col-xs-12" readonly type="text" id="else_work_total_{$i}" name="work_total[]" value="{$elseCarDamageList[$i]['work_total']|default=''}"></td>
+                                    <td><input class="col-xs-12" readonly type="text" id="else_finance_total_{$i}" name="finance_all[]" value="{$elseCarDamageList[$i]['finance_all']|default=''}"></td>
+                                    <td><input class="col-xs-12" readonly type="text" id="else_finance_summary_{$i}" name="finance_summary[]" value="{$elseCarDamageList[$i]['finance_summary']|default=''}"></td>
+                                    <td><input class="col-xs-12" readonly type="text" name="damage_status[]" value="{$elseCarDamageList[$i]['damage_status']|default=''}"></td>
                                 </tr>
                                 {/for}
                                 </tbody>
@@ -1825,6 +1824,7 @@
                         </form>
                     </div>
                 </div>
+
 
             </div>
         </div>
@@ -1837,10 +1837,10 @@
                         <h5 class="widget-title">本车人伤</h5>
                     </div>
                     <div class="widget-body" style="display:none">
-                        <form action="" name="addHuman" style="margin-top:1rem;margin-left:1rem">
+                        <form action="" name="addHuman" id="addHuman" style="margin-top:1rem;margin-left:1rem">
                             <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="human" data-num="0">增加</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable"  data-value="human">删除</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveHumanTable">保存数据</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable"  data-value="human" data-type="2">删除</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveHumanTable" data-value="addHuman" data-type="1">保存数据</button>
                             <table class="table  table-bordered table-hover" style="margin-top:1rem;">
                                 <thead>
                                 <tr>
@@ -1859,33 +1859,34 @@
                                 </thead>
 
                                 <tbody>
-                                {for start="0" end="20"}
-                                <tr id="human_{$i}" {if $i != 0} style="display:none" {/if}>
-                                    <td><input type="checkbox" name="human" class="human" data-num="{$i}" value="human"></td>
+                                {for start="0" end="100"}
+                                <tr id="human_{$i}" {if $i != 0 && !isset($humanList['info'][$i])} style="display:none" {/if} data-num="{$i}">
+                                    <input type="hidden" name="id[]" class="human_id" data-num="{$i}" value="{$humanList['info'][$i]['id']|default=''}">
+                                    <td><input type="checkbox" name="human" class="human" data-num="{$i}" value="{$humanList['info'][$i]['id']|default=''}"></td>
                                     <td>
-                                        <select class="col-xs-12" name="injury_sex">
-                                            <option value="-1">请选择</option>
+                                        <select class="col-xs-12" name="overall_type[]">
+                                            <option value="0">请选择</option>
                                             {volist name="$human_overall_type" id="value" key="key"}
-                                            <option value="{$key-1}">{$value}</option>
+                                            <option value="{$key-1}" {if isset($humanList['info'][$i]['overall_type']) && $humanList['info'][$i]['overall_type'] == $key-1} selected {/if}>{$value}</option>
                                             {/volist}
                                         </select>
                                     </td>
-                                    <td><input class="col-xs-12" type="text" style="color:blue" name="injury_name" value=""></td>
+                                    <td><input class="col-xs-12 injury_name" type="text" id="injury_name_{$i}" data-id="{$humanList['info'][$i]['id']|default=''}" data-num="{$i}" style="color:blue" data-type="1" name="injury_name[]" value="{$humanList['info'][$i]['injury_name']|default=''}"></td>
                                     <td>
-                                        <select class="col-xs-12" name="injury_sex">
-                                            <option value="-1">请选择</option>
+                                        <select class="col-xs-12" name="injury_sex[]">
+                                            <option value="0">请选择</option>
                                             {volist name="$survey_sex" id="value" key="key"}
-                                            <option value="{$key-1}">{$value}</option>
+                                            <option value="{$key-1}" {if isset($humanList['info'][$i]['injury_sex']) && $humanList['info'][$i]['injury_sex'] == $key-1} selected {/if}>{$value}</option>
                                             {/volist}
                                         </select>
                                     </td>
-                                    <td><input class="col-xs-12" type="text" name="injury_age" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="injury_domicile" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="injury_medical" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="injury_record" value=""></td>
-                                    <td><input class="col-xs-12" readonly type="text" name="injury_money" value=""></td>
-                                    <td><input class="col-xs-12" readonly type="text" name="injury_approved" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="injury_remarks" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_age[]" value="{$humanList['info'][$i]['injury_age']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_domicile[]" value="{$humanList['info'][$i]['injury_domicile']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_medical[]" value="{$humanList['info'][$i]['injury_medical']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_record[]" value="{$humanList['info'][$i]['injury_record']|default=''}"></td>
+                                    <td><input class="col-xs-12" readonly type="text" id="injury_money_{$i}" name="injury_money[]" value="{$humanList['info'][$i]['injury_money']|default=''}"></td>
+                                    <td><input class="col-xs-12" readonly type="text" id="injury_approved_{$i}" name="injury_approved[]" value="{$humanList['info'][$i]['injury_approved']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="injury_remarks[]" value="{$humanList['info'][$i]['injury_remarks']|default=''}"></td>
                                 </tr>
                                 {/for}
                                 <tr>
@@ -1897,8 +1898,8 @@
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
-                                    <td><input class="col-xs-12" readonly type="text" name="human_money" value=""></td>
-                                    <td><input class="col-xs-12" readonly type="text" name="human_approved" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" id="human_money" name="human_money" value="{$humanList['human_money']|default=''}"></td>
+                                    <td><input class="col-xs-12" readonly type="text" id="human_approved" name="human_approved" value="{$humanList['human_approved']|default=''}"></td>
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
                                 </tr>
                                 </tbody>
@@ -1906,44 +1907,44 @@
                             <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">费用合计:</label>
-                                    <input type="text" class="form-control input-sm" name="human_fee" id="human_fee" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_fee" id="human_fee" style="width:100%" value="{$humanList['human_fee']|default=''}">
 
                                 </div>
                             </div>
                             <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">诉讼费:</label>
-                                    <input type="text" class="form-control input-sm" name="human_litigation" id="human_litigation" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_litigation" id="human_litigation" style="width:100%" value="{$humanList['human_litigation']|default=''}">
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">鉴定费:</label>
-                                    <input type="text" class="form-control input-sm" name="human_identification" id="human_identification" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_identification" id="human_identification" style="width:100%" value="{$humanList['human_identification']|default=''}">
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">公估费:</label>
-                                    <input type="text" class="form-control input-sm" name="human_appraisal" id="human_appraisal" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_appraisal" id="human_appraisal" style="width:100%" value="{$humanList['human_appraisal']|default=''}">
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">住宿费:</label>
-                                    <input type="text" class="form-control input-sm" name="human_stay" id="human_stay" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_stay" id="human_stay" style="width:100%" value="{$humanList['human_stay']|default=''}">
                                 </div>
                             </div>
                             <div class="" style="margin-top:20px;display: flex;flex-direction:row;margin-bottom: 1rem">
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">路桥费:</label>
-                                    <input type="text" class="form-control input-sm" name="human_road" id="human_road" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_road" id="human_road" style="width:100%" value="{$humanList['human_road']|default=''}">
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">燃油费:</label>
-                                    <input type="text" class="form-control input-sm" name="human_fue" id="human_fue" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_fue" id="human_fue" style="width:100%" value="{$humanList['human_fue']|default=''}">
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">其他:</label>
-                                    <input type="text" class="form-control input-sm" name="human_other" id="human_other" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_other" id="human_other" style="width:100%" value="{$humanList['human_other']|default=''}">
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">合计:</label>
-                                    <input type="text" class="form-control input-sm" name="human_total" id="human_total" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_total" id="human_total" style="width:100%" value="{$humanList['human_total']|default=''}">
                                 </div>
                             </div>
                         </form>
@@ -1954,11 +1955,10 @@
                         <h5 class="widget-title">三者人伤</h5>
                     </div>
                     <div class="widget-body" style="display:none">
-
-                        <form action="" name="addotherhuman" style="margin-top:1rem;margin-left:1rem">
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                        <form action="" name="elseaddHuman" id="elseaddHuman" style="margin-top:1rem;margin-left:1rem">
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="elsehuman" data-num="0">增加</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable"  data-value="elsehuman" data-type="2">删除</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveHumanTable" data-value="elseaddHuman" data-type="2">保存数据</button>
                             <table class="table  table-bordered table-hover" style="margin-top:1rem;">
                                 <thead>
                                 <tr>
@@ -1977,33 +1977,36 @@
                                 </thead>
 
                                 <tbody>
-                                <tr id="other_human_1">
-                                    <td><input type="checkbox" name="other_human" value="other_human"></td>
-                                    <td>
-                                        <select class="col-xs-12" name="damage_sex">
-                                            <option value="-1">请选择</option>
-                                            {volist name="$human_overall_type" id="value" key="key"}
-                                            <option value="{$key-1}">{$value}</option>
-                                            {/volist}
-                                        </select>
-                                    </td>
-                                    <td><input class="col-xs-12" type="text" name="injury_name" value=""></td>
-                                    <td>
-                                        <select class="col-xs-12" name="injury_sex">
-                                            <option value="-1">请选择</option>
-                                            {volist name="$survey_sex" id="value" key="key"}
-                                            <option value="{$key-1}">{$value}</option>
-                                            {/volist}
-                                        </select>
-                                    </td>
-                                    <td><input class="col-xs-12" type="text" name="injury_age" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="injury_domicile" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="injury_medical" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="injury_record" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="injury_money" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="injury_approved" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="injury_remarks" value=""></td>
+                                {for start="0" end="100"}
+                                <tr id="elsehuman_{$i}" {if $i != 0 && !isset($elsehumanList['info'][$i])} style="display:none" {/if} data-num="{$i}">
+                                <input type="hidden" name="id[]" class="human_id" data-num="{$i}" value="{$elsehumanList['info'][$i]['id']|default=''}">
+                                <td><input type="checkbox" name="elsehuman" class="elsehuman" data-num="{$i}" value="{$elsehumanList['info'][$i]['id']|default=''}"></td>
+                                <td>
+                                    <select class="col-xs-12" name="overall_type[]">
+                                        <option value="0">请选择</option>
+                                        {volist name="$human_overall_type" id="value" key="key"}
+                                        <option value="{$key-1}" {if isset($elsehumanList['info'][$i]['overall_type']) && $elsehumanList['info'][$i]['overall_type'] == $key-1} selected {/if}>{$value}</option>
+                                        {/volist}
+                                    </select>
+                                </td>
+                                <td><input class="col-xs-12 injury_name" type="text" id="elseinjury_name_{$i}" data-id="{$elsehumanList['info'][$i]['id']|default=''}" data-num="{$i}" style="color:blue" data-type="2" name="injury_name[]" value="{$elsehumanList['info'][$i]['injury_name']|default=''}"></td>
+                                <td>
+                                    <select class="col-xs-12" name="injury_sex[]">
+                                        <option value="0">请选择</option>
+                                        {volist name="$survey_sex" id="value" key="key"}
+                                        <option value="{$key-1}" {if isset($elsehumanList['info'][$i]['injury_sex']) && $elsehumanList['info'][$i]['injury_sex'] == $key-1} selected {/if}>{$value}</option>
+                                        {/volist}
+                                    </select>
+                                </td>
+                                <td><input class="col-xs-12" type="text" name="injury_age[]" value="{$elsehumanList['info'][$i]['injury_age']|default=''}"></td>
+                                <td><input class="col-xs-12" type="text" name="injury_domicile[]" value="{$elsehumanList['info'][$i]['injury_domicile']|default=''}"></td>
+                                <td><input class="col-xs-12" type="text" name="injury_medical[]" value="{$elsehumanList['info'][$i]['injury_medical']|default=''}"></td>
+                                <td><input class="col-xs-12" type="text" name="injury_record[]" value="{$elsehumanList['info'][$i]['injury_record']|default=''}"></td>
+                                <td><input class="col-xs-12" readonly type="text" id="elseinjury_money_{$i}" name="injury_money[]" value="{$elsehumanList['info'][$i]['injury_money']|default=''}"></td>
+                                <td><input class="col-xs-12" readonly type="text" id="elseinjury_approved_{$i}" name="injury_approved[]" value="{$elsehumanList['info'][$i]['injury_approved']|default=''}"></td>
+                                <td><input class="col-xs-12" type="text" name="injury_remarks[]" value="{$elsehumanList['info'][$i]['injury_remarks']|default=''}"></td>
                                 </tr>
+                                {/for}
                                 <tr>
                                     <td>小计</td>
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
@@ -2013,8 +2016,8 @@
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="human_money" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="human_approved" value=""></td>
+                                    <td><input class="col-xs-12" readonly type="text" id="elsehuman_money" name="human_money" value="{$elsehumanList['human_money']|default=''}"></td>
+                                    <td><input class="col-xs-12" readonly type="text" id="elsehuman_approved" name="human_approved" value="{$elsehumanList['human_approved']|default=''}"></td>
                                     <td><input class="col-xs-12" readonly type="text" value=""></td>
                                 </tr>
                                 </tbody>
@@ -2022,55 +2025,50 @@
                             <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">费用合计:</label>
-                                    <input type="text" class="form-control input-sm" name="human_fee" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_fee" id="elsehuman_fee" style="width:100%" value="{$elsehumanList['human_fee']|default=''}">
 
                                 </div>
                             </div>
                             <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">诉讼费:</label>
-                                    <input type="text" class="form-control input-sm" name="human_litigation"  style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_litigation" id="elsehuman_litigation" style="width:100%" value="{$elsehumanList['human_litigation']|default=''}">
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">鉴定费:</label>
-                                    <input type="text" class="form-control input-sm" name="human_identification" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_identification" id="human_identification" style="width:100%" value="{$humanList['human_identification']|default=''}">
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">公估费:</label>
-                                    <input type="text" class="form-control input-sm" name="human_appraisal" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_appraisal" id="elsehuman_appraisal" style="width:100%" value="{$elsehumanList['human_appraisal']|default=''}">
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">住宿费:</label>
-                                    <input type="text" class="form-control input-sm" name="human_stay" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_stay" id="elsehuman_stay" style="width:100%" value="{$elsehumanList['human_stay']|default=''}">
                                 </div>
                             </div>
-                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
+                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;margin-bottom: 1rem">
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">路桥费:</label>
-                                    <input type="text" class="form-control input-sm" name="human_road" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_road" id="elsehuman_road" style="width:100%" value="{$elsehumanList['human_road']|default=''}">
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">燃油费:</label>
-                                    <input type="text" class="form-control input-sm" name="human_fue" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_fue" id="elsehuman_fue" style="width:100%" value="{$elsehumanList['human_fue']|default=''}">
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">其他:</label>
-                                    <input type="text" class="form-control input-sm" name="human_other" style="width:100%" value="">
+                                    <input type="text" class="form-control input-sm" name="human_other" id="elsehuman_other" style="width:100%" value="{$elsehumanList['human_other']|default=''}">
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">合计:</label>
-                                    <input type="text" class="form-control input-sm" name="human_total" style="width:100%" value="">
-                                </div>
-                            </div>
-                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
-                                <div style="margin-left: 2rem;width:20%">
-                                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">提交</button>
-                                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存</button>
+                                    <input type="text" class="form-control input-sm" name="human_total" id="elsehuman_total" style="width:100%" value="{$elsehumanList['human_total']|default=''}">
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
+
             </div>
         </div>
         <!--人伤结束-->
@@ -2082,10 +2080,33 @@
                         <h5 class="widget-title">补偿款信息</h5>
                     </div>
                     <div class="widget-body" style="display:none">
-                        <form action="" name="addcompensation" style="margin-top:1rem;margin-left:1rem">
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                        <form action="" name="addCompensation" id="addCompensation" style="margin-top:1rem;margin-left:1rem">
+                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;margin-bottom: 1rem">
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">被统筹人:</label>
+                                    <input type="text" class="form-control input-sm" name="human_road" style="width:100%" value="{$list.coordinated_name|default=''}">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">证件类型:</label>
+                                    <select class="col-xs-12" name="coordinated_license_type">
+                                        <option value="0">请选择</option>
+                                        {volist name="$license_type" id="value" key="key"}
+                                        <option value="{$key-1}" {if isset($list.coordinated_license_type) && $list.coordinated_license_type == $key-1} selected {/if}>{$value}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">证件号:</label>
+                                    <input type="text" class="form-control input-sm" name="human_other" style="width:100%" value="{$list.coordinated_number|default=''}">
+                                </div>
+                                <div style="margin-left: 2rem;width:20%">
+                                    <label class="text-center search-item-label">电话:</label>
+                                    <input type="text" class="form-control input-sm" name="human_total" style="width:100%" value="{$list.coordinated_phone|default=''}">
+                                </div>
+                            </div>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="compensation" data-num="1">增加</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable" data-value="compensation">删除</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveCompensationTable" data-type="1" data-value="addCompensation">保存数据</button>
                             <table class="table  table-bordered table-hover" style="margin-top:1rem;">
                                 <thead>
                                 <tr>
@@ -2100,26 +2121,27 @@
                                     <th class="center">金额</th>
                                 </tr>
                                 </thead>
-
                                 <tbody>
-                                <tr id="compensation_1">
-                                    <td><input type="checkbox" name="compensation" value="compensation"></td>
-                                    <td><input class="col-xs-12" type="text" name="payee" value=""></td>
+                                {for start="0" end="100"}
+                                <tr id="compensation_{$i}" {if $i !=0 && !isset($compensationList[$i])} style="display:none" {/if} data-num="{$i}">
+                                    <td><input type="checkbox" class="compensation" data-num="{$i}" name="compensation" value="compensation"></td>
+                                    <td><input class="col-xs-12" type="text" name="payee[]" value="{$compensationList[$i]['payee']|default=''}"></td>
                                     <td>
-                                        <select class="col-xs-12" name="license_type">
+                                        <select class="col-xs-12" name="license_type[]">
                                             <option value="-1">请选择</option>
                                             {volist name="$license_type" id="value" key="key"}
-                                            <option value="{$key-1}">{$value}</option>
+                                            <option value="{$key-1}" {if isset($compensationList[$i]) && $compensationList[$i]['license_type'] == $key-1} selected {/if}>{$value}</option>
                                             {/volist}
                                         </select>
                                     </td>
-                                    <td><input class="col-xs-12" type="text" name="license_number" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="compensation_phone" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="compensation_relationship" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="compensation_bank" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="compensation_account" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="compensation_money" value=""></td>
+                                    <td><input class="col-xs-12" type="text" name="license_number[]" value="{$compensationList[$i]['license_number']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_phone[]" value="{$compensationList[$i]['compensation_phone']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_relationship[]" value="{$compensationList[$i]['compensation_relationship']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_bank[]" value="{$compensationList[$i]['compensation_bank']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_account[]" value="{$compensationList[$i]['compensation_account']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" name="compensation_money[]" value="{$compensationList[$i]['compensation_money']|default=''}"></td>
                                 </tr>
+                                {/for}
                                 </tbody>
                             </table>
                         </form>
@@ -2130,10 +2152,10 @@
                         <h5 class="widget-title">其他费用信息</h5>
                     </div>
                     <div class="widget-body" style="display:none">
-                        <form action="" name="addothercompensation" style="margin-top:1rem;margin-left:1rem">
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" data-num="1">增加</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">删除</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                        <form action="" id="elseaddCompensation" name="elseaddCompensation" style="margin-top:1rem;margin-left:1rem">
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="elsecompensation" data-num="1">增加</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable" data-value="elsecompensation">删除</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveCompensationTable" data-type="2" data-value="elseaddCompensation">保存数据</button>
                             <table class="table  table-bordered table-hover" style="margin-top:1rem;">
                                 <thead>
                                 <tr>
@@ -2150,41 +2172,46 @@
                                 </thead>
 
                                 <tbody>
-                                <tr id="other_compensation_1">
-                                    <td><input type="checkbox" name="other_compensation" value="other_compensation"></td>
-                                    <td><input class="col-xs-12" type="text" name="payee" value=""></td>
+                                {for start="0" end="100"}
+                                <tr id="elsecompensation_{$i}" {if $i !=0 && !isset($elsecompensationList[$i])} style="display:none" {/if} data-num="{$i}">
+                                    <td><input type="checkbox" class="elsecompensation" data-num="{$i}" name="other_compensation[]" value="other_compensation"></td>
+                                    <td><input class="col-xs-12" type="text" name="payee[]" value="{$elsecompensationList[$i]['payee']|default=''}"></td>
                                     <td>
-                                        <select class="col-xs-12" name="license_type">
+                                        <select class="col-xs-12" name="license_type[]">
                                             <option value="-1">请选择</option>
                                             {volist name="$license_type" id="value" key="key"}
-                                            <option value="{$key-1}">{$value}</option>
+                                            <option value="{$key-1}" {if isset($elsecompensationList[$i]) && $elsecompensationList[$i]['license_type'] == $key-1} selected {/if}>{$value}</option>
                                             {/volist}
                                         </select>
                                     </td>
-                                    <td><input class="col-xs-12" type="text" name="license_number" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="compensation_phone" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="compensation_relationship" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="compensation_bank" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="compensation_account" value=""></td>
-                                    <td><input class="col-xs-12" type="text" name="compensation_money" value=""></td>
+                                <td><input class="col-xs-12" type="text" name="license_number[]" value="{$elsecompensationList[$i]['license_number']|default=''}"></td>
+                                <td><input class="col-xs-12" type="text" name="compensation_phone[]" value="{$elsecompensationList[$i]['compensation_phone']|default=''}"></td>
+                                <td><input class="col-xs-12" type="text" name="compensation_relationship[]" value="{$elsecompensationList[$i]['compensation_relationship']|default=''}"></td>
+                                <td><input class="col-xs-12" type="text" name="compensation_bank[]" value="{$elsecompensationList[$i]['compensation_bank']|default=''}"></td>
+                                <td><input class="col-xs-12" type="text" name="compensation_account[]" value="{$elsecompensationList[$i]['compensation_account']|default=''}"></td>
+                                <td><input class="col-xs-12" type="text" name="compensation_money[]" value="{$elsecompensationList[$i]['compensation_money']|default=''}"></td>
                                 </tr>
+                                {/for}
                                 </tbody>
                             </table>
-                            <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
-                                <div style="margin: 2rem;width:20%">
-                                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">补偿款提交</button>
-                                </div>
-                            </div>
                         </form>
+
                     </div>
                 </div>
             </div>
         </div>
         <!--补偿款信息结束-->
+
+
+    <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+        <div class=" search-item-div col-xs-3 col-lg-offset-5">
+            <button class="layui-btn layui-btn-radius layui-btn-normal addReview">提交审核</button>
+        </div>
+    </div>
     </div>
 </div>
 <!--三者车modal开始-->
-<div class="modal fade" id="elseCarModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+<div class="modal fade" id="elseCarModal" data-num="" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog" style="width:80%">
         <div class="modal-content">
             <div class="modal-header">
@@ -2217,33 +2244,33 @@
                         </thead>
 
                         <tbody>
-                        {for start="0" end="20"}
-                        <tr id="Elseaccessories_{$i}" {if $i != 0 && !isset($elseAccessoriesList[$i])} style="display:none" {/if}>
+                        {for start="0" end="100"}
+                        <tr id="Elseaccessories_{$i}" {if $i != 0 && !isset($elseAccessoriesList[$i])} style="display:none" {/if} data-num="{$i}">
                         <td><input type="checkbox" class="Elseaccessories" name="accessories[]" data-num="{$i}" value="Elseaccessories"></td>
                         <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
                         <td>
-                            <select class="col-xs-12" name="damage_overall[]">
+                            <select class="col-xs-12" name="damage_overall[]" id="Elsedamage_overall_{$i}">
                                 <option value="-1">请选择</option>
                                 {volist name="$damage_overall_type" id="value" key="key"}
-                                <option value="{$key-1}" {if isset($elseAccessoriesList[$i]['damage_overall']) && $elseAccessoriesList[$i]['damage_overall'] == $key-1} selected {/if}>{$value}</option>
+                                <option value="{$key-1}">{$value}</option>
                                 {/volist}
                             </select>
                         </td>
-                        <td><input class="col-xs-12" type="text" name="damage_name[]" value="{$elseAccessoriesList[$i]['damage_name']|default=''}"></td>
+                        <td><input class="col-xs-12" type="text" name="damage_name[]" id="Elsedamage_name_{$i}" value=""></td>
                         <td>
-                            <select class="col-xs-12" name="price_program[]">
+                            <select class="col-xs-12" name="price_program[]" id="Elseprice_program_{$i}">
                                 <option value="-1">请选择</option>
                                 {volist name="$price_program" id="value" key="key"}
-                                <option value="{$key-1}" {if isset($elseAccessoriesList[$i]['price_program']) && $elseAccessoriesList[$i]['price_program'] == $key-1} selected {/if}>{$value}</option>
+                                <option value="{$key-1}">{$value}</option>
                                 {/volist}
                             </select>
                         </td>
-                        <td><input class="col-xs-12 price" data-value="Elseaccessories" data-num="{$i}" type="text" id="Elsedamage_price_{$i}" name="damage_price[]" value="{$elseAccessoriesList[$i]['damage_price']|default=''}"></td>
-                        <td><input class="col-xs-12 num" data-value="Elseaccessories" data-num="{$i}" type="text" id="Elsedamage_num_{$i}" name="damage_num[]" value="{$elseAccessoriesList[$i]['damage_num']|default=''}"></td>
-                        <td><input class="col-xs-12" readonly type="text" id="Elsedamage_money_{$i}" name="damage_money[]" value="{$elseAccessoriesList[$i]['damage_money']|default=0}"></td>
-                        <td><input class="col-xs-12 discount" data-value="Elseaccessories" data-num="{$i}" type="text" id="Elsedamage_discount_{$i}" name="damage_discount[]" value="{$elseAccessoriesList[$i]['damage_discount']|default=100}"></td>
-                        <td><input class="col-xs-12" type="text" readonly id="Elsedamage_approved_{$i}" name="damage_approved[]" value="{$elseAccessoriesList[$i]['damage_approved']|default=0}"></td>
-                        <td><input class="col-xs-12" type="text" name="damage_remark[]" value="{$elseAccessoriesList[$i]['damage_remark']|default=''}"></td>
+                        <td><input class="col-xs-12 price" data-value="Elseaccessories" data-num="{$i}" type="text" id="Elsedamage_price_{$i}" name="damage_price[]" value=""></td>
+                        <td><input class="col-xs-12 num" data-value="Elseaccessories" data-num="{$i}" type="text" id="Elsedamage_num_{$i}" name="damage_num[]" value=""></td>
+                        <td><input class="col-xs-12" readonly type="text" id="Elsedamage_money_{$i}" name="damage_money[]" value="0"></td>
+                        <td><input class="col-xs-12 discount" data-value="Elseaccessories" data-num="{$i}" type="text" id="Elsedamage_discount_{$i}" name="damage_discount[]" value="100"></td>
+                        <td><input class="col-xs-12" type="text" readonly id="Elsedamage_approved_{$i}" name="damage_approved[]" value="0"></td>
+                        <td><input class="col-xs-12" type="text" id="Elsedamage_remark_{$i}" name="damage_remark[]" value=""></td>
                         </tr>
                         {/for}
                         <tr>
@@ -2254,9 +2281,9 @@
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
-                            <td><input class="col-xs-12" type="text" readonly id="Elseaccessories_money" name="accessories_money" value="{$elseCarDamageList[0]['accessories_money']|default=''}"></td>
+                            <td><input class="col-xs-12" type="text" readonly id="Elseaccessories_money" name="accessories_money" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
-                            <td><input class="col-xs-12" type="text" readonly id="Elseaccessories_approved" name="accessories_approved" value="{$elseCarDamageList[0]['accessories_approved']|default=''}"></td>
+                            <td><input class="col-xs-12" type="text" readonly id="Elseaccessories_approved" name="accessories_approved" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                         </tr>
                         </tbody>
@@ -2264,16 +2291,16 @@
                     <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">合计:</label>
-                            <input type="text" class="form-control input-sm" name="accessories_total" id="Elseaccessories_total" style="width:100%" value="{$elseCarDamageList[0]['accessories_total']|default=''}">
+                            <input type="text" class="form-control input-sm" name="accessories_total" id="Elseaccessories_total" style="width:100%" value="">
 
                         </div>
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">残值:</label>
-                            <input type="text" class="form-control input-sm" style="width:100%" name="accessories_residual" id="Elseaccessories_residual" value="{$elseCarDamageList[0]['accessories_residual']|default=0}">
+                            <input type="text" class="form-control input-sm" style="width:100%" name="accessories_residual" id="Elseaccessories_residual" value="0">
                         </div>
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">总计:</label>
-                            <input type="text" class="form-control input-sm" id="Elseaccessories_all" name="accessories_all" style="width:100%" value="{$elseCarDamageList[0]['accessories_all']|default=''}">
+                            <input type="text" class="form-control input-sm" id="Elseaccessories_all" name="accessories_all" style="width:100%" value="">
                         </div>
                     </div>
                 </form>
@@ -2283,7 +2310,7 @@
                 <form action="" name="ElseaddWork" id="ElseaddWork" style="margin-top:1rem;margin-left:1rem">
                     <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="Elsework" data-num="0">增加</button>
                     <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable" data-value="Elsework">删除</button>
-                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveTable" data-type="2 data-value="ElseaddWork">保存数据</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveTable" data-type="2" data-value="ElseaddWork">保存数据</button>
                     <table class="table  table-bordered table-hover" style="margin-top:1rem;">
                         <thead>
                         <tr>
@@ -2302,33 +2329,33 @@
                         </thead>
 
                         <tbody>
-                        {for start="0" end="20"}
-                        <tr id="Elsework_{$i}" {if $i != 0 && !isset($elseWorkList[$i])} style="display:none" {/if}>
+                        {for start="0" end="100"}
+                        <tr id="Elsework_{$i}" {if $i != 0 && !isset($elseWorkList[$i])} style="display:none" {/if} data-num="{$i}">
                         <td><input type="checkbox" name="work" class="Elsework" data-num="{$i}" value="work"></td>
                         <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
                         <td>
-                            <select class="col-xs-12" name="damage_overall[]">
+                            <select class="col-xs-12" name="damage_overall[]" id="Elsework_overall_{$i}">
                                 <option value="-1">请选择</option>
                                 {volist name="$damage_overall_type" id="value" key="key"}
-                                <option value="{$key-1}" {if isset($elseWorkList[$i]['damage_overall']) && $elseWorkList[$i]['damage_overall'] == $key-1} selected {/if}>{$value}</option>
+                                <option value="{$key-1}"}>{$value}</option>
                                 {/volist}
                             </select>
                         </td>
-                        <td><input class="col-xs-12" type="text" name="damage_name[]" value="{$workList[$i]['damage_name']|default=''}"></td>
+                        <td><input class="col-xs-12" type="text" name="damage_name[]" id="Elsework_name_{$i}" value=""></td>
                         <td>
-                            <select class="col-xs-12" name="price_program[]">
+                            <select class="col-xs-12" name="price_program[]" id="Elsework_program_{$i}">
                                 <option value="-1">请选择</option>
                                 {volist name="$price_program" id="value" key="key"}
-                                <option value="{$key-1}" {if isset($elseWorkList[$i]['price_program']) && $elseWorkList[$i]['price_program'] == $key-1} selected {/if}>{$value}</option>
+                                <option value="{$key-1}">{$value}</option>
                                 {/volist}
                             </select>
                         </td>
-                        <td><input class="col-xs-12 price"  data-value="Elsework" data-num="{$i}" id="Elsework_price_{$i}" type="text" name="damage_price[]" value="{$elseWorkList[$i]['damage_price']|default=''}"></td>
-                        <td><input class="col-xs-12 num" data-value="Elsework" data-num="{$i}" id="Elsework_num_{$i}" type="text" name="damage_num[]" value="{$elseWorkList[$i]['damage_num']|default=''}"></td>
-                        <td><input class="col-xs-12" readonly id="Elsework_money_{$i}" type="text" name="damage_money[]" value="{$elseWorkList[$i]['damage_money']|default=''}"></td>
-                        <td><input class="col-xs-12 discount" data-value="Elsework" data-num="{$i}" id="Elsework_discount_{$i}" type="text" name="damage_discount[]" value="{$elseWorkList[$i]['damage_discount']|default=100}"></td>
-                        <td><input class="col-xs-12" type="text" readonly id="Elsework_approved_{$i}" name="damage_approved[]" value="{$elseWorkList[$i]['damage_approved']|default=''}"></td>
-                        <td><input class="col-xs-12" type="text" name="damage_remark[]" value="{$elseWorkList[$i]['damage_remark']|default=''}"></td>
+                        <td><input class="col-xs-12 price"  data-value="Elsework" data-num="{$i}" id="Elsework_price_{$i}" type="text" name="damage_price[]" value=""></td>
+                        <td><input class="col-xs-12 num" data-value="Elsework" data-num="{$i}" id="Elsework_num_{$i}" type="text" name="damage_num[]" value=""></td>
+                        <td><input class="col-xs-12" readonly id="Elsework_money_{$i}" type="text" name="damage_money[]" value="0"></td>
+                        <td><input class="col-xs-12 discount" data-value="Elsework" data-num="{$i}" id="Elsework_discount_{$i}" type="text" name="damage_discount[]" value="100"></td>
+                        <td><input class="col-xs-12" type="text" readonly id="Elsework_approved_{$i}" name="damage_approved[]" value="0"></td>
+                        <td><input class="col-xs-12" type="text" name="damage_remark[]" id="Elsework_remark_{$i}" value=""></td>
                         </tr>
                         {/for}
                         <tr>
@@ -2339,9 +2366,9 @@
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
-                            <td><input class="col-xs-12" readonly id="Elsework_money" type="text" name="work_money" value="{$elseCarDamageList[0]['work_money']|default=''}"></td>
+                            <td><input class="col-xs-12" readonly id="Elsework_money" type="text" name="work_money" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
-                            <td><input class="col-xs-12" readonly id="Elsework_approved" type="text" name="work_approved" value="{$elseCarDamageList[0]['work_approved']|default=''}"></td>
+                            <td><input class="col-xs-12" readonly id="Elsework_approved" type="text" name="work_approved" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                         </tr>
                         </tbody>
@@ -2349,18 +2376,18 @@
                     <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">施救费:</label>
-                            <input type="text" class="form-control input-sm" name="work_rescue" id="Elsework_rescue" style="width:100%" value="{$elseCarDamageList[0]['work_rescue']|default=''}">
+                            <input type="text" class="form-control input-sm" name="work_rescue" id="Elsework_rescue" style="width:100%" value="">
 
                         </div>
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">总计:</label>
-                            <input type="text" class="form-control input-sm" style="width:100%" name="work_all" id="Elsework_all" value="{$elseCarDamageList[0]['work_all']|default=''}">
+                            <input type="text" class="form-control input-sm" style="width:100%" name="work_all" id="Elsework_all" value="">
                         </div>
                     </div>
                     <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">费用合计:</label>
-                            <input type="text" class="form-control input-sm" id="Elsework_total" name="work_total" style="width:100%" value="{$elseCarDamageList[0]['work_total']|default=''}">
+                            <input type="text" class="form-control input-sm" id="Elsework_total" name="work_total" style="width:100%" value="">
                         </div>
                     </div>
                 </form>
@@ -2389,33 +2416,33 @@
                         </thead>
 
                         <tbody>
-                        {for start="0" end="20"}
-                        <tr id="Elsefinance_{$i}" {if $i != 0 && !isset($elseFinanceList[$i])} style="display:none" {/if}>
+                        {for start="0" end="100"}
+                        <tr id="Elsefinance_{$i}" {if $i != 0 && !isset($elseFinanceList[$i])} style="display:none" {/if} data-num="{$i}">
                         <td><input type="checkbox" name="finance" data-num="{$i}" class="Elsefinance" value="finance"></td>
                         <td><input class="col-xs-12" type="text" value="{$i+1}"></td>
                         <td>
-                            <select class="col-xs-12" name="damage_overall[]">
+                            <select class="col-xs-12" name="damage_overall[]" id="Elsefinance_overall_{$i}">
                                 <option value="-1">请选择</option>
                                 {volist name="$damage_overall_type" id="value" key="key"}
-                                <option value="{$key-1}" {if isset($elseFinanceList[$i]['damage_overall']) && $elseFinanceList[$i]['damage_overall'] == $key-1} selected {/if}>{$value}</option>
+                                <option value="{$key-1}">{$value}</option>
                                 {/volist}
                             </select>
                         </td>
-                        <td><input class="col-xs-12" type="text" name="damage_name[]" value="{$financeList[$i]['damage_name']|default=''}"></td>
+                        <td><input class="col-xs-12" type="text" name="damage_name[]" id="Elsefinance_name_{$i}" value="{$financeList[$i]['damage_name']|default=''}"></td>
                         <td>
-                            <select class="col-xs-12" name="price_program[]">
+                            <select class="col-xs-12" name="price_program[]" id="Elsefinance_program_{$i}">
                                 <option value="-1">请选择</option>
                                 {volist name="$price_program" id="value" key="key"}
-                                <option value="{$key-1}" {if isset($elseFinanceList[$i]['price_program']) && $elseFinanceList[$i]['price_program'] == $key-1} selected {/if}>{$value}</option>
+                                <option value="{$key-1}">{$value}</option>
                                 {/volist}
                             </select>
                         </td>
-                        <td><input class="col-xs-12 price" data-value="Elsefinance" data-num="{$i}" id="Elsefinance_price_{$i}" type="text" name="damage_price[]" value="{$elseFinanceList[$i]['damage_price']|default=''}"></td>
-                        <td><input class="col-xs-12 num" data-value="Elsefinance" data-num="{$i}" id="Elsefinance_num_{$i}" type="text" name="damage_num[]" value="{$elseFinanceList[$i]['damage_num']|default=''}"></td>
-                        <td><input class="col-xs-12" readonly id="Elsefinance_money_{$i}" type="text" name="damage_money[]" value="{$elseFinanceList[$i]['damage_money']|default=''}"></td>
-                        <td><input class="col-xs-12 discount" data-value="Elsefinance" data-num="{$i}" id="Elsefinance_discount_{$i}" type="text" name="damage_discount[]" value="{$elseFinanceList[$i]['damage_discount']|default=100}"></td>
-                        <td><input class="col-xs-12" readonly id="Elsefinance_approved_{$i}" type="text" name="damage_approved[]" value="{$elseFinanceList[$i]['damage_approved']|default=''}"></td>
-                        <td><input class="col-xs-12" type="text" name="damage_remark[]" value="{$elseFinanceList[$i]['damage_remark']|default=''}"></td>
+                        <td><input class="col-xs-12 price" data-value="Elsefinance" data-num="{$i}" id="Elsefinance_price_{$i}" type="text" name="damage_price[]" value=""></td>
+                        <td><input class="col-xs-12 num" data-value="Elsefinance" data-num="{$i}" id="Elsefinance_num_{$i}" type="text" name="damage_num[]" value=""></td>
+                        <td><input class="col-xs-12" readonly id="Elsefinance_money_{$i}" type="text" name="damage_money[]" value="0"></td>
+                        <td><input class="col-xs-12 discount" data-value="Elsefinance" data-num="{$i}" id="Elsefinance_discount_{$i}" type="text" name="damage_discount[]" value="100"></td>
+                        <td><input class="col-xs-12" readonly id="Elsefinance_approved_{$i}" type="text" name="damage_approved[]" value="0"></td>
+                        <td><input class="col-xs-12" type="text" id="Elsefinance_remark_{$i}" name="damage_remark[]" value=""></td>
                         </tr>
                         {/for}
                         <tr>
@@ -2426,9 +2453,9 @@
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
-                            <td><input class="col-xs-12" type="text" id="Elsefinance_money" name="finance_money" value="{$elseCarDamageList[0]['work_total']|default=''}"></td>
+                            <td><input class="col-xs-12" type="text" id="Elsefinance_money" name="finance_money" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
-                            <td><input class="col-xs-12" type="text" id="Elsefinance_approved" name="finance_approved" value="{$elseCarDamageList[0]['work_total']|default=''}"></td>
+                            <td><input class="col-xs-12" type="text" id="Elsefinance_approved" name="finance_approved" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                         </tr>
                         </tbody>
@@ -2436,60 +2463,60 @@
                     <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">合计:</label>
-                            <input type="text" class="form-control input-sm" name="finance_total" id="Elsefinance_total" style="width:100%" value="{$elseCarDamageList[0]['finance_total']|default=''}">
+                            <input type="text" class="form-control input-sm" name="finance_total" id="Elsefinance_total" style="width:100%" value="">
 
                         </div>
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">残值:</label>
-                            <input type="text" class="form-control input-sm" style="width:100%" name="finance_residual" id="Elsefinance_residual" value="{$elseCarDamageList[0]['finance_residual']|default=0}">
+                            <input type="text" class="form-control input-sm" style="width:100%" name="finance_residual" id="Elsefinance_residual" value="0">
                         </div>
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">财务总计:</label>
-                            <input type="text" class="form-control input-sm" id="Elsefinance_all" name="finance_all" style="width:100%" value="{$elseCarDamageList[0]['finance_all']|default=''}">
+                            <input type="text" class="form-control input-sm" id="Elsefinance_all" name="finance_all" style="width:100%" value="">
                         </div>
                     </div>
                     <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">诉讼费:</label>
-                            <input type="text" class="form-control input-sm" name="finance_litigation" id="Elsefinance_litigation" style="width:100%" value="{$elseCarDamageList[0]['finance_litigation']|default=''}">
+                            <input type="text" class="form-control input-sm" name="finance_litigation" id="Elsefinance_litigation" style="width:100%" value="">
 
                         </div>
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">鉴定费:</label>
-                            <input type="text" class="form-control input-sm" style="width:100%" name="finance_identification" id="Elsefinance_identification" value="{$elseCarDamageList[0]['finance_identification']|default=''}">
+                            <input type="text" class="form-control input-sm" style="width:100%" name="finance_identification" id="Elsefinance_identification" value="">
                         </div>
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">公估费:</label>
-                            <input type="text" class="form-control input-sm" id="Elsefinance_appraisal" name="finance_appraisal" style="width:100%" value="{$elseCarDamageList[0]['finance_appraisal']|default=''}">
+                            <input type="text" class="form-control input-sm" id="Elsefinance_appraisal" name="finance_appraisal" style="width:100%" value="">
                         </div>
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">住宿费:</label>
-                            <input type="text" class="form-control input-sm" id="Elsefinance_stay" name="finance_stay" style="width:100%" value="{$elseCarDamageList[0]['finance_stay']|default=''}">
+                            <input type="text" class="form-control input-sm" id="Elsefinance_stay" name="finance_stay" style="width:100%" value="">
                         </div>
                     </div>
                     <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">路桥费:</label>
-                            <input type="text" class="form-control input-sm" name="finance_road" id="Elsefinance_road" style="width:100%" value="{$elseCarDamageList[0]['finance_road']|default=''}">
+                            <input type="text" class="form-control input-sm" name="finance_road" id="Elsefinance_road" style="width:100%" value="">
 
                         </div>
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">燃油费:</label>
-                            <input type="text" class="form-control input-sm" style="width:100%" name="finance_fuel" id="Elsefinance_fuel" value="{$elseCarDamageList[0]['finance_fuel']|default=''}">
+                            <input type="text" class="form-control input-sm" style="width:100%" name="finance_fuel" id="Elsefinance_fuel" value="">
                         </div>
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">其他:</label>
-                            <input type="text" class="form-control input-sm" id="Elsefinance_other" name="finance_other" style="width:100%" value="{$elseCarDamageList[0]['finance_other']|default=''}">
+                            <input type="text" class="form-control input-sm" id="Elsefinance_other" name="finance_other" style="width:100%" value="">
                         </div>
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">汇总:</label>
-                            <input type="text" class="form-control input-sm" id="Elsefinance_summary" name="finance_summary" style="width:100%" value="{$elseCarDamageList[0]['finance_summary']|default=''}">
+                            <input type="text" class="form-control input-sm" id="Elsefinance_summary" name="finance_summary" style="width:100%" value="">
                         </div>
                     </div>
                     <div class="" style="margin-top:20px;display: flex;flex-direction:row;">
                         <div style="margin-left: 2rem;width:20%">
                             <label class="text-center search-item-label">备注说明:</label>
-                            <textarea name="finance_remark" id="Elsefinance_remark" cols="120" rows="10">{$elseCarDamageList[0]['finance_remark']|default=''}</textarea>
+                            <textarea name="finance_remark" id="Elsefinance_remark" cols="120" rows="10"></textarea>
                         </div>
                     </div>
 
@@ -2506,7 +2533,7 @@
 
 
 <!--人伤modal开始-->
-<div class="modal fade" id="humanModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+<div class="modal fade" id="humanModal" data-id="" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog" style="width:80%">
         <div class="modal-content">
             <div class="modal-header">
@@ -2514,29 +2541,29 @@
                 <h4 class="modal-title">人伤信息</h4>
             </div>
             <div class="modal-body">
-                <form action="" name="addHuman" style="margin-top:1rem;margin-left:1rem">
+                <form action="" class="HumaninfoForm" name="addHumanInfo" id="addHumanInfo" style="margin-top:1rem;margin-left:1rem">
                     <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                         <div class="search-item-div col-xs-3">
-                            <label for="invoice_name" class="text-center search-item-label">诊断病情:</label>
-                            <input type="text" class="form-control input-sm" style="width:100%" name="invoice_name" id="invoice_name" value="{$list.invoice_name|default=''}">
+                            <label for="injury_condition" class="text-center search-item-label">诊断病情:</label>
+                            <input type="text" class="form-control input-sm" style="width:100%" name="injury_condition" id="injury_condition" value="">
 
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="invoice_tax" class="text-center search-item-label">是否住院:</label>
-                            <input type="text" style="width:100%" name="invoice_tax" id="invoice_tax" value="{$list.invoice_tax|default=''}">
+                            <label for="injury_hospitalized" class="text-center search-item-label">是否住院:</label>
+                            <input type="text" style="width:100%" name="injury_hospitalized" id="injury_hospitalized" value="">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="invoice_bank" class="text-center search-item-label">住院天数:</label>
-                            <input type="text" class="form-control input-sm" style="width:100%" name="invoice_bank" id="invoice_bank" value="{$list.invoice_bank|default=''}">
+                            <label for="injury_day" class="text-center search-item-label">住院天数:</label>
+                            <input type="text" class="form-control input-sm" style="width:100%" name="injury_day" id="injury_day" value="">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="invoice_account" class="text-center search-item-label">是否残疾:</label>
-                            <input type="text" class="form-control input-sm" style="width:100%" name="invoice_account" id="invoice_account" value="{$list.invoice_account|default=''}">
+                            <label for="injury_disability" class="text-center search-item-label">是否残疾:</label>
+                            <input type="text" class="form-control input-sm" style="width:100%" name="injury_disability" id="injury_disability" value="">
                         </div>
                     </div>
-                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="human" data-num="0">增加</button>
-                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable"  data-value="human">删除</button>
-                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">保存数据</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="humanInfo" data-num="0">增加</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable"  data-value="humanInfo">删除</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal saveHumanPrice" data-value="addHumanInfo">保存数据</button>
                     <table class="table  table-bordered table-hover" style="margin-top:1rem;">
                         <thead>
                         <tr>
@@ -2552,30 +2579,32 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {for start="0" end="20"}
-                        <tr id="human_{$i}" {if $i != 0} style="display:none" {/if}>
-                        <td><input type="checkbox" name="human" class="human" data-num="{$i}" value="human"></td>
+                        {for start="0" end="100"}
+                        <tr id="humanInfo_{$i}" {if $i != 0} style="display:none" {/if} data-num="{$i}">
+                        <td><input type="checkbox" name="human" class="humanInfo" data-num="{$i}" value="human"></td>
+                        <td><input type="text" value="{$i+1}"></td>
                         <td>
-                            <select class="col-xs-12" name="injury_sex">
+                            <select class="col-xs-12" name="overall_type[]" id="human_overall_type_{$i}">
                                 <option value="-1">请选择</option>
                                 {volist name="$human_overall_type" id="value" key="key"}
                                 <option value="{$key-1}">{$value}</option>
                                 {/volist}
                             </select>
                         </td>
-                        <td><input class="col-xs-12" type="text" name="injury_name" value=""></td>
                         <td>
-                            <select class="col-xs-12" name="injury_sex">
+                            <select class="col-xs-12" name="price_type[]" id="human_price_type_{$i}">
                                 <option value="-1">请选择</option>
-                                {volist name="$survey_sex" id="value" key="key"}
+                                {volist name="$price_type" id="value" key="key"}
                                 <option value="{$key-1}">{$value}</option>
                                 {/volist}
                             </select>
+
                         </td>
-                        <td><input class="col-xs-12" type="text" name="injury_age" value=""></td>
-                        <td><input class="col-xs-12" type="text" name="injury_domicile" value=""></td>
-                        <td><input class="col-xs-12" type="text" name="injury_medical" value=""></td>
-                        <td><input class="col-xs-12" type="text" name="injury_record" value=""></td>
+                        <td><input class="col-xs-12 price" data-value="humanInfo" data-num="{$i}" id="price_{$i}" type="text" name="price[]" value=""></td>
+                        <td><input class="col-xs-12 num" data-value="humanInfo" data-num="{$i}" id="num_{$i}" type="text" name="num[]" value=""></td>
+                        <td><input class="col-xs-12" readonly type="text" id="price_total_{$i}" name="price_total[]" value=""></td>
+                        <td><input class="col-xs-12" readonly type="text" id="price_approved_{$i}" name="price_approved[]" value=""></td>
+                        <td><input class="col-xs-12" type="text" name="remarks[]" id="remarks_{$i}" value=""></td>
                         </tr>
                         {/for}
                         <tr>
@@ -2584,8 +2613,9 @@
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
-                            <td><input class="col-xs-12" type="text" name="human_money" value=""></td>
-                            <td><input class="col-xs-12" type="text" name="human_approved" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" id="human_money_total" name="human_money" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" id="human_approved_total" name="human_approved" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                         </tr>
                         </tbody>
@@ -2593,8 +2623,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="humanSubmit">提交</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="human_price_close" data-num="">关闭</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -2702,6 +2731,32 @@ jQuery(function($) {
             });
         });
     }
+    //查勘录入
+    $(".addSurvey").on('click',function() {
+        var but = $(this);
+        but.attr("disabled", "disabled");
+        var url = '/admin/ajax/overallcompensation/survey/addSurvey';
+        var form = $("form[name=addSurvey]").serializeArray();
+        $.ajax(url, {
+            dataType: 'json', // type of response data
+            timeout: 500,     // timeout milliseconds
+            method: "post",
+            data: form,
+            success: function (data, status, xhr) {   // success callback function
+                but.removeAttr("disabled");
+                if (data.code == 100000) {
+                    layer.msg(data.msg);
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function () {
+                but.removeAttr("disabled");
+                layer.msg("系统错误");
+            }
+        });
+        return false;
+    })
     //未来元素展示与否
     $("#showImages").on("click",".widget-header",function() {
         if($(this).parents(".widget-box").find(".widget-body").css('display') === 'none') {
@@ -2755,11 +2810,24 @@ jQuery(function($) {
     //车损人伤补偿款表格增加/删除
     //增加
     $(".addTable").on('click',function() {
-        var num = $(this).attr("data-num");
+        var num = 0;
+        $(this).parents('form').find('tr').each(function() {
+            if (!$(this).is(':hidden')) {
+                data_num = $(this).attr("data-num");
+                if(data_num != undefined) {
+                    num = data_num;
+                }
+            }
+        });
         var value = $(this).attr("data-value");
-        var next = parseInt(num) + 1;
-        $("#"+value+"_"+next).show();
-        $(this).attr("data-num",next);
+        for (var i=0;i<=100;i++) {
+            var num = parseInt(num) + 1;
+            var html = $("#"+value+"_"+num).html();
+            if(html != undefined) {
+                $("#"+value+"_"+num).show();
+                return false;
+            }
+        }
         return false;
     })
     //删除
@@ -2787,7 +2855,7 @@ jQuery(function($) {
                 $("#damage_approved_"+num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for(var i = 0; i<=20; i++) {
+                for(var i = 0; i<=100; i++) {
                     var money = $("#damage_money_"+i).val();
                     var approved = $("#damage_approved_"+i).val();
                     if(money != undefined && money != '') {
@@ -2812,7 +2880,7 @@ jQuery(function($) {
                 $("#work_approved_"+num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for(var i = 0; i<=20; i++) {
+                for(var i = 0; i<=100; i++) {
                     var money = $("#work_money_"+i).val();
                     var approved = $("#work_approved_"+i).val();
                     if(money != undefined && money != '') {
@@ -2837,7 +2905,7 @@ jQuery(function($) {
                 $("#finance_approved_"+num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for(var i = 0; i<=20; i++) {
+                for(var i = 0; i<=100; i++) {
                     var money = $("#finance_money_"+i).val();
                     var approved = $("#finance_approved_"+i).val();
                     if(money != undefined && money != '') {
@@ -2862,7 +2930,7 @@ jQuery(function($) {
                 $("#Elsedamage_approved_"+num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for(var i = 0; i<=20; i++) {
+                for(var i = 0; i<=100; i++) {
                     var money = $("#Elsedamage_money_"+i).val();
                     var approved = $("#Elsedamage_approved_"+i).val();
                     if(money != undefined && money != '') {
@@ -2887,7 +2955,7 @@ jQuery(function($) {
                 $("#Elsework_approved_"+num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for(var i = 0; i<=20; i++) {
+                for(var i = 0; i<=100; i++) {
                     var money = $("#Elsework_money_"+i).val();
                     var approved = $("#Elsework_approved_"+i).val();
                     if(money != undefined && money != '') {
@@ -2912,7 +2980,7 @@ jQuery(function($) {
                 $("#Elsefinance_approved_"+num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for(var i = 0; i<=20; i++) {
+                for(var i = 0; i<=100; i++) {
                     var money = $("#Elsefinance_money_"+i).val();
                     var approved = $("#Elsefinance_approved_"+i).val();
                     if(money != undefined && money != '') {
@@ -2926,6 +2994,23 @@ jQuery(function($) {
                 var accessories_residual = $("#Elsefinance_residual").val();
                 var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
                 $("#Elsefinance_all").val(accessories_all);
+            }
+        //人伤
+        }else if(value == 'humanInfo') {
+            var damage_num = $("#num_"+num).val();
+            if(damage_num != '') {
+                var price = $(this).val();
+                $("#price_total_"+num).val((price * damage_num).toFixed(2));
+                $("#price_approved_"+num).val((price * damage_num).toFixed(2));
+                var accessories_money = 0;
+                for(var i = 0; i<=100; i++) {
+                    var money = $("#price_total_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money*1 +money*1).toFixed(2);
+                    }
+                }
+                $("#human_money_total").val(accessories_money);
+                $("#human_approved_total").val(accessories_money);
             }
         }
     })
@@ -2943,7 +3028,7 @@ jQuery(function($) {
                 $("#damage_approved_"+num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for(var i = 0; i<=20; i++) {
+                for(var i = 0; i<=100; i++) {
                     var money = $("#damage_money_"+i).val();
                     var approved = $("#damage_approved_"+i).val();
                     if(money != undefined && money != '') {
@@ -2968,7 +3053,7 @@ jQuery(function($) {
                 $("#work_approved_"+num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for(var i = 0; i<=20; i++) {
+                for(var i = 0; i<=100; i++) {
                     var money = $("#work_money_"+i).val();
                     var approved = $("#work_approved_"+i).val();
                     if(money != undefined && money != '') {
@@ -2993,7 +3078,7 @@ jQuery(function($) {
                 $("#finance_approved_"+num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for(var i = 0; i<=20; i++) {
+                for(var i = 0; i<=100; i++) {
                     var money = $("#finance_money_"+i).val();
                     var approved = $("#finance_approved_"+i).val();
                     if(money != undefined && money != '') {
@@ -3018,7 +3103,7 @@ jQuery(function($) {
                 $("#Elsedamage_approved_"+num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for(var i = 0; i<=20; i++) {
+                for(var i = 0; i<=100; i++) {
                     var money = $("#Elsedamage_money_"+i).val();
                     var approved = $("#Elsedamage_approved_"+i).val();
                     if(money != undefined && money != '') {
@@ -3043,7 +3128,7 @@ jQuery(function($) {
                 $("#Elsework_approved_"+num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for(var i = 0; i<=20; i++) {
+                for(var i = 0; i<=100; i++) {
                     var money = $("#Elsework_money_"+i).val();
                     var approved = $("#Elsework_approved_"+i).val();
                     if(money != undefined && money != '') {
@@ -3068,7 +3153,7 @@ jQuery(function($) {
                 $("#Elsefinance_approved_"+num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for(var i = 0; i<=20; i++) {
+                for(var i = 0; i<=100; i++) {
                     var money = $("#Elsefinance_money_"+i).val();
                     var approved = $("#Elsefinance_approved_"+i).val();
                     if(money != undefined && money != '') {
@@ -3082,6 +3167,23 @@ jQuery(function($) {
                 var accessories_residual = $("#Elsefinance_residual").val();
                 var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
                 $("#Elsefinance_all").val(accessories_all);
+            }
+            //人伤
+        }else if(value == 'humanInfo') {
+            var price = $("#price_"+num).val();
+            if(price != '') {
+                var damage_num = $(this).val();
+                $("#price_total_"+num).val((price * damage_num).toFixed(2));
+                $("#price_approved_"+num).val((price * damage_num).toFixed(2));
+                var accessories_money = 0;
+                for(var i = 0; i<=100; i++) {
+                    var money = $("#price_total_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                    }
+                }
+                $("#human_money_total").val(parseFloat(accessories_money).toFixed(2));
+                $("#human_approved_total").val(parseFloat(accessories_money).toFixed(2));
             }
         }
     })
@@ -3099,7 +3201,7 @@ jQuery(function($) {
                 $("#damage_approved_" + num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for (var i = 0; i <= 20; i++) {
+                for (var i = 0; i <= 100; i++) {
                     var money = $("#damage_money_" + i).val();
                     var approved = $("#damage_approved_" + i).val();
                     if (money != undefined && money != '') {
@@ -3124,7 +3226,7 @@ jQuery(function($) {
                 $("#work_approved_" + num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for (var i = 0; i <= 20; i++) {
+                for (var i = 0; i <= 100; i++) {
                     var money = $("#work_money_" + i).val();
                     var approved = $("#work_approved_" + i).val();
                     if (money != undefined && money != '') {
@@ -3149,7 +3251,7 @@ jQuery(function($) {
                 $("#finance_approved_" + num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for (var i = 0; i <= 20; i++) {
+                for (var i = 0; i <= 100; i++) {
                     var money = $("#finance_money_" + i).val();
                     var approved = $("#finance_approved_" + i).val();
                     if (money != undefined && money != '') {
@@ -3174,7 +3276,7 @@ jQuery(function($) {
                 $("#Elsedamage_approved_" + num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for (var i = 0; i <= 20; i++) {
+                for (var i = 0; i <= 100; i++) {
                     var money = $("#Elsedamage_money_" + i).val();
                     var approved = $("#Elsedamage_approved_" + i).val();
                     if (money != undefined && money != '') {
@@ -3199,7 +3301,7 @@ jQuery(function($) {
                 $("#Elsework_approved_" + num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for (var i = 0; i <= 20; i++) {
+                for (var i = 0; i <= 100; i++) {
                     var money = $("#Elsework_money_" + i).val();
                     var approved = $("#Elsework_approved_" + i).val();
                     if (money != undefined && money != '') {
@@ -3224,7 +3326,7 @@ jQuery(function($) {
                 $("#Elsefinance_approved_" + num).val((price * damage_num * discount).toFixed(2));
                 var accessories_money = 0;
                 var accessories_approved = 0;
-                for (var i = 0; i <= 20; i++) {
+                for (var i = 0; i <= 100; i++) {
                     var money = $("#Elsefinance_money_" + i).val();
                     var approved = $("#Elsefinance_approved_" + i).val();
                     if (money != undefined && money != '') {
@@ -3315,7 +3417,7 @@ jQuery(function($) {
             replaceForm(form, 'damage_type', 3);
             //三者车
         }else if(value == 'addOtherCarForm'){
-            var url = '/admin/ajax/overallcompensation/survey/addCarForm';
+            var url = '/admin/ajax/overallcompensation/survey/addOtherCarForm';
             $("#addOtherCarForm").find('tr').each(function () {
                 if ($(this).is(':hidden')) {
                     $(this).remove();
@@ -3367,6 +3469,33 @@ jQuery(function($) {
                 but.removeAttr("disabled");
                 if (data.code == 100000) {
                     layer.msg(data.msg);
+                    //如果是三者车损数据，则重新赋值三者车损失id
+                    if(value == 'addOtherCarForm') {
+                        $("#addOtherCarForm").find("tr").each(function() {
+                            if (!$(this).is(':hidden')) {
+                                var num = $(this).attr("data-num");
+                                $("#other_plate_"+num).attr("data-id",id[0]);
+                                id.shift();
+                            }
+                        })
+                    }else if(value == 'ElseaddAccessories') {
+                        var num = $("#elseCarModal").attr("data-num");
+                        var price = $("#Elseaccessories_all").val();
+                        $("#else_work_total_"+num).val(price);
+                        var price = $("#Elsefinance_summary").val();
+                        $("#else_finance_summary_"+num).val(price);
+                    }else if(value == 'ElseaddFinance') {
+                        var num = $("#elseCarModal").attr("data-num");
+                        var price = $("#ElseaccessoriElsefinance_all").val();
+                        $("#else_finance_total_"+num).val(price);
+                        var price = $("#Elsefinance_summary").val();
+                        $("#else_finance_summary_"+num).val(price);
+                    }else if(value == 'ElseaddWork') {
+                        var num = $("#elseCarModal").attr("data-num");
+                        var price = $("#Elsefinance_summary").val();
+                        $("#else_finance_summary_"+num).val(price);
+                    }
+
                 } else {
                     layer.msg(data.msg);
                 }
@@ -3407,15 +3536,338 @@ jQuery(function($) {
         return false;
     })
     //三者车车牌点击
-    $("#other_plate").on('click',function() {
+    $(".other_plate").on('click',function() {
         var value = $(this).val();
+        var num = $(this).attr("data-num");
         if(value != '') {
+            var id = $(this).attr("data-id");
+            $("#elseCarModal").attr("data-num",num);
+            $.ajax("/admin/ajax/overallcompensation/survey/getAccessoriesInfo", {
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: {related_id:id},
+                success: function (data, status, xhr) {   // success callback function
+                    if (data.code == 100000) {
+                        var msg = data.data;
+                        if(msg[1]) {
+                            for(var i=0;i<msg[1].length;i++) {
+                                $("#Elseaccessories_"+i).show();
+                                $("#Elsedamage_overall_"+i).val(msg[1][i].damage_overall);
+                                $("#Elsedamage_name_"+i).val(msg[1][i].damage_name);
+                                $("#Elseprice_program_"+i).val(msg[1][i].price_program);
+                                $("#Elsedamage_price_"+i).val(msg[1][i].damage_price);
+                                $("#Elsedamage_num_"+i).val(msg[1][i].damage_num);
+                                $("#Elsedamage_money_"+i).val(msg[1][i].damage_money);
+                                $("#Elsedamage_discount_"+i).val(msg[1][i].damage_discount);
+                                $("#Elsedamage_approved_"+i).val(msg[1][i].damage_approved);
+                                $("#Elsedamage_remark_"+i).val(msg[1][i].damage_remark);
+                                $("#Elseaccessories_money").val(msg['info'][0].accessories_money);
+                                $("#Elseaccessories_approved").val(msg['info'][0].accessories_approved);
+                                $("#Elseaccessories_total").val(msg['info'][0].accessories_total);
+                                $("#Elseaccessories_residual").val(msg['info'][0].accessories_residual);
+                                $("#Elseaccessories_all").val(msg['info'][0].accessories_all);
+                            }
+                        }
+                        if(msg[2]) {
+                            for(var i=0;i<msg[1].length;i++) {
+                                $("#Elsefinance_"+i).show();
+                                $("#Elsework_overall_"+i).val(msg[2][i].damage_overall);
+                                $("#Elsework_name_"+i).val(msg[2][i].damage_name);
+                                $("#Elsework_program_"+i).val(msg[2][i].price_program);
+                                $("#Elsework_price_"+i).val(msg[2][i].damage_price);
+                                $("#Elsework_num_"+i).val(msg[2][i].damage_num);
+                                $("#Elsework_money_"+i).val(msg[2][i].damage_money);
+                                $("#Elsework_discount_"+i).val(msg[2][i].damage_discount);
+                                $("#Elsework_approved_"+i).val(msg[2][i].damage_approved);
+                                $("#Elsework_remark_"+i).val(msg[2][i].damage_remark);
+                                $("#Elsework_money").val(msg['info'][0].accessories_money);
+                                $("#Elsework_approved").val(msg['info'][0].accessories_approved);
+                                $("#Elsework_rescue").val(msg['info'][0].work_rescue);
+                                $("#Elsework_all").val(msg['info'][0].work_all);
+                                $("#Elsework_total").val(msg['info'][0].work_total);
+                            }
+                        }
+                        if(msg[3]) {
+                            for(var i=0;i<msg[1].length;i++) {
+                                $("#Elsefinance_"+i).show();
+                                $("#Elsefinance_overall_"+i).val(msg[2][i].damage_overall);
+                                $("#Elsefinance_name_"+i).val(msg[2][i].damage_name);
+                                $("#Elsefinance_program_"+i).val(msg[2][i].price_program);
+                                $("#Elsefinance_price_"+i).val(msg[2][i].damage_price);
+                                $("#Elsefinance_num_"+i).val(msg[2][i].damage_num);
+                                $("#Elsefinance_money_"+i).val(msg[2][i].damage_money);
+                                $("#Elsefinance_discount_"+i).val(msg[2][i].damage_discount);
+                                $("#EElsefinance_approved_"+i).val(msg[2][i].damage_approved);
+                                $("#Elsefinance_remark_"+i).val(msg[2][i].damage_remark);
+                                $("#Elsefinance_money").val(msg['info'][0].finance_money);
+                                $("#Elsefinance_approved").val(msg['info'][0].finance_approved);
+                                $("#Elsefinance_total").val(msg['info'][0].finance_total);
+                                $("#Elsefinance_residual").val(msg['info'][0].finance_residual);
+                                $("#Elsefinance_all").val(msg['info'][0].finance_all);
+                                $("#Elsefinance_litigation").val(msg['info'][0].finance_litigation);
+                                $("#Elsefinance_identification").val(msg['info'][0].finance_identification);
+                                $("#Elsefinance_appraisal").val(msg['info'][0].finance_appraisal);
+                                $("#Elsefinance_stay").val(msg['info'][0].finance_stay);
+                                $("#Elsefinance_road").val(msg['info'][0].finance_road);
+                                $("#Elsefinance_fuel").val(msg['info'][0].finance_fuel);
+                                $("#Elsefinance_other").val(msg['info'][0].finance_other);
+                                $("#Elsefinance_summary").val(msg['info'][0].finance_summary);
+                                $("#Elsefinance_remark").val(msg['info'][0].finance_remark);
+                            }
+                        }
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function () {
+                    layer.msg("系统错误");
+                }
+            });
             $("#elseCarModal").modal();
         }
     })
-    //本人人伤
+    //本人人伤保存
     $(".saveHumanTable").on('click',function() {
+        var value = $(this).attr("data-value");
+        var type = $(this).attr("data-type");
+        var but = $(this);
+        but.attr("disabled", "disabled");
+        var url = '/admin/ajax/overallcompensation/survey/addHuman';
+        $("#"+value).find('tr').each(function () {
+            if ($(this).is(':hidden')) {
+                $(this).remove();
+            }
+        })
+        var form = $("form[name="+value+"]").serializeArray();
+        replaceForm(form,'related_id',$("#report_id").val());
+        replaceForm(form,'human_type',type);
+        $.ajax(url, {
+            dataType: 'json', // type of response data
+            timeout: 500,     // timeout milliseconds
+            method: "post",
+            data: form,
+            success: function (data, status, xhr) {   // success callback function
+                but.removeAttr("disabled");
+                if (data.code == 100000) {
+                    var id = data.data;
+                    if(value == 'addHuman') {
+                        var accessories_money = 0;
+                        $("#addHuman").find("tr").each(function() {
+                            if (!$(this).is(':hidden')) {
+                                var num = $(this).attr("data-num");
+                                $("#injury_name_"+num).attr("data-id",id[0]);
+                                id.shift();
+                                var money = $("#injury_money_"+num).val();
+                                if(money != undefined && money != '') {
+                                    accessories_money = parseFloat(accessories_money*1 + money*1);
+                                }
+                            }
+                            $("#human_money").val(parseFloat(accessories_money).toFixed(2));
+                            $("#human_approved").val(parseFloat(accessories_money).toFixed(2));
+                            $("#human_fee").val(parseFloat(accessories_money).toFixed(2));
+                        })
+                    }else if(value == 'elseaddHuman') {
+                        var accessories_money = 0;
+                        $("#elseaddHuman").find("tr").each(function() {
+                            if (!$(this).is(':hidden')) {
+                                var num = $(this).attr("data-num");
+                                $("#elseinjury_name_"+num).attr("data-id",id[0]);
+                                id.shift();
+                                var money = $("#elseinjury_money_"+num).val();
+                                if(money != undefined && money != '') {
+                                    accessories_money = parseFloat(accessories_money*1 + money*1);
+                                }
+                            }
+                            $("#elsehuman_money").val(parseFloat(accessories_money).toFixed(2));
+                            $("#elsehuman_approved").val(parseFloat(accessories_money).toFixed(2));
+                            $("#elsehuman_fee").val(parseFloat(accessories_money).toFixed(2));
+                        })
+                    }
+                    layer.msg(data.msg);
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function () {
+                but.removeAttr("disabled");
+                layer.msg("系统错误");
+            }
+        });
+        return false;
+    })
+    //人伤详情
+    $(".injury_name").on('click',function() {
+        var value = $(this).val();
+        var report_id = $("#report_id").val();
+        var type = $(this).attr("data-type");
+        var num = $(this).attr("data-num");
+        var id = $(this).attr("data-id");
+        var url = "/admin/ajax/overallcompensation/survey/getHuman";
+        $.ajax(url, {
+            dataType: 'json', // type of response data
+            timeout: 500,     // timeout milliseconds
+            method: "post",
+            data: {injury_name:value,related_id:report_id,human_type:type,related_id:id},
+            success: function (data, status, xhr) {   // success callback function
+                $("#humanModal").attr("data-id",id);
+                if(type == 1) {
+                    $(".saveHumanPrice").attr("data-value","addHumanInfo");
+                    $(".HumaninfoForm").attr("name","addHumanInfo");
+                    $(".HumaninfoForm").attr("id","addHumanInfo");
+                }else if(type == 2) {
+                    $(".saveHumanPrice").attr("data-value","elseaddHumanInfo");
+                    $(".HumaninfoForm").attr("name","elseaddHumanInfo");
+                    $(".HumaninfoForm").attr("id","elseaddHumanInfo");
+                }
+                if(data.data[0]) {
+                    var msg = data.data;
+                    for(var i=0;i<Object.keys(msg).length-2;i++) {
+                        $("#humanInfo_"+i).show();
+                        $("#human_overall_type_"+i).val(msg[i].overall_type);
+                        $("#human_price_type_"+i).val(msg[i].price_type);
+                        $("#price_"+i).val(msg[i].price);
+                        $("#num_"+i).val(msg[i].num);
+                        $("#price_total_"+i).val(msg[i].price_total);
+                        $("#price_approved_"+i).val(msg[i].price_approved);
+                        $("#remarks_"+i).val(msg[i].remarks);
+                    }
+                    $("#human_money_total").val(msg.injury_money);
+                    $("#human_approved_total").val(msg.injury_approved);
+                }
+                $("#humanModal").modal();
+            },
+            error: function () {
+                layer.msg("系统错误");
+            }
+        });
+        $("#human_price_close").attr("data-num",num);
+        return false;
+    })
+    //人伤价格详情提交
+    $(".saveHumanPrice").on('click',function() {
+        var value = $(this).attr("data-value");
+        var but = $(this);
+        but.attr("disabled", "disabled");
+        //本车配件
+        var url = '/admin/ajax/overallcompensation/survey/addHumanPrice';
+        $("#"+value).find('tr').each(function () {
+            if ($(this).is(':hidden')) {
+                $(this).remove();
+            }
+        })
+        var form = $("form[name=" + value + "]").serializeArray();
+        replaceForm(form,'related_id',$("#humanModal").attr("data-id"));
+        replaceForm(form,'report_id',$("#report_id").val());
+        $.ajax(url, {
+            dataType: 'json', // type of response data
+            timeout: 500,     // timeout milliseconds
+            method: "post",
+            data: form,
+            success: function (data, status, xhr) {   // success callback function
+                but.removeAttr("disabled");
+                if (data.code == 100000) {
+                    layer.msg(data.msg);
+                    var num = $("#human_price_close").attr("data-num");
+                    if(value == 'addHumanInfo') {
+                        $("#injury_money_"+num).val($("#human_money_total").val());
+                        $("#injury_approved_"+num).val($("#human_money_total").val());
+                        var accessories_money = 0;
+                        for(var i = 0; i<=100; i++) {
+                            var money = $("#injury_money_"+i).val();
+                            if(money != undefined && money != '') {
+                                accessories_money = parseFloat(accessories_money*1 + money*1);
+                            }
+                        }
+                        $("#human_money").val(parseFloat(accessories_money).toFixed(2));
+                        $("#human_approved").val(parseFloat(accessories_money).toFixed(2));
+                        $("#human_fee").val(parseFloat(accessories_money).toFixed(2));
+                    }else if(value == 'elseaddHumanInfo') {
+                        $("#elseinjury_money_"+num).val($("#human_money_total").val());
+                        $("#elseinjury_approved_"+num).val($("#human_money_total").val());
+                        var accessories_money = 0;
+                        for(var i = 0; i<=100; i++) {
+                            var money = $("#elseinjury_money_"+i).val();
+                            if(money != undefined && money != '') {
+                                accessories_money = parseFloat(accessories_money*1 + money*1);
+                            }
+                        }
+                        $("#elsehuman_money").val(parseFloat(accessories_money).toFixed(2));
+                        $("#elsehuman_approved").val(parseFloat(accessories_money).toFixed(2));
+                        $("#elsehuman_fee").val(parseFloat(accessories_money).toFixed(2));
+                    }
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function () {
+                but.removeAttr("disabled");
+                layer.msg("系统错误");
+            }
+        });
+        return false;
 
+    })
+    //补偿款信息添加
+    $(".saveCompensationTable").on('click',function() {
+        var value = $(this).attr("data-value");
+        var type = $(this).attr("data-type");
+        var but = $(this);
+        but.attr("disabled", "disabled");
+        var url = '/admin/ajax/overallcompensation/survey/addCompensation';
+        $("#"+value).find('tr').each(function () {
+            if ($(this).is(':hidden')) {
+                $(this).remove();
+            }
+        })
+        var form = $("form[name=" + value + "]").serializeArray();
+        replaceForm(form,'related_id',$("#report_id").val());
+        replaceForm(form,'other_type',type);
+        $.ajax(url, {
+            dataType: 'json', // type of response data
+            timeout: 500,     // timeout milliseconds
+            method: "post",
+            data: form,
+            success: function (data, status, xhr) {   // success callback function
+                but.removeAttr("disabled");
+                if (data.code == 100000) {
+                    layer.msg(data.msg);
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function () {
+                but.removeAttr("disabled");
+                layer.msg("系统错误");
+            }
+        });
+        return false;
+    })
+
+    //提交审核
+    $(".addReview").on('click',function() {
+        var but = $(this);
+        but.attr("disabled", "disabled");
+        var url = '/admin/ajax/overallcompensation/survey/addReivew';
+        $.ajax(url, {
+            dataType: 'json', // type of response data
+            timeout: 500,     // timeout milliseconds
+            method: "post",
+            data: {report_id:$("#report_id").val()},
+            success: function (data, status, xhr) {   // success callback function
+                but.removeAttr("disabled");
+                if (data.code == 100000) {
+                    layer.msg(data.msg);
+                } else {
+                    layer.msg(data.msg);
+                }
+            },
+            error: function () {
+                but.removeAttr("disabled");
+                layer.msg("系统错误");
+            }
+        });
+        return false;
     })
 });
 </script>

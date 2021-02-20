@@ -100,6 +100,12 @@ class Survey extends Common {
         $this->assign('survey_user_edit',$users[$list[0]['survey_agency']]);
         //查勘录入
 
+        $survey_list = Model('Survey')->getSurvey(['report_id'=>$this->param['report_id']]);
+        if(!empty($survey_list)) {
+            $survey_list = $survey_list[0];
+        }
+        $this->assign('surveyList',$survey_list);
+
         $this->assign('survey_sex',$res['survey_sex']);
         $this->assign('dirver_model',$res['dirver_model']);
         $this->assign('cause_accident',$res['cause_accident']);
@@ -174,27 +180,32 @@ class Survey extends Common {
         //三者车主表
         $else_damage_info = Model('Survey')->getDamageLordList(['related_id'=>$this->param['report_id'],'this_car'=>2]);
         $this->assign('elseCarDamageList',$else_damage_info);
-        $elseAccessoriesList = [];
-        $elseWorkList = [];
-        $elseFinanceList = [];
-        if(!empty($else_damage_info)) {
-            //三者车配件
-            $elseAccessoriesList = Model('Survey')->getDamageList(['damage_type'=>1,'type'=>1,'related_id'=>$else_damage_info[0]['id']]);
-            //三者车工时
-            $elseWorkList = Model('Survey')->getDamageList(['damage_type'=>2,'type'=>1,'related_id'=>$else_damage_info[0]['id']]);
-            //三者车财务
-            $elseFinanceList = Model('Survey')->getDamageList(['damage_type'=>3,'type'=>1,'related_id'=>$else_damage_info[0]['id']]);
-        }
-        //三者车配件
-        $this->assign('elseAccessoriesList',$elseAccessoriesList);
-        //三者车工时
-        $this->assign('elseWorkList',$elseWorkList);
-        //三者车财务
-        $this->assign('elseFinanceList',$elseFinanceList);
 
         //人伤
         $this->assign('human_overall_type',$res['human_overall_type']);
         $this->assign('license_type',$res['license_type']);
+        $this->assign('price_type',$res['price_type']);
+        //人伤数据
+        $humanList = Model('Survey')->getHumanList(['related_id'=>$this->param['report_id'],'human_type'=>1]);
+        if(!empty($humanList)) {
+            $humanList = $humanList[0];
+        }
+        $this->assign('humanList',$humanList);
+        //三者人伤
+        $humanList = Model('Survey')->getHumanList(['related_id'=>$this->param['report_id'],'human_type'=>2]);
+        if(!empty($humanList)) {
+            $humanList = $humanList[0];
+        }
+        $this->assign('elsehumanList',$humanList);
+
+        //补偿款信息
+        $this->assign('license_type',$res['license_type']);
+        //补偿款信息数据
+        $compensationList = Model('Survey')->getCompensationList(['related_id'=>$this->param['report_id'],'other_type'=>1]);
+        $this->assign('compensationList',$compensationList);
+        //其他补偿款信息数据
+        $elsecompensationList = Model('Survey')->getCompensationList(['related_id'=>$this->param['report_id'],'other_type'=>2]);
+        $this->assign('elsecompensationList',$elsecompensationList);
 
         $this->fetch();
     }
