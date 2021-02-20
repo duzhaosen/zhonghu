@@ -77,4 +77,22 @@ class Report extends Model {
         }
         return false;
     }
+
+    /** 提交审核查勘中心
+     *
+     */
+    public function review($condition) {
+        Db::startTrans();
+        try{
+            db($this->db)->where(['report_id'=>$condition['report_id']])->update(['status'=>$condition['status']]);
+            // 提交事务
+            Db::commit();
+        } catch (\Exception $e) {
+            // 回滚事务
+            Db::rollback();
+            print_r($e);die;
+            return false;
+        }
+        return true;
+    }
 }

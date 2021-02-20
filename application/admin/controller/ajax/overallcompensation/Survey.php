@@ -557,4 +557,18 @@ class Survey extends Common {
         $data['msg'] = '查勘录入保存失败';
         return json($data);
     }
+
+    /** 提交审核
+     *
+     */
+    public function addReview(Request $request) {
+        $this->param = $request->param();
+        if(!isset($this->param['report_id']) || !isset($this->param['status'])) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '报案单号不可为空';
+            return json($data);
+        }
+        Model('Report')->
+    }
 }
