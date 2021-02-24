@@ -25,6 +25,7 @@ class Overall extends Model {
     private $document_info_db = "zh_documents_info";
     private $endorsements_db = "zh_endorsements";
     private $documents_issued_db = "zh_documents_issued";
+    private $sales_db = "zh_sales";
 
 
     /** 查询统筹单单查询
@@ -88,6 +89,9 @@ class Overall extends Model {
 
                 //审核
                 $item['review_log'] = Model('ReviewLog')->getList(['related_id'=>$item['temporary_id']]);
+
+                //销售费用管理
+                $item['sales'] = db($this->sales_db)->where(['related_id'=>$item['temporary_id']])->select();
 
                 //组织
                 $users = Model('User')->getList(['id'=> $item['attribution_user']]);

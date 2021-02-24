@@ -354,13 +354,21 @@ class Overall extends Common {
         if(isset($this->param['temporary_id'])) {
             $this->param['overall.temporary_id'] = $this->param['temporary_id'];
             unset($this->param['temporary_id']);
+            $res = Model('Overall')->getList($this->param);
+            if($res[0]['status'] != 6) {
+                $this->error("审核状态不为审核通过");
+            }
         }
-        $res = Model('Overall')->getList($this->param);
+        if(isset($this->param['p_temporary_id'])) {
+            $this->param['endorsements.p_temporary_id'] = $this->param['p_temporary_id'];
+            unset($this->param['temporary_id']);
+            $res = Model('Endorsements')->getList($this->param);
+            if($res[0]['status'] != 4) {
+                $this->error("审核状态不为审核通过");
+            }
+        }
         if($res->total() == 0) {
             $this->error("未查询到统筹单");
-        }
-        if($res[0]['status'] != 6) {
-            $this->error("审核状态不为审核通过");
         }
         $this->assign('res',$res[0]);
         $this->fetch();

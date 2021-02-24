@@ -132,7 +132,7 @@
                         <td>{$value.human_injury_typeStr}</td>
                         <td>
                             <button class="layui-btn layui-btn-xs layui-btn-radius layui-btn-normal add">查勘录入</button>
-                            <button class="layui-btn layui-btn-xs layui-btn-radius layui-btn-normal">浏览</button>
+                            <button class="layui-btn layui-btn-xs layui-btn-radius layui-btn-normal view">浏览</button>
                         </td>
                     </tr>
                     {/volist}
@@ -169,5 +169,9 @@
             window.location.href="/admin/Overallcompensation/survey/add?report_id="+report_id;
             return false;
         })
+        $(".view").on('click',function() {
+            var report_id = $(this).parents('tr').attr("data-id");
+            window.location.href="/admin/Overallcompensation/survey/view?report_id="+report_id;
+         })
     })
 </script>

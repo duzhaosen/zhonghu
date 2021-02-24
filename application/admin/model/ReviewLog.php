@@ -16,6 +16,7 @@ class ReviewLog extends Model {
     private $db = 'zh_review_log';
     private $overall_db = 'zh_overall';
     private $endorsements_db = 'zh_endorsements';
+    private $sale_db = 'zh_sales';
 
     /** 添加审核情况
      * @param $condition
@@ -61,6 +62,48 @@ class ReviewLog extends Model {
                 if($condition['status'] == 6) {
                     $overall['financial_review_user'] = getAdminInfo();
                     $overall['financial_review_time'] = time();
+                    //销售费用管理
+                    $sales = [];
+                    if(isset($condition['total_planning'])) {
+                        $sales['total_planning'] = $condition['total_planning'];
+                    }
+                    if(isset($condition['coordination'])) {
+                        $sales['coordination'] = $condition['coordination'];
+                    }
+                    if(isset($condition['invoicing_deduction'])) {
+                        $sales['invoicing_deduction'] = $condition['invoicing_deduction'];
+                    }
+                    if(isset($condition['settlement_type'])) {
+                        $sales['settlement_type'] = $condition['settlement_type'];
+                    }
+                    if(isset($condition['return_ratio'])) {
+                        $sales['return_ratio'] = $condition['return_ratio'];
+                    }
+                    if(isset($condition['reward'])) {
+                        $sales['reward'] = $condition['reward'];
+                    }
+                    if(isset($condition['return_money'])) {
+                        $sales['return_money'] = $condition['return_money'];
+                    }
+                    if(isset($condition['paid_money'])) {
+                        $sales['paid_money'] = $condition['paid_money'];
+                    }
+                    if(isset($condition['remarks'])) {
+                        $sales['remarks'] = $condition['remarks'];
+                    }
+                    if(!empty($sales)) {
+                        $res = db($this->sale_db)->where(['related_id'=>$condition['related_id']])->select();
+                        if(empty($res)) {
+                            $sales['create_time'] = time();
+                            $sales['create_user'] = getAdminInfo();
+                            $sales['related_id'] = $condition['related_id'];
+                            db($this->sale_db)->insert($sales);
+                        }else{
+                            $sales['op_time'] = time();
+                            $sales['op_user'] = getAdminInfo();
+                            db($this->sale_db)->where(['related_id'=>$condition['related_id']])->update($sales);
+                        }
+                    }
                 }
                 db($this->overall_db)->where(['temporary_id'=>$condition['related_id']])->update($overall);
                 $review = array();

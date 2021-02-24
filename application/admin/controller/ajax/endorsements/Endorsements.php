@@ -30,19 +30,6 @@ class Endorsements extends Common {
                 return json($data);
             }
         }
-        //验证车架号/车牌号是否在系统内且在统筹期间内
-        $car_frame = $this->param['frame'];
-        $car_list = Model('Endorsements')->getListSimple(['frame'=>$car_frame,'type'=>1]);
-        if(count($car_list) > 0) {
-            foreach($car_list as $key => $value) {
-                if($value['end_time']+86400 > strtotime($this->param['start_time'])) {
-                    $data = array();
-                    $data['code'] = 100001;
-                    $data['msg'] = '车架号已在其他单子的统筹期内'.$value['overall_id'];
-                    return json($data);
-                }
-            }
-        }
         //格式化数据
         $this->param['endorsements_id'] = Model('Endorsements')->generatePId();
         $this->param['status'] = 2;
@@ -199,5 +186,29 @@ class Endorsements extends Common {
             $line .= "\n";
         }
         return $line;
+    }
+
+    /** 生成缴费信息
+     *
+     */
+    public function addPayInfo(Request $request) {
+        $this->param = $request->param();
+        if(!isset($this->param['related_id']) || !isset($this->param['overall_type'])) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '重要参数不可为空';
+            return json($data);
+        }
+        $res = Model('Endorsements')->addPayinfo($this->param);
+        if($res) {
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = '生成缴费信息成功';
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100001;
+        $data['msg'] = '生成缴费信息失败';
+        return json($data);
     }
 }

@@ -563,12 +563,74 @@ class Survey extends Common {
      */
     public function addReview(Request $request) {
         $this->param = $request->param();
-        if(!isset($this->param['report_id']) || !isset($this->param['status'])) {
+        if(!isset($this->param['report_id']) || !isset($this->param['report_type'])) {
             $data = array();
             $data['code'] = 100001;
             $data['msg'] = '报案单号不可为空';
             return json($data);
         }
-        Model('Report')->
+        $res = Model('Report')->review($this->param);
+        if($res) {
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = '提交成功';
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100001;
+        $data['msg'] = '提交失败';
+        return json($data);
+    }
+
+    /** 添加理算数据
+     *
+     */
+    public function addLoss(Request $request) {
+        $field = $request->param();
+        //格式化数据处理
+        $condition = array();
+        foreach ($field as $key => $value) {
+            if(is_array($value)){
+                foreach ($value as $k => $item) {
+                    $condition[$k][$key] = $item;
+                }
+            }else{
+                $condition[$key] = $value;
+            }
+        }
+        foreach ($condition as $key => $value) {
+            if(is_array($value)) {
+                $res = Config::parse(APP_PATH.'/admin/config/formValidator/addLoss.ini','ini');
+                foreach($res['addloss'] as $k => $item) {
+                    if($item && empty($value[$k])) {
+                        $data = array();
+                        $data['code'] = 100001;
+                        $data['msg'] = $res['addlosscomment'][$k].'不可为空';
+                        return json($data);
+                    }
+                }
+            }else{
+                $res = Config::parse(APP_PATH.'/admin/config/formValidator/addLoss.ini','ini');
+                foreach($res['addlossother'] as $k => $item) {
+                    if($item && empty($condition[$k])) {
+                        $data = array();
+                        $data['code'] = 100001;
+                        $data['msg'] = $res['addlossothercomment'][$k].'不可为空';
+                        return json($data);
+                    }
+                }
+            }
+        }
+        $res = Model('Survey')->addLoss($condition);
+        if($res) {
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = '理算保存成功';
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100001;
+        $data['msg'] = '理算保存失败';
+        return json($data);
     }
 }

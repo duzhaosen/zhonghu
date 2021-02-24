@@ -1,5 +1,7 @@
 <link rel="stylesheet" href="/static/ace1.4/assets/css/jquery.magnify.css">
 <script src="/static/ace1.4/assets/js/jquery.magnify.js"></script>
+<link rel="stylesheet" href="/static/ace1.4/assets/css/chosen.min.css">
+<script src="/static/ace1.4/assets/js/chosen.jquery.min.js"></script>
 <style>
     .titles {
         width: 100%;
@@ -1627,7 +1629,7 @@
                             </form>
 <!--                           本车工时结束-->
 <!--                           本车财务开始-->
-                            <div class="titles"><p><font></font>本车财务定损</p></div>
+                            <div class="titles"><p><font></font>本车财物定损</p></div>
                             <form action="" name="addFinance" id="addFinance" style="margin-top:1rem;margin-left:1rem">
                                         <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="finance" data-num="0">增加</button>
                                         <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable" data-value="finance">删除</button>
@@ -2036,7 +2038,7 @@
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">鉴定费:</label>
-                                    <input type="text" class="form-control input-sm" name="human_identification" id="human_identification" style="width:100%" value="{$humanList['human_identification']|default=''}">
+                                    <input type="text" class="form-control input-sm" name="human_identification" id="elsehuman_identification" style="width:100%" value="{$humanList['human_identification']|default=''}">
                                 </div>
                                 <div style="margin-left: 2rem;width:20%">
                                     <label class="text-center search-item-label">公估费:</label>
@@ -2175,15 +2177,24 @@
                                 {for start="0" end="100"}
                                 <tr id="elsecompensation_{$i}" {if $i !=0 && !isset($elsecompensationList[$i])} style="display:none" {/if} data-num="{$i}">
                                     <td><input type="checkbox" class="elsecompensation" data-num="{$i}" name="other_compensation[]" value="other_compensation"></td>
-                                    <td><input class="col-xs-12" type="text" name="payee[]" value="{$elsecompensationList[$i]['payee']|default=''}"></td>
                                     <td>
-                                        <select class="col-xs-12" name="license_type[]">
-                                            <option value="-1">请选择</option>
-                                            {volist name="$license_type" id="value" key="key"}
-                                            <option value="{$key-1}" {if isset($elsecompensationList[$i]) && $elsecompensationList[$i]['license_type'] == $key-1} selected {/if}>{$value}</option>
-                                            {/volist}
-                                        </select>
-                                    </td>
+
+                                    <select class="col-xs-12" name="payee[]"  lay-verify="" lay-search>
+                                        <option value="-1">请选择</option>
+                                        {volist name="$compensation_company" id="value" key="key"}
+                                        <option value="{$key-1}">{$value}</option>
+                                        {/volist}
+                                    </select>
+
+                                </td>
+                                <td>
+                                    <select class="col-xs-12" name="license_type[]">
+                                        <option value="-1">请选择</option>
+                                        {volist name="$license_type" id="value" key="key"}
+                                        <option value="{$key-1}" {if isset($elsecompensationList[$i]) && $elsecompensationList[$i]['license_type'] == $key-1} selected {/if}>{$value}</option>
+                                        {/volist}
+                                    </select>
+                                </td>
                                 <td><input class="col-xs-12" type="text" name="license_number[]" value="{$elsecompensationList[$i]['license_number']|default=''}"></td>
                                 <td><input class="col-xs-12" type="text" name="compensation_phone[]" value="{$elsecompensationList[$i]['compensation_phone']|default=''}"></td>
                                 <td><input class="col-xs-12" type="text" name="compensation_relationship[]" value="{$elsecompensationList[$i]['compensation_relationship']|default=''}"></td>
@@ -2202,6 +2213,31 @@
         </div>
         <!--补偿款信息结束-->
 
+
+    <!--    审核日志开始-->
+    <table class="table  table-bordered table-hover center">
+        <thead>
+        <tr style="background: #307ECC;color:white">
+            <th class="center">时间</th>
+            <th class="center">审核人</th>
+            <th class="center">审核意见</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {volist name="logs" id="value"}
+        <tr>
+            <td>{:date("Y-m-d H:i:s",$value.create_time)}</td>
+            <td>{$value.create_user}</td>
+            <td>{$value.remarks}</td>
+        </tr>
+        {/volist}
+        <tr>
+
+        </tr>
+        </tbody>
+    </table>
+    <!--    审核日志结束-->
 
     <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
         <div class=" search-item-div col-xs-3 col-lg-offset-5">
@@ -2393,7 +2429,7 @@
                 </form>
                 <!--                           本车工时结束-->
                 <!--                           本车财务开始-->
-                <div class="titles"><p><font></font>三者车财务定损</p></div>
+                <div class="titles"><p><font></font>三者车财物定损</p></div>
                 <form action="" name="ElseaddFinance" id="ElseaddFinance" style="margin-top:1rem;margin-left:1rem">
                     <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal addTable" data-value="Elsefinance" data-num="0">增加</button>
                     <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal delTable" data-value="Elsefinance">删除</button>
@@ -2574,6 +2610,7 @@
                             <th class="center">金额</th>
                             <th class="center">数量</th>
                             <th class="center">总价</th>
+                            <th class="center">折扣</th>
                             <th class="center">核价金额</th>
                             <th class="center">备注</th>
                         </tr>
@@ -2603,6 +2640,7 @@
                         <td><input class="col-xs-12 price" data-value="humanInfo" data-num="{$i}" id="price_{$i}" type="text" name="price[]" value=""></td>
                         <td><input class="col-xs-12 num" data-value="humanInfo" data-num="{$i}" id="num_{$i}" type="text" name="num[]" value=""></td>
                         <td><input class="col-xs-12" readonly type="text" id="price_total_{$i}" name="price_total[]" value=""></td>
+                        <td><input class="col-xs-12 discount" data-value="humanInfo" data-num="{$i}" type="text" id="discount_{$i}" name="discount[]" value="100"></td>
                         <td><input class="col-xs-12" readonly type="text" id="price_approved_{$i}" name="price_approved[]" value=""></td>
                         <td><input class="col-xs-12" type="text" name="remarks[]" id="remarks_{$i}" value=""></td>
                         </tr>
@@ -2615,6 +2653,7 @@
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" id="human_money_total" name="human_money" value=""></td>
+                            <td><input class="col-xs-12" readonly type="text" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" id="human_approved_total" name="human_approved" value=""></td>
                             <td><input class="col-xs-12" readonly type="text" value=""></td>
                         </tr>
@@ -2895,7 +2934,7 @@ jQuery(function($) {
                 var work_total = parseFloat(accessories_approved*1 + work_rescue*1).toFixed(2);
                 $("#work_total").val(work_total);
             }
-            //财务定损
+            //财物定损
         }else if(value == 'finance') {
             var damage_num = $("#finance_num_"+num).val();
             if(damage_num != '') {
@@ -2970,7 +3009,7 @@ jQuery(function($) {
                 var work_total = parseFloat(accessories_approved*1 + work_rescue*1).toFixed(2);
                 $("#Elsework_total").val(work_total);
             }
-            //其他财务定损
+            //其他财物定损
         }else if(value == 'Elsefinance') {
             var damage_num = $("#Elsefinance_num_"+num).val();
             if(damage_num != '') {
@@ -3000,16 +3039,20 @@ jQuery(function($) {
             var damage_num = $("#num_"+num).val();
             if(damage_num != '') {
                 var price = $(this).val();
+                var discount = $("#discount_"+num).val();
                 $("#price_total_"+num).val((price * damage_num).toFixed(2));
-                $("#price_approved_"+num).val((price * damage_num).toFixed(2));
+                $("#price_approved_"+num).val((price * damage_num * discount/100).toFixed(2));
                 var accessories_money = 0;
+                var accessories_total = 0;
                 for(var i = 0; i<=100; i++) {
-                    var money = $("#price_total_"+i).val();
+                    var money = $("#price_approved_"+i).val();
+                    var total = $("#price_total_"+i).val();
                     if(money != undefined && money != '') {
                         accessories_money = parseFloat(accessories_money*1 +money*1).toFixed(2);
+                        accessories_total = parseFloat(accessories_total*1 +total*1).toFixed(2);
                     }
                 }
-                $("#human_money_total").val(accessories_money);
+                $("#human_money_total").val(accessories_total);
                 $("#human_approved_total").val(accessories_money);
             }
         }
@@ -3068,7 +3111,7 @@ jQuery(function($) {
                 var work_total = parseFloat(accessories_approved*1 + work_rescue*1).toFixed(2);
                 $("#work_total").val(work_total);
             }
-            //财务定损
+            //财物定损
         }else if(value == "finance") {
             var price = $("#finance_price_"+num).val();
             if(price != '') {
@@ -3143,7 +3186,7 @@ jQuery(function($) {
                 var work_total = parseFloat(accessories_approved*1 + work_rescue*1).toFixed(2);
                 $("#Elsework_total").val(work_total);
             }
-            //其他财务定损
+            //其他财物定损
         }else if(value == "Elsefinance") {
             var price = $("#Elsefinance_price_"+num).val();
             if(price != '') {
@@ -3173,17 +3216,21 @@ jQuery(function($) {
             var price = $("#price_"+num).val();
             if(price != '') {
                 var damage_num = $(this).val();
+                var discount = $("#discount_"+num).val();
                 $("#price_total_"+num).val((price * damage_num).toFixed(2));
-                $("#price_approved_"+num).val((price * damage_num).toFixed(2));
+                $("#price_approved_"+num).val((price * damage_num * discount/100).toFixed(2));
                 var accessories_money = 0;
+                var accessories_total = 0;
                 for(var i = 0; i<=100; i++) {
-                    var money = $("#price_total_"+i).val();
+                    var money = $("#price_approved_"+i).val();
+                    var total = $("#price_total_"+i).val();
                     if(money != undefined && money != '') {
-                        accessories_money = parseFloat(accessories_money) + parseFloat(money);
+                        accessories_money = parseFloat(accessories_money*1 +money*1).toFixed(2);
+                        accessories_total = parseFloat(accessories_total*1 +total*1).toFixed(2);
                     }
                 }
-                $("#human_money_total").val(parseFloat(accessories_money).toFixed(2));
-                $("#human_approved_total").val(parseFloat(accessories_money).toFixed(2));
+                $("#human_money_total").val(accessories_total);
+                $("#human_approved_total").val(accessories_money);
             }
         }
     })
@@ -3241,7 +3288,7 @@ jQuery(function($) {
                 var work_total = parseFloat(accessories_approved*1 + work_rescue*1).toFixed(2);
                 $("#work_total").val(work_total);
             }
-            //财务定损
+            //财物定损
         }else if(value == "finance") {
             var price = $("#finance_price_" + num).val();
             var damage_num = $("#finance_num_" + num).val();
@@ -3316,7 +3363,7 @@ jQuery(function($) {
                 var work_total = parseFloat(accessories_approved*1 + work_rescue*1).toFixed(2);
                 $("#Elsework_total").val(work_total);
             }
-            //其他财务定损
+            //其他财物定损
         }else if(value == "finance") {
             var price = $("#Elsefinance_price_" + num).val();
             var damage_num = $("#Elsefinance_num_" + num).val();
@@ -3340,6 +3387,27 @@ jQuery(function($) {
                 var accessories_residual = $("#Elsefinance_residual").val();
                 var accessories_all = parseFloat(accessories_approved*1 - accessories_residual*1).toFixed(2);
                 $("#Elsefinance_all").val(accessories_all);
+            }
+            //人伤折扣计算
+        }else if(value == 'humanInfo') {
+            var price = $("#price_"+num).val();
+            var damage_num = $("#num_"+num).val();
+            if(price != '' && damage_num != '') {
+                var discount = $(this).val();
+                $("#price_total_"+num).val((price * damage_num).toFixed(2));
+                $("#price_approved_"+num).val((price * damage_num * discount/100).toFixed(2));
+                var accessories_money = 0;
+                var accessories_total = 0;
+                for(var i = 0; i<=100; i++) {
+                    var money = $("#price_approved_"+i).val();
+                    var total = $("#price_total_"+i).val();
+                    if(money != undefined && money != '') {
+                        accessories_money = parseFloat(accessories_money*1 +money*1).toFixed(2);
+                        accessories_total = parseFloat(accessories_total*1 +total*1).toFixed(2);
+                    }
+                }
+                $("#human_money_total").val(accessories_total);
+                $("#human_approved_total").val(accessories_money);
             }
         }
     });
@@ -3729,6 +3797,7 @@ jQuery(function($) {
                         $("#price_"+i).val(msg[i].price);
                         $("#num_"+i).val(msg[i].num);
                         $("#price_total_"+i).val(msg[i].price_total);
+                        $("#discount_"+i).val(msg[i].discount);
                         $("#price_approved_"+i).val(msg[i].price_approved);
                         $("#remarks_"+i).val(msg[i].remarks);
                     }
@@ -3771,20 +3840,23 @@ jQuery(function($) {
                     var num = $("#human_price_close").attr("data-num");
                     if(value == 'addHumanInfo') {
                         $("#injury_money_"+num).val($("#human_money_total").val());
-                        $("#injury_approved_"+num).val($("#human_money_total").val());
+                        $("#injury_approved_"+num).val($("#human_approved_total").val());
                         var accessories_money = 0;
+                        var accessories_approvel = 0;
                         for(var i = 0; i<=100; i++) {
                             var money = $("#injury_money_"+i).val();
+                            var approvel = $("#injury_approved_"+i).val();
                             if(money != undefined && money != '') {
                                 accessories_money = parseFloat(accessories_money*1 + money*1);
+                                accessories_approvel = parseFloat(accessories_approvel*1 + approvel*1);
                             }
                         }
                         $("#human_money").val(parseFloat(accessories_money).toFixed(2));
-                        $("#human_approved").val(parseFloat(accessories_money).toFixed(2));
+                        $("#human_approved").val(parseFloat(accessories_approvel).toFixed(2));
                         $("#human_fee").val(parseFloat(accessories_money).toFixed(2));
                     }else if(value == 'elseaddHumanInfo') {
                         $("#elseinjury_money_"+num).val($("#human_money_total").val());
-                        $("#elseinjury_approved_"+num).val($("#human_money_total").val());
+                        $("#elseinjury_approved_"+num).val($("#human_approved_total").val());
                         var accessories_money = 0;
                         for(var i = 0; i<=100; i++) {
                             var money = $("#elseinjury_money_"+i).val();
@@ -3848,12 +3920,12 @@ jQuery(function($) {
     $(".addReview").on('click',function() {
         var but = $(this);
         but.attr("disabled", "disabled");
-        var url = '/admin/ajax/overallcompensation/survey/addReivew';
+        var url = '/admin/ajax/overallcompensation/survey/addReview';
         $.ajax(url, {
             dataType: 'json', // type of response data
             timeout: 500,     // timeout milliseconds
             method: "post",
-            data: {report_id:$("#report_id").val()},
+            data: {report_id:$("#report_id").val(),report_type:2},
             success: function (data, status, xhr) {   // success callback function
                 but.removeAttr("disabled");
                 if (data.code == 100000) {

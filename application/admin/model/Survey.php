@@ -20,6 +20,8 @@ class Survey extends Model {
     private $human_price = 'zh_human_price';
     private $compensation_db = 'zh_compensation';
     private $survey_db = 'zh_survey';
+    private $report_db = 'zh_report';
+    private $loss_db = 'zh_loss';
 
     /** 查询查勘录入信息
      *
@@ -58,7 +60,19 @@ class Survey extends Model {
      *
      */
     public function getDamageList($condition) {
-        return db($this->info_db)->where($condition)->select();
+        $res =  db($this->info_db)->where($condition)->select();
+        if(!empty($res)) {
+            $comment = Config::parse(APP_PATH.'/admin/config/report.ini','ini');
+            foreach($res as $key => $value) {
+                if($value['damage_overall']) {
+                    $res[$key]['damage_overallStr'] = $comment['damage_overall_type'][$value['damage_overall']];
+                }else{
+                    $res[$key]['damage_overallStr'] = '';
+                }
+                $res[$key]['price_programStr'] = $comment['price_program'][$value['price_program']];
+            }
+        }
+        return $res;
     }
 
     /** 查询三者车损详情
@@ -172,6 +186,8 @@ class Survey extends Model {
                     db($this->info_db)->insertAll($info_data);
                 }
             }
+            //更新报案表人伤信息录入
+            db($this->report_db)->where(['report_id'=>$condition['report_id']])->update(['car_damage_type'=>2]);
             // 提交事务
             Db::commit();
         } catch (\Exception $e) {
@@ -236,7 +252,7 @@ class Survey extends Model {
                         $data['finance_stay'] = $value['finance_stay'];
                         $data['finance_road'] = $value['finance_road'];
                         $data['finance_fuel'] = $value['finance_fuel'];
-                        $data[ey]['finance_other'] = $value['finance_other'];
+                        $data['finance_other'] = $value['finance_other'];
                         $data['finance_summary'] = $value['finance_summary'];
                         if(isset($value['finance_remark'])) {
                             $data['finance_remark'] = $value['finance_remark'];
@@ -259,6 +275,8 @@ class Survey extends Model {
             if(!empty($id)) {
                 db($this->db)->where('id','in',array_diff($old_ids,$ids))->delete();
             }
+            //更新报案表人伤信息录入
+            db($this->report_db)->where(['report_id'=>$condition['report_id']])->update(['car_damage_type'=>2]);
             // 提交事务
             Db::commit();
             return $old_ids;
@@ -385,6 +403,8 @@ class Survey extends Model {
             $price_data['human_approved'] = $human_money;
             $price_data['human_fee'] = $human_money;
             db($this->human)->where(['related_id'=>$condition['related_id'],'human_type'=>$condition['human_type']])->update($price_data);
+            //更新报案表人伤信息录入
+            db($this->report_db)->where(['report_id'=>$condition['related_id']])->update(['human_injury_type'=>2]);
             // 提交事务
             Db::commit();
         } catch (\Exception $e) {
@@ -407,7 +427,43 @@ class Survey extends Model {
         $result = db($this->human_price)->where(['related_id'=>$condition['related_id']])->select();
         $result['injury_money'] = $result_info[0]['injury_money'];
         $result['injury_approved'] = $result_info[0]['injury_approved'];
+        if(!empty($result)) {
+            $comment = Config::parse(APP_PATH.'/admin/config/report.ini','ini');
+            foreach($result as $key => $value) {
+                if(is_array($value)) {
+                    if ($value['overall_type']) {
+                        $result[$key]['overall_typeStr'] = $comment['human_overall_type'][$value['overall_type']];
+                    } else {
+                        $result[$key]['overall_typeStr'] = '';
+                    }
+                    if ($value['price_type']) {
+                        $result[$key]['price_typeStr'] = $comment['price_type'][$value['price_type']];
+                    } else {
+                        $result[$key]['price_typeStr'] = '';
+                    }
+                }
+            }
+        }
         return $result;
+    }
+
+    /** 人伤姓名
+     *
+     */
+    public function getHuamnInfo($condition) {
+        $result_info = db($this->human_info)->where($condition)->select();
+        if(empty($result_info)) {
+            return false;
+        }
+        $comment = Config::parse(APP_PATH.'/admin/config/report.ini','ini');
+        foreach ($result_info as $key => $value) {
+            if($value['injury_sex']) {
+                $result_info[$key]['injury_sexStr'] = $comment['survey_sex'][$value['injury_sex']];
+            }else{
+                $result_info[$key]['injury_sexStr'] = '';
+            }
+        }
+        return $result_info;
     }
     /** 查询人伤主表+姓名表
      *
@@ -441,6 +497,7 @@ class Survey extends Model {
                     $data[$key]['num'] = $value['num'];
                     $data[$key]['price_total'] = $value['price_total'];
                     $data[$key]['price_approved'] = $value['price_approved'];
+                    $data[$key]['discount'] = $value['discount'];
                     $data[$key]['remarks'] = $value['remarks'];
                     $data[$key]['create_user'] = getAdminInfo();
                     $data[$key]['create_time'] = time();
@@ -468,8 +525,22 @@ class Survey extends Model {
                 $human_data['injury_approved'] = $condition['human_approved'];
             }
             if(!empty($human_data)) {
+                $human_data = array_filter($human_data);
                 db($this->human_info)->where(['id'=>$condition['related_id']])->update($human_data);
             }
+            //更新报案表人伤信息录入
+            $info = db($this->human_info)->where(['id'=>$condition['related_id']])->select();
+            //计算人伤主表金额
+            $money = 0;
+            $approval = 0;
+            foreach($info as $key => $value) {
+                $money += $value['injury_money'];
+                $approval += $value['injury_approved'];
+            }
+            db($this->human)->where(['id'=>$info[0]['human_id']])->update(['human_money'=>$money,'human_approved'=>$approval]);
+
+            $info = db($this->human)->where(['id'=>$info[0]['human_id']])->select();
+            db($this->report_db)->where(['report_id'=>$info[0]['related_id']])->update(['human_injury_type'=>2]);
             // 提交事务
             Db::commit();
         } catch (\Exception $e) {
@@ -512,5 +583,46 @@ class Survey extends Model {
      */
     public function getCompensationList($condition) {
         return db($this->compensation_db)->where($condition)->select();
+    }
+
+    /** 核算数据
+     *
+     */
+    public function getLoss($condition) {
+        return db($this->loss_db)->where($condition)->select();
+    }
+
+    /** 添加核算数据
+     *
+     */
+    public function addLoss($condition) {
+        Db::startTrans();
+        try{
+            $data = [];
+            db($this->loss_db)->where(['related_id'=>$condition['related_id']])->delete();
+            foreach ($condition as $key => $value) {
+                if(is_array($value) && $value['type_total']) {
+                    $value = array_filter($value);
+                    $data[$key] = $value;
+                    $data[$key]['type'] = $key+1;
+                    $data[$key]['create_time'] = time();
+                    $data[$key]['create_user'] = getAdminInfo();
+                    $data[$key]['other_price'] = $condition['other_price'];
+                    $data[$key]['total'] = $condition['total'];
+                    $data[$key]['other_total'] = $condition['other_total'];
+                    $data[$key]['price_all'] = $condition['price_all'];
+                    $data[$key]['related_id'] = $condition['related_id'];
+                }
+            }
+            db($this->loss_db)->insertAll($data);
+            // 提交事务
+            Db::commit();
+        } catch (\Exception $e) {
+            // 回滚事务
+            Db::rollback();
+            print_r($e);die;
+            return false;
+        }
+        return true;
     }
 }

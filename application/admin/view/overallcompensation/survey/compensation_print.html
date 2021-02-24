@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <title></title>
+</head>
+<body>
+<button onclick="printSomething()" class="btn btn-success" style="float: right;margin-right: 10%">
+    <i class="fa fa-print fa-2x"></i>
+</button>
+<!--startprint-->
+<style>
+    .tongyin{
+        width: 960px;
+        height: 650px;
+        margin:20px auto;
+        /*border: 1px solid #000;*/
+    }
+    .tongyin table{
+        width: 100%;
+        border: none;
+        border-color: #000;
+    }
+    .tongyin tr:first-child{
+        text-align: center;
+    }
+    table tr td{
+        width:80px;
+        font-size: 12px;
+        padding: 10px 0;
+        text-align: center;
+    }
+</style>
+<div class="tongyin">
+    <table id="" border="1">
+        <tr>
+            <td colspan="14" style="font-size: 18px;">中互交通运输有限公司补偿确认单</td>
+        </tr>
+        <tr>
+            <td>报案单号</td><td colspan="2">{$list.report_id}</td>
+            <td>报案时间</td><td colspan="2">{$list.report_time|date="Y-m-d",###}</td>
+            <td>出险时间</td><td colspan="1">{$list.out_danger_time|date="Y-m-d",###}</td>
+            <td>出险地点</td><td colspan="1">{$list.address}</td>
+            <td>报案人</td><td colspan="2">{$list.report_user}</td>
+        </tr>
+        <tr>
+            <td>统筹单号</td><td colspan="2">{$list.overall_id}</td>
+            <td>车牌号</td><td colspan="2">{$list.overall_id}</td>
+            <td>车架号</td><td colspan="1">{$list.frame}</td>
+            <td>被统筹人</td><td colspan="1">{$list.coordinated_name}</td>
+            <td>车主</td><td colspan="2">{$overall.car_name}</td>
+        </tr>
+        <tr>
+            <td>车辆种类</td><td colspan="2">{$overall.speciesStr}</td>
+            <td>归属部门</td><td colspan="2">{$overall.structureStr}</td>
+            <td>归属人</td><td colspan="1">{$overall.attribution_userStr}</td>
+            <td>统筹起期</td><td colspan="1">{$overall.start_time|date="Y-m-d",###}</td>
+            <td>统筹止期</td><td colspan="2">{$overall.end_time|date="Y-m-d",###}</td>
+        </tr>
+        <tr>
+            <td>查勘机构</td><td colspan="2">{$list.survey_agencyStr}</td>
+            <td>查勘员</td><td colspan="2">{$list.survey_userStr}</td>
+            <td>查勘员电话</td><td colspan="1">{$list.survey_phone}</td>
+            <td>复勘机构</td><td colspan="1"></td>
+            <td>复勘员</td><td colspan="2"></td>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+            <td colspan="14">补偿款支付信息</td>
+        </tr>
+        <tr>
+            <td>序号</td>
+            <td>收款人</td>
+            <td colspan="3">证件号</td>
+            <td>电话</td>
+            <td colspan="1">与被统筹人关系</td>
+            <td colspan="1">财务付款日期</td>
+
+            <td>开户行</td>
+            <!--<td>银行账户</td>-->
+            <td colspan="2">账号</td>
+            <td>金额</td>
+
+        </tr>
+        {volist name="compensationList" id="value" key="key"}
+        <input type="hidden" value="{$num=$key}">
+        <tr>
+            <td>{$key}</td>
+            <td>{$value.payee}</td>
+            <td colspan="3">{$value.license_number}</td>
+            <td>{$value.compensation_phone}</td>
+            <td  colspan="1">
+                {$value.compensation_relationship}
+            </td>
+            <td colspan="1">
+                {$value.finance_payment|date="Y-m-d",###}
+            </td>
+            <td>{$value.compensation_bank}</td>
+            <td colspan="2">{$value.compensation_account}</td>
+            <td>{$value.compensation_money}</td>
+        </tr>
+        {/volist}
+        {volist name="elsecompensationList" id="value"}
+        <tr>
+            <td>{$num+1}</td>
+            <td>{$value.payee}</td>
+            <td colspan="3">{$value.license_number}</td>
+            <td>{$value.compensation_phone}</td>
+            <td>
+                {$value.compensation_relationship}
+            </td>
+            <td></td>
+            <td>{$value.compensation_bank}</td>
+            <td colspan="2">{$value.compensation_account}</td>
+            <td>{$value.compensation_money}</td>
+        </tr>
+
+        {/volist}
+        <tr>
+
+            <td colspan="2">合计</td>
+            <td colspan="8"></td>
+            <td colspan="2">{$price}</td>
+
+        </tr>
+        <tr style="border: none;">
+            <td colspan="3" style="border: none;text-align: left;">总经理:</td>
+            <td colspan="3" style="border: none;text-align: left;">财务经理:</td>
+            <td colspan="2" style="border: none;text-align: left;">出纳：</td>
+            <td colspan="2" style="border: none;text-align: left;">补偿部：</td>
+
+            <!--		   <td colspan="2" style="border: none;text-align: left;">客服部经理：</td>-->
+            <!--		   <td colspan="2" style="border: none;text-align: left;">客服专员：</td>-->
+        </tr>
+    </table>
+</div>
+<!--endprint-->
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    //打印功能
+    function printSomething() {
+// 获取当前页面html代码
+        var currentHtml = window.document.body.innerHTML;
+// 设置打印开始位置
+        var start = '<!--startprint-->';
+// 设置打印结束位置
+        var end = '<!--endprint-->';
+// 获取到要打印部分的代码
+        var printHtml = currentHtml.substring(currentHtml.indexOf(start) + start.length, currentHtml.indexOf(end));
+// 也可以通过id获取
+//var printHtml = document.getElementById('main').innerHTML
+// 打印
+        window.document.body.innerHTML = printHtml;
+        window.print();
+// 返回原界面
+        window.document.body.innerHTML = currentHtml;
+    }
+</script>
+</html>

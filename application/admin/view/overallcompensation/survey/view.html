@@ -68,6 +68,7 @@
         <li>车辆统筹情况</li>
         <li>车损</li>
         <li>人伤</li>
+        <li>理算</li>
         <li>补偿款信息</li>
     </ul>
     <div class="layui-tab-content">
@@ -164,7 +165,7 @@
                         </div>
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class=" search-item-div col-xs-8">
-                                <label for="report_id" class="text-center search-item-label">出险地点:</label>
+                                <label for="risk_location" class="text-center search-item-label">出险地点:</label>
                                 <div name="risk_location" disabled="disbled"></div>
                                 <input type="text" class="form-control" readonly style="width:40%;margin-top:1rem;" placeholder="请输入出险地点" value="{$report_list.address|default=''}">
                             </div>
@@ -1731,6 +1732,7 @@
                         </div>
 
                     </form>
+                    <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal print" data-this_car="1" data-value="carPrint" data-id="{$carDamageList[0]['id']}" style="margin:1rem">点击打印本车本车定损单</button>
                     <!--                           本车财务结束-->
 
                 </div>
@@ -1760,6 +1762,7 @@
                                 <th class="center">财物</th>
                                 <th class="center">汇总</th>
                                 <th class="center">状态</th>
+                                <th class="center">打印</th>
                             </tr>
                             </thead>
 
@@ -1790,6 +1793,7 @@
                             <td><input class="col-xs-12" readonly type="text" id="else_finance_total_{$i}" name="finance_all[]" value="{$elseCarDamageList[$i]['finance_all']|default=''}"></td>
                             <td><input class="col-xs-12" readonly type="text" id="else_finance_summary_{$i}" name="finance_summary[]" value="{$elseCarDamageList[$i]['finance_summary']|default=''}"></td>
                             <td><input class="col-xs-12" readonly type="text" name="damage_status[]" value="{$elseCarDamageList[$i]['damage_status']|default=''}"></td>
+                            <td><button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal print" data-value="carPrint" data-this_car="2" data-id="{$elseCarDamageList[$i]['id']|default=''}">点击打印三者车定损单</button></td>
                             </tr>
                             {/for}
                             </tbody>
@@ -1824,6 +1828,7 @@
                                 <th class="center">金额</th>
                                 <th class="center">核价金额</th>
                                 <th class="center">备注</th>
+                                <th class="center">打印</th>
                             </tr>
                             </thead>
 
@@ -1856,6 +1861,7 @@
                             <td><input class="col-xs-12" readonly type="text" id="injury_money_{$i}" name="injury_money[]" value="{$humanList['info'][$i]['injury_money']|default=''}"></td>
                             <td><input class="col-xs-12" readonly type="text" id="injury_approved_{$i}" name="injury_approved[]" value="{$humanList['info'][$i]['injury_approved']|default=''}"></td>
                             <td><input class="col-xs-12" readonly type="text" name="injury_remarks[]" value="{$humanList['info'][$i]['injury_remarks']|default=''}"></td>
+                            <td><button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal print" data-value="humanPrint" data-this_car="1" data-id="{$humanList['info'][$i]['id']|default=''}">点击打印人伤定损单</button></td>
                             </tr>
                             {/for}
                             <tr>
@@ -1870,6 +1876,7 @@
                                 <td><input class="col-xs-12" readonly type="text" id="human_money" name="human_money" value="{$humanList['human_money']|default=''}"></td>
                                 <td><input class="col-xs-12" readonly type="text" id="human_approved" name="human_approved" value="{$humanList['human_approved']|default=''}"></td>
                                 <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                <td></td>
                             </tr>
                             </tbody>
                         </table>
@@ -1939,6 +1946,7 @@
                                 <th class="center">金额</th>
                                 <th class="center">核价金额</th>
                                 <th class="center">备注</th>
+                                <th class="center">打印</th>
                             </tr>
                             </thead>
 
@@ -1971,6 +1979,7 @@
                             <td><input class="col-xs-12" readonly type="text" id="elseinjury_money_{$i}" name="injury_money[]" value="{$elsehumanList['info'][$i]['injury_money']|default=''}"></td>
                             <td><input class="col-xs-12" readonly type="text" id="elseinjury_approved_{$i}" name="injury_approved[]" value="{$elsehumanList['info'][$i]['injury_approved']|default=''}"></td>
                             <td><input class="col-xs-12" readonly type="text" name="injury_remarks[]" value="{$elsehumanList['info'][$i]['injury_remarks']|default=''}"></td>
+                            <td><button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal print" data-value="humanPrint" data-this_car="2" data-id="{$elsehumanList['info'][$i]['id']|default=''}">点击打印三者人伤定损单</button></td>
                             </tr>
                             {/for}
                             <tr>
@@ -1985,6 +1994,7 @@
                                 <td><input class="col-xs-12" readonly type="text" id="elsehuman_money" name="human_money" value="{$elsehumanList['human_money']|default=''}"></td>
                                 <td><input class="col-xs-12" readonly type="text" id="elsehuman_approved" name="human_approved" value="{$elsehumanList['human_approved']|default=''}"></td>
                                 <td><input class="col-xs-12" readonly type="text" value=""></td>
+                                <td></td>
                             </tr>
                             </tbody>
                         </table>
@@ -2038,6 +2048,153 @@
         </div>
     </div>
     <!--人伤结束-->
+    <!--    理算开始-->
+
+    <div class="layui-tab-item">
+        <div class="row" style="margin: 0.5rem">
+            <div class="widget-box  collapsed">
+                <div class="widget-header">
+                    <h5 class="widget-title">理算</h5>
+                </div>
+                <div class="widget-body" style="display:none">
+                    <form name="addLoss">
+                        <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+                            <thead>
+                            <tr>
+                                <td></td>
+                                <td>本车损失</td>
+                                <td>本车物损</td>
+                                <td>本车人伤</td>
+                                <td>本车人亡</td>
+                                <td>三责车损失</td>
+                                <td>三责物损</td>
+                                <td>三责车人伤</td>
+                                <td>三责车人亡</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>金额</td>
+                                <input type="hidden" name="type[]" value="1">
+                                <td><input type="text" class="price" data-num="1" id="price_1" name="price[]" value="{$loss.1.price|default=''}"></td>
+                                <td><input type="text" class="price" data-num="2" id="price_2" name="price[]" value="{$loss.2.price|default=''}"></td>
+                                <td><input type="text" class="price" data-num="3" id="price_3" name="price[]" value="{$loss.3.price|default=''}"></td>
+                                <td><input type="text" class="price" data-num="4" id="price_4" name="price[]" value="{$loss.4.price|default=''}"></td>
+                                <td><input type="text" class="price" data-num="5" id="price_5" name="price[]" value="{$loss.5.price|default=''}"></td>
+                                <td><input type="text" class="price" data-num="6" id="price_6" name="price[]" value="{$loss.6.price|default=''}"></td>
+                                <td><input type="text" class="price" data-num="7" id="price_7" name="price[]" value="{$loss.7.price|default=''}"></td>
+                                <td><input type="text" class="price" data-num="8" id="price_8" name="price[]" value="{$loss.8.price|default=''}"></td>
+                            </tr>
+                            <tr >
+                                <td>免赔额</td>
+                                <input type="hidden" name="type[]" value="2">
+                                <td><input type="text" class="deductible" data-num="1" id="deductible_1" name="deductible[]" value="{$loss.1.deductible|default=''}"></td>
+                                <td><input type="text" class="deductible" data-num="2" id="deductible_2" name="deductible[]" value="{$loss.2.deductible|default=''}"></td>
+                                <td><input type="text" class="deductible" data-num="3" id="deductible_3" name="deductible[]" value="{$loss.3.deductible|default=''}"></td>
+                                <td><input type="text" class="deductible" data-num="4" id="deductible_4" name="deductible[]" value="{$loss.4.deductible|default=''}"></td>
+                                <td><input type="text" class="deductible" data-num="5" id="deductible_5" name="deductible[]" value="{$loss.5.deductible|default=''}"></td>
+                                <td><input type="text" class="deductible" data-num="6" id="deductible_6" name="deductible[]" value="{$loss.6.deductible|default=''}"></td>
+                                <td><input type="text" class="deductible" data-num="7" id="deductible_7" name="deductible[]" value="{$loss.7.deductible|default=''}"></td>
+                                <td><input type="text" class="deductible" data-num="8" id="deductible_8" name="deductible[]" value="{$loss.8.deductible|default=''}"></td>
+                            </tr>
+                            <tr data-num="3">
+                                <td>免赔率(%)</td>
+                                <input type="hidden" name="type[]" value="3">
+                                <td><input type="text" class="free_odds" data-num="1" id="free_odds_1" name="free_odds[]" value="{$loss.1.free_odds|default=''}"></td>
+                                <td><input type="text" class="free_odds" data-num="2" id="free_odds_2" name="free_odds[]" value="{$loss.2.free_odds|default=''}"></td>
+                                <td><input type="text" class="free_odds" data-num="3" id="free_odds_3" name="free_odds[]" value="{$loss.3.free_odds|default=''}"></td>
+                                <td><input type="text" class="free_odds" data-num="4" id="free_odds_4" name="free_odds[]" value="{$loss.4.free_odds|default=''}"></td>
+                                <td><input type="text" class="free_odds" data-num="5" id="free_odds_5" name="free_odds[]" value="{$loss.5.free_odds|default=''}"></td>
+                                <td><input type="text" class="free_odds" data-num="6" id="free_odds_6" name="free_odds[]" value="{$loss.6.free_odds|default=''}"></td>
+                                <td><input type="text" class="free_odds" data-num="7" id="free_odds_7" name="free_odds[]" value="{$loss.7.free_odds|default=''}"></td>
+                                <td><input type="text" class="free_odds" data-num="8" id="free_odds_8" name="free_odds[]" value="{$loss.8.free_odds|default=''}"></td>
+                            </tr>
+                            <tr data-num="4">
+                                <td>事故责任(%)</td>
+                                <input type="hidden" name="type[]" value="4">
+                                <td><input type="text" class="liability" data-num="1" id="liability_1" name="liability[]" value="{$loss.1.liability|default=$cause_liability_rate}"></td>
+                                <td><input type="text" class="liability" data-num="2" id="liability_2" name="liability[]" value="{$loss.2.liability|default=$cause_liability_rate}"></td>
+                                <td><input type="text" class="liability" data-num="3" id="liability_3" name="liability[]" value="{$loss.3.liability|default=$cause_liability_rate}"></td>
+                                <td><input type="text" class="liability" data-num="4" id="liability_4" name="liability[]" value="{$loss.4.liability|default=$cause_liability_rate}"></td>
+                                <td><input type="text" class="liability" data-num="5" id="liability_5" name="liability[]" value="{$loss.5.liability|default=$cause_liability_rate}"></td>
+                                <td><input type="text" class="liability" data-num="6" id="liability_6" name="liability[]" value="{$loss.6.liability|default=$cause_liability_rate}"></td>
+                                <td><input type="text" class="liability" data-num="7" id="liability_7" name="liability[]" value="{$loss.7.liability|default=$cause_liability_rate}"></td>
+                                <td><input type="text" class="liability" data-num="8" id="liability_8" name="liability[]" value="{$loss.8.liability|default=$cause_liability_rate}"></td>
+                            </tr>
+                            <tr data-num="5">
+                                <td>交强险</td>
+                                <input type="hidden" name="type[]" value="5">
+                                <td><input type="text" class="insurance" data-num="1" id="insurance_1" name="insurance[]" value="{$loss.1.insurance|default=''}"></td>
+                                <td><input type="text" class="insurance" data-num="2" id="insurance_2" name="insurance[]" value="{$loss.2.insurance|default=''}"></td>
+                                <td><input type="text" class="insurance" data-num="3" id="insurance_3" name="insurance[]" value="{$loss.3.insurance|default=''}"></td>
+                                <td><input type="text" class="insurance" data-num="4" id="insurance_4" name="insurance[]" value="{$loss.4.insurance|default=''}"></td>
+                                <td><input type="text" class="insurance" data-num="5" id="insurance_5" name="insurance[]" value="{$loss.5.insurance|default=''}"></td>
+                                <td><input type="text" class="insurance" data-num="6" id="insurance_6" name="insurance[]" value="{$loss.6.insurance|default=''}"></td>
+                                <td><input type="text" class="insurance" data-num="7" id="insurance_7" name="insurance[]" value="{$loss.7.insurance|default=''}"></td>
+                                <td><input type="text" class="insurance" data-num="8" id="insurance_8" name="insurance[]" value="{$loss.8.insurance|default=''}"></td>
+                            </tr>
+                            <tr data-num="6">
+                                <td>其他</td>
+                                <input type="hidden" name="type[]" value="6">
+                                <td><input type="text" class="other" data-num="1" id="other_1" name="other[]" value="{$loss.1.other|default=''}"></td>
+                                <td><input type="text" class="other" data-num="2" id="other_2" name="other[]" value="{$loss.2.other|default=''}"></td>
+                                <td><input type="text" class="other" data-num="3" id="other_3" name="other[]" value="{$loss.3.other|default=''}"></td>
+                                <td><input type="text" class="other" data-num="4" id="other_4" name="other[]" value="{$loss.4.other|default=''}"></td>
+                                <td><input type="text" class="other" data-num="5" id="other_5" name="other[]" value="{$loss.5.other|default=''}"></td>
+                                <td><input type="text" class="other" data-num="6" id="other_6" name="other[]" value="{$loss.6.other|default=''}"></td>
+                                <td><input type="text" class="other" data-num="7" id="other_7" name="other[]" value="{$loss.7.other|default=''}"></td>
+                                <td><input type="text" class="other" data-num="8" id="other_8" name="other[]" value="{$loss.8.other|default=''}"></td>
+                            </tr>
+                            <tr data-num="7">
+                                <td>合计</td>
+                                <input type="hidden" name="type[]" value="7">
+                                <td><input type="text" class="type_total" data-num="1" id="type_total_1" name="type_total[]" value="{$loss.1.type_total|default=0}"></td>
+                                <td><input type="text" class="type_total" data-num="2" id="type_total_2" name="type_total[]" value="{$loss.2.type_total|default=0}"></td>
+                                <td><input type="text" class="type_total" data-num="3" id="type_total_3" name="type_total[]" value="{$loss.3.type_total|default=0}"></td>
+                                <td><input type="text" class="type_total" data-num="4" id="type_total_4" name="type_total[]" value="{$loss.4.type_total|default=0}"></td>
+                                <td><input type="text" class="type_total" data-num="5" id="type_total_5" name="type_total[]" value="{$loss.5.type_total|default=0}"></td>
+                                <td><input type="text" class="type_total" data-num="6" id="type_total_6" name="type_total[]" value="{$loss.6.type_total|default=0}"></td>
+                                <td><input type="text" class="type_total" data-num="7" id="type_total_7" name="type_total[]" value="{$loss.7.type_total|default=0}"></td>
+                                <td><input type="text" class="type_total" data-num="8" id="type_total_8" name="type_total[]" value="{$loss.8.type_total|default=0}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="" style="margin-top:20px;display: flex;flex-direction:row;margin-bottom: 1rem">
+                            <div style="margin-left: 2rem;width:20%">
+                                <label class="text-center search-item-label">其他费用:</label>
+                                <input type="text" class="form-control input-sm" name="other_price" readonly id="other_price" style="width:100%" value="{$loss['other_price']|default=$loss_price}">
+                            </div>
+                            <div style="margin-left: 2rem;width:20%">
+                                <label class="text-center search-item-label">本车合计:</label>
+                                <input type="text" class="form-control input-sm" name="total" id="total" style="width:100%" value="{$loss['total']|default=''}">
+                            </div>
+                            <div style="margin-left: 2rem;width:20%">
+                                <label class="text-center search-item-label">三者车合计:</label>
+                                <input type="text" class="form-control input-sm" name="other_total" id="other_total" style="width:100%" value="{$loss['other_total']|default=''}">
+                            </div>
+                            <div style="margin-left: 2rem;width:20%">
+                                <label class="text-center search-item-label">合计:</label>
+                                <input type="text" class="form-control input-sm" name="price_all" id="price_all" style="width:100%" value="{$loss['price_all']|default=''}">
+                            </div>
+                        </div>
+
+                        <div class="" style="margin-top:20px;display: flex;flex-direction:row;margin-bottom: 1rem">
+                            <div style="margin-left: 2rem;width:20%">
+                                <label class="text-center search-item-label">备注意见:</label>
+                                <textarea name="remarks" id="" style="width:100%" rows="10">{$loss['remarks']|default=''}</textarea>
+                            </div>
+                        </div>
+                        <div class="" style="margin-top:20px;display: flex;flex-direction:row;margin-bottom: 1rem">
+                            <div style="margin-left: 2rem;width:20%">
+                                <button class="layui-btn layui-btn-radius layui-btn-normal addLoss" style="margin-top:1rem">保存数据</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--    理算结束-->
     <!--补偿款信息开始-->
     <div class="layui-tab-item">
         <div class="row" style="margin: 0.5rem">
@@ -2155,16 +2312,15 @@
                             </tbody>
                         </table>
                     </form>
-
                 </div>
+                <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal print" data-value="compensationPrint" data-id="">点击打印补偿款单据</button>
             </div>
         </div>
     </div>
     <!--补偿款信息结束-->
 
-
     <!--    审核日志开始-->
-    <table class="table  table-bordered table-hover" style="margin-top:1rem;">
+    <table class="table  table-bordered table-hover" style="margin-top:1rem;text-align: center">
         <thead>
         <tr>
             <th class="center">时间</th>
@@ -2188,31 +2344,6 @@
     </table>
     <!--    审核日志结束-->
 
-    <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
-        <div class=" search-item-div col-xs-3">
-            <label class="text-center search-item-label">车损审核:</label>
-            <select class="col-xs-12" name="car_damage_type" id="car_damage_type">
-                <option value="0">请选择</option>
-                <option value="1">审核通过</option>
-                <option value="2">退回修改</option>
-            </select>
-        </div>
-        <div class=" search-item-div col-xs-3">
-            <label class="text-center search-item-label">人伤审核:</label>
-            <select class="col-xs-12" name="human_injury_type">
-                <option value="0">请选择</option>
-                <option value="1">审核通过</option>
-                <option value="2">退回修改</option>
-            </select>
-        </div>
-        <div class=" search-item-div col-xs-3">
-            <label class="text-center search-item-label">审核备注:</label>
-            <textarea style="width:100%" name="remarks" id="review_remarks" rows="2"></textarea>
-        </div>
-        <div class=" search-item-div col-xs-3">
-            <button class="layui-btn layui-btn-radius layui-btn-normal addReview" style="margin-top:1rem">提交审核</button>
-        </div>
-    </div>
 </div>
 </div>
 <!--三者车modal开始-->
@@ -2594,10 +2725,10 @@
                             </select>
 
                         </td>
-                        <td><input class="col-xs-12 price" readonly data-value="humanInfo" data-num="{$i}" id="price_{$i}" type="text" name="price[]" value=""></td>
+                        <td><input class="col-xs-12 price" readonly data-value="humanInfo" data-num="{$i}" type="text" name="price[]" value=""></td>
                         <td><input class="col-xs-12 num" readonly data-value="humanInfo" data-num="{$i}" id="num_{$i}" type="text" name="num[]" value=""></td>
                         <td><input class="col-xs-12" readonly type="text" id="price_total_{$i}" name="price_total[]" value=""></td>
-                        <td><input class="col-xs-12" readonly type="text" id="discount{$i}" name="discount[]" value=""></td>
+                        <td><input class="col-xs-12" readonly type="text" id="discount_{$i}" name="discount[]" value=""></td>
                         <td><input class="col-xs-12" readonly type="text" id="price_approved_{$i}" name="price_approved[]" value=""></td>
                         <td><input class="col-xs-12" type="text" readonly name="remarks[]" id="remarks_{$i}" value=""></td>
                         </tr>
@@ -2628,6 +2759,15 @@
 
 <script>
     jQuery(function($){
+        //点击打印本车车损定损单
+        $(".print").on('click',function() {
+            var type = $(this).attr("data-value");
+            var id = $(this).attr("data-id");
+            var report_id = $("#report_id").val();
+            var this_car = $(this).attr("data-this_car");
+            window.location.href = "/admin/overallcompensation/survey/"+type+'?id='+id+"&report_id="+report_id+"&this_car="+this_car;
+            return false;
+        })
         //三者车车牌点击
         $(".other_plate").on('click',function() {
             var value = $(this).val();
@@ -2767,49 +2907,6 @@
                 }
             });
             $("#human_price_close").attr("data-num",num);
-            return false;
-        })
-        //提交审核
-        $(".addReview").on('click',function() {
-            var but = $(this);
-            but.attr("disabled", "disabled");
-            var remarks = $("#review_remarks").val();
-            var status = $("#car_damage_type").val();
-            if(status == 1) {
-                status = 3;
-                var log_type = 1;
-            }else if(status == 2){
-                status = 1;
-                var log_type = 2;
-            }else{
-                layer.msg("请选择审核通过与否");
-                but.removeAttr("disabled");
-                return false;
-            }
-            if(remarks == '') {
-                layer.msg("请输入审核意见");
-                but.removeAttr("disabled");
-                return false;
-            }
-            var url = '/admin/ajax/overallcompensation/survey/addReview';
-            $.ajax(url, {
-                dataType: 'json', // type of response data
-                timeout: 500,     // timeout milliseconds
-                method: "post",
-                data: {report_id:$("#report_id").val(),report_type:status,remarks:remarks,log_type:log_type},
-                success: function (data, status, xhr) {   // success callback function
-                    but.removeAttr("disabled");
-                    if (data.code == 100000) {
-                        layer.msg(data.msg);
-                    } else {
-                        layer.msg(data.msg);
-                    }
-                },
-                error: function () {
-                    but.removeAttr("disabled");
-                    layer.msg("系统错误");
-                }
-            });
             return false;
         })
         //未来元素展示与否

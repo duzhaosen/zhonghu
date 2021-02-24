@@ -983,7 +983,7 @@
         <div class="widget-header">
             <h5 class="widget-title">
                 <div class="search-item-div col-xs-3">
-                    <label for="participate_name" class="text-center search-item-label">批文</label>
+                    <label for="participate_name" class="text-center search-item-label">参统说明</label>
                 </div>
 
             </h5>
@@ -995,6 +995,23 @@
         </div>
     </div>
 </div>
+        <div class="col-xs-12 col-sm-12">
+            <div class="widget-box">
+                <div class="widget-header">
+                    <h5 class="widget-title">
+                        <div class="search-item-div col-xs-3">
+                            <label for="participate_name" class="text-center search-item-label">批文</label>
+                        </div>
+
+                    </h5>
+                </div>
+                <div class="widget-body">
+                    <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                        <textarea name="approval" id="approval" style="width:100%" rows="10">{$list.approval|default=''}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 <div class="form-inline form-group col-xs-12" style="margin-top:20px;margin-left:40%">
     <button class="layui-btn layui-btn-normal layui-btn-radius" id="addOverall" style=""  data-toggle="modal">提交审核</button>

@@ -154,6 +154,9 @@ class Endorsements extends Model {
             if(isset($condition['description'])) {
                 $param['description'] = $condition['description'];
             }
+            if(isset($condition['approval'])) {
+                $param['approval'] = $condition['approval'];
+            }
             db($this->db)->insert($param);
             //车辆信息
             $car = array();
@@ -399,17 +402,6 @@ class Endorsements extends Model {
             }
             $coordinated['create_time'] = time();
             db($this->coordinator_db)->insert($coordinated);
-            //缴费信息
-            $pay = array();
-            $pay['overall_type'] = 1;
-            $pay['pay_money'] = $condition['total_planning'];
-            $pay['pay_time'] = strtotime($condition['create_time']);
-            $pay['related_id'] = $condition['p_temporary_id'];
-            if(isset($condition['create_user'])) {
-                $pay['create_user'] = $condition['create_user'];
-            }
-            $pay['create_time'] = time();
-            db($this->pay_db)->insert($pay);
             //开票信息
             if(isset($condition['invoice_type'])) {
                 $invoice = array();
@@ -877,5 +869,22 @@ class Endorsements extends Model {
      */
     public function getListSimple($condition=[]) {
         return db($this->db)->where($condition)->select();
+    }
+
+    public function addPayinfo($condition) {
+        $result = db($this->pay_db)->where(['related_id'=>$condition['related_id'],'overall_type'=>$condition['overall_type']])->select();
+        if(empty($result)) {
+            $condition['create_time'] = time();
+            $condition['create_user'] = getAdminInfo();
+            return db($this->pay_db)->insert($condition);
+        }else{
+            $condition['op_user'] = getAdminInfo();
+            $condition['op_time'] = time();
+            $related_id = $condition['related_id'];
+            $overall_type = $condition['overall_type'];
+            unset($condition['related_id']);
+            unset($condition['overall_type']);
+            return db($this->pay_db)->where(['related_id'=>$related_id,'overall_type'=>$overall_type])->update($condition);
+        }
     }
 }

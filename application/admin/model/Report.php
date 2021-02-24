@@ -14,6 +14,8 @@ use think\Db;
 
 class Report extends Model {
     private $db = 'zh_report';
+    private $logs_db = 'zh_report_logs';
+    private $compensation_db = 'zh_compensation';
 
     /** 报案中心查询
      * @param $condition
@@ -71,11 +73,9 @@ class Report extends Model {
         $res = db($this->db)->where($condition)->order('id','desc')->select();
         if(empty($res)) {
             return $result.'0001';
-        }else{
-            $str = substr($res[0]['report_id'],2,10) + 1;
-            return 'BA'.$str;
         }
-        return false;
+        $str = substr($res[0]['report_id'],2,10) + 1;
+        return 'BA'.$str;
     }
 
     /** 提交审核查勘中心
@@ -84,7 +84,31 @@ class Report extends Model {
     public function review($condition) {
         Db::startTrans();
         try{
-            db($this->db)->where(['report_id'=>$condition['report_id']])->update(['status'=>$condition['status']]);
+            //查勘审核
+            $data = [];
+            $data['report_type'] = $condition['report_type'];
+            db($this->db)->where(['report_id'=>$condition['report_id']])->update($data);
+            //审核日志
+            $logs = [];
+            $logs['create_user'] = getAdminInfo();
+            $logs['create_time'] = time();
+            $logs['report_id'] = $condition['report_id'];
+            if(isset($condition['remarks'])) {
+                $logs['remarks'] = $condition['remarks'];
+            }
+            $logs['status'] = $condition['log_type'];
+            db($this->logs_db)->insert($logs);
+            //如果是补偿款信息审核，则修改补偿款信息财务付款时间
+            if($condition['report_type'] == 6) {
+                $res = db($this->compensation_db)->where(['related_id'=>$condition['report_id'],'other_type'=>1])->select();
+                if(!empty($res)) {
+                    foreach ($res as $key => $value) {
+                        if(empty($value['finance_payment'])) {
+                            db($this->compensation_db)->where(['id'=>$value['id']])->update(['finance_payment'=>time()]);
+                        }
+                    }
+                }
+            }
             // 提交事务
             Db::commit();
         } catch (\Exception $e) {
@@ -94,5 +118,19 @@ class Report extends Model {
             return false;
         }
         return true;
+    }
+
+    /** 查勘中心审核详情
+     *
+     */
+    public function getLogs($condition) {
+        $res = db($this->logs_db)->where($condition)->order('id','desc')->select();
+        if(!empty($res)) {
+            $comment = Config::parse(APP_PATH.'/admin/config/report.ini','ini');
+            foreach($res as $key => $value) {
+                $res[$key]['remarks'] = $comment['log_type'][$value['status']].":".$value['remarks'];
+            }
+        }
+        return $res;
     }
 }
