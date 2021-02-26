@@ -1,58 +1,218 @@
-<div class="row">
-    <form style="" name="addQuotationForm">
-        <div class="col-xs-12 col-sm-12">
-            <div class="widget-box">
-                <div class="widget-header">
-                    <h5 class="widget-title">统计分析</h5>
-                </div>
-                <div class="widget-body">
-                    <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
-                        <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">机构名称:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
-                        </div>
-                        <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">统计起期:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
-                        </div>
-                        <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">统计止期:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
-                        </div>
-                        <div class=" search-item-div col-xs-1" style="margin-top:2rem;">
-                            <button class="layui-btn layui-btn-radius layui-btn-normal" id="search">查询</button>
-                        </div>
-                    </div>
-                    <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
-                        <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">参统件数:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
-                        </div>
-                        <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">统筹费:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
-                        </div>
-                        <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">已补偿件数:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
-                        </div>
-                        <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">已支付补偿额:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
-                        </div>
-                    </div>
-                    <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
-                        <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">待补偿件数:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
-                        </div>
-                        <div class=" search-item-div col-xs-3">
-                            <label for="id" class="text-center search-item-label">待补偿金额:</label>
-                            <input type="text" class="form-control" id="id" name="id" style="width:100%" value="{:input('param.id')}">
-                        </div>
-                    </div>
-                </div>
+<div class="layui-tab layui-tab-card">
+    <ul class="layui-tab-title">
+        <li {if $param.type == 1} class="layui-this" {/if}>归属人</li>
+        <li {if $param.type == 2} class="layui-this" {/if}>日期</li>
+        <li {if $param.type == 3} class="layui-this" {/if}>区域</li>
+        <li {if $param.type == 4} class="layui-this" {/if}>费用情况报表</li>
+    </ul>
+    <form action="">
+        <input type="hidden" name="type" value="{$param.type}">
+        <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+            <div class=" search-item-div col-xs-3">
+                <label for="start_time" class="text-center search-item-label">统筹起期:</label>
+                <input type="text" class="form-control" readonly id="start_time" name="start_time" style="width:100%" value="{:date('Y/m/d',$param.start_time)}">
             </div>
+            <div class="search-item-div col-xs-3">
+                <label for="end_time" class="text-center search-item-label">统筹止期:</label>
+                <input type="text" readonly class="form-control" id="end_time" name="end_time"  style="width:100%" value="{:date('Y/m/d',$param.end_time)}">
+            </div>
+            <div class="search-item-div col-xs-3">
+                <label for="plate" class="text-center search-item-label">分公司:</label>
+                <input type="text" class="form-control" id="plate" name="plate" style="width:100%" placeholder="请输入车牌号" value="">
+            </div>
+            <button class="layui-btn layui-btn-radius layui-btn-normal" style="margin-top:2rem">查询</button>
         </div>
     </form>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show" style="height: 1500px;">
+            <div style="overflow-x: auto; overflow-y: auto;height:800px;width:1600px">
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3">
+                        <label for="start_time" class="text-center search-item-label">总计:</label>
+                        <span>{$day_work_all|default=''}</span>
+                    </div>
+                    <div class=" search-item-div col-xs-3">
+                        <label for="start_time" class="text-center search-item-label">件数:</label>
+                        <span>{$day_work_num|default=''}</span>
+                        <span></span>
+                    </div>
+                </div>
+                <table class="layui-table center" width="1500px" height="600px">
+                    <colgroup>
+                        <col width="10%">
+                    </colgroup>
+                    <thead>
+                    <tr align="center">
+                        <td rowspan="2" style="vertical-align:middle">日期</td>
+                        {volist name="user" id="value"}
+                        <td colspan="2">{$value}</td>
+                        {/volist}
+                    </tr>
+                    <tr>
+                        {volist name="user" id="value"}
+                        <td>统筹费</td>
+                        <td>件数</td>
+                        {/volist}
+                    </tr>
+                    </thead>
+                    {volist name="$day_work" id="value"}
+                    <tr>
+                        <td>{$key}</td>
+                        {volist name="$value" id="item"}
+                        <td>{$item.price|default=''}</td>
+                        <td>{$item.num|default=1}</td>
+                        {/volist}
+                    </tr>
+                    {/volist}
+                </table>
+            </div>
+        </div>
+
+        <div class="layui-tab-item layui-show" style="height: 1500px;">
+            <div class="form-inline col-xs-12" style="margin-top:20px;">
+                <div class=" search-item-div col-xs-3">
+                    <label class="text-center search-item-label">总计:</label>
+                    <span>{$date_all|default=''}</span>
+                </div>
+                <div class=" search-item-div col-xs-3">
+                    <label class="text-center search-item-label">件数:</label>
+                    <span>{$date_num|default=''}</span>
+                    <span></span>
+                </div>
+            </div>
+            <div style="overflow-x: auto; overflow-y: auto;height:800px;width:1600px">
+                <table class="layui-table center" width="1500px" height="600px">
+                    <colgroup>
+                        <col width="10%">
+                    </colgroup>
+                    <thead>
+                    <tr align="center">
+                        <td rowspan="2" style="vertical-align:middle">日期</td>
+                        {volist name="$type" id="value"}
+                        <td colspan="3">{$value.name}</td>
+                        {/volist}
+                    </tr>
+                    <tr>
+                        {volist name="$type" id="value"}
+                        <td>件数</td>
+                        <td>统筹费</td>
+                        <td>净统筹费</td>
+                        {/volist}
+                    </tr>
+                    </thead>
+                    {volist name="date_list" id="value"}
+                    <tr>
+                        <td>{$key}</td>
+                        {volist name="$value" id="item"}
+                        <td>{$item.num|default=''}</td>
+                        <td>{$item.price|default=''}</td>
+                        <td>{$item.netprice|default=''}</td>
+                        {/volist}
+                    </tr>
+                    {/volist}
+                </table>
+            </div>
+        </div>
+
+        <div class="layui-tab-item layui-show" style="height: 1500px;">
+            <div style="overflow-x: auto; overflow-y: auto;height:800px;width:1600px">
+                <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
+                    <div class=" search-item-div col-xs-3">
+                        <label class="text-center search-item-label">总计:</label>
+                        <span>{$data_all|default=''}</span>
+                    </div>
+                    <div class=" search-item-div col-xs-3">
+                        <label class="text-center search-item-label">件数:</label>
+                        <span>{$data_num|default=''}</span>
+                        <span></span>
+                    </div>
+                </div>
+                <table class="layui-table center" width="1500px" height="600px">
+                    <colgroup>
+                        <col width="10%">
+                    </colgroup>
+                    <thead>
+                    <tr align="center">
+                        <td rowspan="2" style="vertical-align:middle">日期</td>
+                        {volist name="type" id="value"}
+                        <td colspan="2">{$value.name}</td>
+                        {/volist}
+                    </tr>
+                    <tr>
+                        {volist name="type" id="value"}
+                        <td>统筹费</td>
+                        <td>件数</td>
+                        {/volist}
+                    </tr>
+                    </thead>
+                    {volist name="date_data" id="value"}
+                    <tr>
+                        <td>{$key}</td>
+                        {volist name="$value" id="item"}
+                        <td>{$item.price|default=''}</td>
+                        <td>{$item.num|default=''}</td>
+                        {/volist}
+                    </tr>
+                    {/volist}
+                </table>
+            </div>
+        </div>
+
+        <div class="layui-tab-item layui-show" style="height: 1500px;">
+            <div style="overflow-x: auto; overflow-y: auto;height:800px;width:1600px">
+                <table class="layui-table center" width="1500px" height="600px">
+                    <colgroup>
+                        <col width="10%">
+                    </colgroup>
+                    <thead>
+                    <tr align="center">
+                        <td>车辆种类</td>
+                        <td>标准统筹费</td>
+                        <td>统筹费</td>
+                        <td>佣金</td>
+                        <td>实收</td>
+                        <td>件数</td>
+                        <td>佣金率</td>
+                        <td>单面折扣率</td>
+                    </tr>
+                    </thead>
+                    {volist name="list" id="value"}
+                    <tr>
+                        <td>{$key}</td>
+                        <td>{$value.benchmarking}</td>
+                        <td>{$value.total_planning}</td>
+                        <td>{$value.return_money}</td>
+                        <td>{$value.commission}</td>
+                        <td>{$value.num}</td>
+                        <td>{$value.commission_rate}</td>
+                        <td>{$value.discount_rate}</td>
+                    </tr>
+                    {/volist}
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+<script>
+    jQuery(function($) {
+        layui.use('laydate', function() {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#start_time' //核统起
+                , format: 'yyyy/MM/dd'
+                , done: function (value, date, endDate) {
+                    $("#start_time").val(value);
+                }
+            });
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#end_time' //核统起
+                , format: 'yyyy/MM/dd'
+                , done: function (value, date, endDate) {
+                    $("#end_time").val(value);
+                }
+            });
+        });
+    })
+</script>

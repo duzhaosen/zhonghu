@@ -60,6 +60,7 @@ class ReviewLog extends Model {
                 }
                 //财务审核通过，同步财务审核人和财务审核日期
                 if($condition['status'] == 6) {
+                    $overall['overall_id'] = Model('Overall')->generateOverallId();
                     $overall['financial_review_user'] = getAdminInfo();
                     $overall['financial_review_time'] = time();
                     //销售费用管理
@@ -132,6 +133,7 @@ class ReviewLog extends Model {
                 if($condition['status'] == 4) {
                     $endorsements['financial_review_user'] = getAdminInfo();
                     $endorsements['financial_review_time'] = time();
+                    $endorsements['endorsements_id'] = Model('Endorsements')->generatePId();
                 }
                 db($this->endorsements_db)->where(['p_temporary_id'=>$condition['related_id']])->update($endorsements);
                 $review = array();

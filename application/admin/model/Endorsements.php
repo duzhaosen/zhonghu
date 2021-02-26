@@ -27,7 +27,7 @@ class Endorsements extends Model {
     /** 查询批单单查询
      * $condition array()
      */
-    public function getList($condition,$field='*',$page=10,$paginate=[]) {
+    public function getList($condition,$field='*',$page=10,$paginate=[],$show = true) {
         $condition['endorsements.type'] = 1;
         $admin = Session::get('user_admin');
         if(!isset($condition['endorsements.attribution_user'])) {
@@ -53,53 +53,55 @@ class Endorsements extends Model {
             ->join($this->traffic_db." traffic", "endorsements.p_temporary_id=traffic.related_id")
             ->join($this->participate_db." participate", "endorsements.p_temporary_id=participate.related_id")
             ->join($this->coordinator_db." coordinator", "endorsements.p_temporary_id=coordinator.related_id")
-            ->paginate($page,false,$paginate)->each(function($item,$key) use($commont) {
-                $item['plate_typeStr'] = $commont['plate_type'][$item['plate_type']];
-                $manager = Model('User')->getList(['id'=>$item['manager']]);
-                $item['managerStr'] = isset($manager[0]) ? $manager[0]['name'] : '';
-                $attribution_user = Model('User')->getList(['id'=>$item['attribution_user']]);
-                $item['attribution_userStr'] = isset($attribution_user[0]) ? $attribution_user[0]['name'] : '';
-                $item['colorStr'] = $commont['color'][$item['color']];
-                $item['endorsements_typeStr'] = $commont['endorsements_type'][$item['endorsements_type']];
-                $item['use_natureStr'] = $commont['use_nature'][$item['use_nature']];
-                $item['speciesStr'] = $commont['species'][$item['species']];
-                $item['colorStr'] = $commont['color'][$item['color']];
-                $item['car_typeStr'] = $commont['car_type'][$item['car_type']];
-                $item['vehicle_inspectionStr'] = $commont['vehicle_inspection'][$item['vehicle_inspection']];
-                $item['participate_cityStr'] = cityName($item['participate_city']);
-                $item['statusStr'] = $commont['status'][$item['status']];
-                $item['relationshipStr'] = $commont['relationship'][$item['relationship']];
-                $item['license_typeStr'] = $commont['license_type'][$item['license_type']];
-                $item['last_year_dangerStr'] = $commont['last_year_danger'][$item['last_year_danger']];
-                $item['participate_license_typeStr'] = $commont['license_type'][$item['participate_license_type']];
-                $item['coordinated_license_typeStr'] = $commont['license_type'][$item['coordinated_license_type']];
+            ->paginate($page,false,$paginate)->each(function($item,$key) use($commont,$show) {
+                if($show == true) {
+                    $item['plate_typeStr'] = $commont['plate_type'][$item['plate_type']];
+                    $manager = Model('User')->getList(['id'=>$item['manager']]);
+                    $item['managerStr'] = isset($manager[0]) ? $manager[0]['name'] : '';
+                    $attribution_user = Model('User')->getList(['id'=>$item['attribution_user']]);
+                    $item['attribution_userStr'] = isset($attribution_user[0]) ? $attribution_user[0]['name'] : '';
+                    $item['colorStr'] = $commont['color'][$item['color']];
+                    $item['endorsements_typeStr'] = $commont['endorsements_type'][$item['endorsements_type']];
+                    $item['use_natureStr'] = $commont['use_nature'][$item['use_nature']];
+                    $item['speciesStr'] = $commont['species'][$item['species']];
+                    $item['colorStr'] = $commont['color'][$item['color']];
+                    $item['car_typeStr'] = $commont['car_type'][$item['car_type']];
+                    $item['vehicle_inspectionStr'] = $commont['vehicle_inspection'][$item['vehicle_inspection']];
+                    $item['participate_cityStr'] = cityName($item['participate_city']);
+                    $item['statusStr'] = $commont['status'][$item['status']];
+                    $item['relationshipStr'] = $commont['relationship'][$item['relationship']];
+                    $item['license_typeStr'] = $commont['license_type'][$item['license_type']];
+                    $item['last_year_dangerStr'] = $commont['last_year_danger'][$item['last_year_danger']];
+                    $item['participate_license_typeStr'] = $commont['license_type'][$item['participate_license_type']];
+                    $item['coordinated_license_typeStr'] = $commont['license_type'][$item['coordinated_license_type']];
 
-                //影响资料
-                $item['attach'] = Model('Upload')->getlist(['related_id'=>$item['p_temporary_id']]);
+                    //影响资料
+                    $item['attach'] = Model('Upload')->getlist(['related_id'=>$item['p_temporary_id']]);
 
-                //开票
-                $item['invoice'] = Model('Invoice')->getlist(['related_id'=>$item['p_temporary_id']]);
+                    //开票
+                    $item['invoice'] = Model('Invoice')->getlist(['related_id'=>$item['p_temporary_id']]);
 
-                //统筹单暂存号
-                $overall = Model('Overall')->getList(['overall.overall_id'=>$item['overall_id']]);;
-                $item['temporary_id'] = $overall[0]['temporary_id'];
+                    //统筹单暂存号
+                    $overall = Model('Overall')->getList(['overall.overall_id'=>$item['overall_id']]);;
+                    $item['temporary_id'] = $overall[0]['temporary_id'];
 
+
+
+                    //审核
+                    $item['review_log'] = Model('ReviewLog')->getList(['related_id'=>$item['p_temporary_id']]);
+
+                    //组织
+                    $users = Model('User')->getList(['id'=> $item['attribution_user']]);
+                    $item['structure'] = $users[0]['structure'];
+                    $item['structureStr'] = $users[0]['structureStr'];
+                    //来源
+                    $item['source'] = $users[0]['source'];
+                    $item['sourceStr'] = $commont['source'][$users[0]['source']];
+                    //用户地区
+                    $item['cityStr'] = $users[0]['cityName'];
+                }
                 //缴费信息
                 $item['pay'] = db($this->pay_db)->where(['related_id'=>$item['p_temporary_id'],'overall_type'=>2])->select();
-
-
-                //审核
-                $item['review_log'] = Model('ReviewLog')->getList(['related_id'=>$item['p_temporary_id']]);
-
-                //组织
-                $users = Model('User')->getList(['id'=> $item['attribution_user']]);
-                $item['structure'] = $users[0]['structure'];
-                $item['structureStr'] = $users[0]['structureStr'];
-                //来源
-                $item['source'] = $users[0]['source'];
-                $item['sourceStr'] = $commont['source'][$users[0]['source']];
-                //用户地区
-                $item['cityStr'] = $users[0]['cityName'];
 
                 return $item;
         });

@@ -478,6 +478,8 @@
                                 <button class="layui-btn layui-btn-radius layui-btn-normal" id="last_danger">往年出险情况</button>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-inline form-group col-xs-12">
                         <div class=" search-item-div col-xs-3">
                             <label for="participate_city" class="text-center search-item-label">参统省份<span style="color:red">*</span>:</label>
                             <select name="participate_city" id="participate_city" style="width:100%">
@@ -485,6 +487,46 @@
                                 <option value="{$key-1}" {if isset($list.participate_city)} {if $list.participate_city eq $key-1} checked {/if}{/if}>{$value}</option>
                                 {/volist}
                             </select>
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="last_year_status" class="text-center search-item-label">上年状态<span style="color:red">*</span>:</label>
+                            <input type="text" class="form-control" id="last_year_status" placeholder="请输入上年状态" name="last_year_status" style="width:100%" value="{$list.last_year_status|default=''}">
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="year_indemnity" class="text-center search-item-label">本年赔款(次)<span style="color:red">*</span>:</label>
+                            <input type="text" class="form-control" id="year_indemnity" name="year_indemnity" placeholder="请输入本年赔款(次)" style="width:100%" value="{$list.year_indemnity|default=''}">
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="continuous_non_risk" class="text-center search-item-label">连续未出险<span style="color:red">*</span>:</label>
+                            <input type="text" class="form-control" id="continuous_non_risk" placeholder="请输入连续未出险" name="continuous_non_risk" style="width:100%" value="{$list.continuous_non_risk|default=''}">
+                        </div>
+                    </div>
+                    <div class="form-inline form-group col-xs-12">
+                        <div class=" search-item-div col-xs-3">
+                            <label for="continuous_year" class="text-center search-item-label">连续年数<span style="color:red">*</span>:</label>
+                            <input type="text" class="form-control" id="continuous_year" name="continuous_year" placeholder="请输入连续年数" style="width:100%" value="{$list.continuous_year|default=''}">
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="danger_total" class="text-center search-item-label">连续期间出险次数<span style="color:red">*</span>:</label>
+                            <input type="text" class="form-control" id="danger_total" placeholder="请输入连续期间出险次数" name="danger_total" style="width:100%" value="{$list.danger_total|default=''}">
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="discount" class="text-center search-item-label">主体折扣<span style="color:red">*</span>:</label>
+                            <input type="text" class="form-control" id="discount" name="discount" placeholder="请输入主体折扣" style="width:100%" value="{$list.discount|default=''}">
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="coefficient" class="text-center search-item-label">无赔优系数<span style="color:red">*</span>:</label>
+                            <input type="text" class="form-control" id="coefficient" placeholder="请输入无赔优系数" name="coefficient" style="width:100%" value="{$list.coefficient|default=''}">
+                        </div>
+                    </div>
+                    <div class="form-inline form-group col-xs-12">
+                        <div class=" search-item-div col-xs-3">
+                            <label for="remarks" class="text-center search-item-label">备注<span style="color:red">*</span>:</label>
+                            <input type="text" class="form-control" id="remarks" name="remarks" placeholder="请输入备注" style="width:100%" value="{$list.remarks|default=''}">
+                        </div>
+                        <div class="search-item-div col-xs-3">
+                            <label for="rating" class="text-center search-item-label">评分/评级<span style="color:red">*</span>:</label>
+                            <input type="text" class="form-control" id="rating" placeholder="请输入分/评级" name="rating" style="width:100%" value="{$list.rating|default=''}">
                         </div>
                     </div>
                 </div>

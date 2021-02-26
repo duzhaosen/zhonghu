@@ -17,10 +17,7 @@ class Logs extends Common {
     public function __construct(Request $request = null)
     {
         if($request->action() == 'index') {
-            $this->power = 25;
-        }
-        else if($request->action() == 'add') {
-            $this->power = 32;
+            $this->power = 68;
         }
         parent::__construct($request);
     }

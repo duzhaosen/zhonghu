@@ -40,7 +40,11 @@ class Fullorder extends Common {
         if(!isset($this->param['overall_id'])) {
             $this->error("统筹单号不可为空");
         }
-        $res = Model('Overall')->getList($this->param);
+        //查询是否有最新批单
+        $res = Model('Endorsements')->getList($this->param);
+        if(empty($res)) {
+            $res = Model('Overall')->getList($this->param);
+        }
         if(empty($res[0])) {
             $this->error("请输入有效统筹单号");
         }

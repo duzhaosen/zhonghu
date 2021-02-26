@@ -205,31 +205,32 @@
     const tree_data = {$menuList};
     jQuery(function($) {
         var powers = [];
-        var sampleData = initiateDemoData(tree_data);//see below
-        var divTree = '<ul id="tree1"></ul>';
-        $("#tree_view_data").html(divTree);
-        $('#tree1').ace_tree({
-            dataSource: sampleData['dataSource1'],
-            multiSelect: true,
-            loadingHTML: '<div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>',
-            'open-icon' : 'ace-icon tree-minus hide',
-            'close-icon' : 'ace-icon tree-plus hide',
-            'selectable' : true,
-            'selected-icon' : 'ace-icon fa fa-check',
-            'unselected-icon' : 'ace-icon fa fa-check',
-            'cacheItems': true,
-            'folderSelect': true,
-            'folder-open-icon' : 'ace-icon tree-plus',
-            'folder-close-icon' : 'ace-icon tree-minus'
-        }).on('selected.fu.tree', function(e,data) {
-            var powersArr = [];
-            $.each(data.selected,function(index,value){
-                powersArr.push(value.id);
-            });
-            powers = powersArr;
-        });
-        //提交modal
+            //提交modal
         $("#addRoles").on('click', function() {
+            $("#tree1").html();
+            var sampleData = initiateDemoData(tree_data);//see below
+            var divTree = '<ul id="tree1"></ul>';
+            $("#tree_view_data").html(divTree);
+            $('#tree1').ace_tree({
+                dataSource: sampleData['dataSource1'],
+                multiSelect: true,
+                loadingHTML: '<div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>',
+                'open-icon' : 'ace-icon tree-minus hide',
+                'close-icon' : 'ace-icon tree-plus hide',
+                'selectable' : true,
+                'selected-icon' : 'ace-icon fa fa-check',
+                'unselected-icon' : 'ace-icon fa fa-check',
+                'cacheItems': true,
+                'folderSelect': true,
+                'folder-open-icon' : 'ace-icon tree-plus',
+                'folder-close-icon' : 'ace-icon tree-minus'
+            }).on('updated.fu.tree', function(e,data) {
+                var powersArr = [];
+                $.each(data.selected,function(index,value){
+                    powersArr.push(value.id);
+                });
+                powers = powersArr;
+            });
             $("#myModal").modal();
         })
         //点击修改
@@ -263,7 +264,6 @@
                             $("#tree1").html("");
                             //重新初始化树
                             var sampleData = initiateDemoData(msg[0].powsermenu);//see below
-                            console.log(msg[0].powsermenu);
                             $("#tree_view_data").html();
                             var divTree = '<ul id="tree1"></ul>';
                             $("#tree_view_data").html(divTree);
@@ -280,12 +280,16 @@
                                 'folderSelect': true,
                                 'folder-open-icon' : 'ace-icon tree-plus',
                                 'folder-close-icon' : 'ace-icon tree-minus'
-                            }).on('selected.fu.tree', function(e,data) {
+                            }).on('updated.fu.tree', function(e,data) {
+                                $("#tree1").find(".tree-selected").each(function() {
+                                    $(this).find(".icon-caret.ace-icon.tree-plus").trigger("click");
+                                })
                                 var powersArr = [];
                                 $.each(data.selected,function(index,value){
                                     powersArr.push(value.id);
                                 });
                                 powers = powersArr;
+                                console.log(powers);
                             });
                             $("#myModal").modal();
                         }else{

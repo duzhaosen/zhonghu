@@ -31,7 +31,6 @@ class Endorsements extends Common {
             }
         }
         //格式化数据
-        $this->param['endorsements_id'] = Model('Endorsements')->generatePId();
         $this->param['status'] = 2;
         $res = Model('Endorsements')->addEndorsements($this->param);
         $result = $res == true? '成功': '失败';

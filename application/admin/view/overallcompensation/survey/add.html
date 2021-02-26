@@ -617,12 +617,21 @@
                         <div class="widget-body" id="file_show_{$total}" style="display:none;">
                             <div style="display: flex;flex-direction:row;flex-wrap:wrap;">
                                 {volist name="$value" id="v" key="k"}
+                                {if substr($v.url,-4) == '.jpg' || substr($v.url,-4) == '.png' || substr($v.url,-4) == 'jpeg'}
                                 <div id="img{$v.id}" style="height:100px;width:10%;margin-top:2rem;">
                                     <a data-magnify="gallery" data-src="" data-group="{$v.folder}" href="{$v.url}">
                                         <img src="{$v.url}" style="padding:2px;" width="100%" height="100%">
                                     </a>
                                     <div class="del-icon" data-class1="{$total}" data-class2="{$k-1}" data-id="{$v.id}"></div>
                                 </div>
+                                {else}
+                                <div id="img{$v.id}" style="height:100px;width:10%;">
+                                    <video style="height:100px;width:100%;margin-top:2rem;" controls>
+                                        <source src="{$v.url}" type="video/mp4">
+                                    </video>
+                                    <div class="del-icon" data-class1="{$total}" data-class2="{$k-1}" data-id="{$v.id}"></div>
+                                </div>
+                                {/if}
                                 {/volist}
                             </div>
                         </div>
@@ -2178,29 +2187,27 @@
                                 <tr id="elsecompensation_{$i}" {if $i !=0 && !isset($elsecompensationList[$i])} style="display:none" {/if} data-num="{$i}">
                                     <td><input type="checkbox" class="elsecompensation" data-num="{$i}" name="other_compensation[]" value="other_compensation"></td>
                                     <td>
-
-                                    <select class="col-xs-12" name="payee[]"  lay-verify="" lay-search>
-                                        <option value="-1">请选择</option>
-                                        {volist name="$compensation_company" id="value" key="key"}
-                                        <option value="{$key-1}">{$value}</option>
-                                        {/volist}
-                                    </select>
-
-                                </td>
-                                <td>
-                                    <select class="col-xs-12" name="license_type[]">
-                                        <option value="-1">请选择</option>
-                                        {volist name="$license_type" id="value" key="key"}
-                                        <option value="{$key-1}" {if isset($elsecompensationList[$i]) && $elsecompensationList[$i]['license_type'] == $key-1} selected {/if}>{$value}</option>
-                                        {/volist}
-                                    </select>
-                                </td>
-                                <td><input class="col-xs-12" type="text" name="license_number[]" value="{$elsecompensationList[$i]['license_number']|default=''}"></td>
-                                <td><input class="col-xs-12" type="text" name="compensation_phone[]" value="{$elsecompensationList[$i]['compensation_phone']|default=''}"></td>
-                                <td><input class="col-xs-12" type="text" name="compensation_relationship[]" value="{$elsecompensationList[$i]['compensation_relationship']|default=''}"></td>
-                                <td><input class="col-xs-12" type="text" name="compensation_bank[]" value="{$elsecompensationList[$i]['compensation_bank']|default=''}"></td>
-                                <td><input class="col-xs-12" type="text" name="compensation_account[]" value="{$elsecompensationList[$i]['compensation_account']|default=''}"></td>
-                                <td><input class="col-xs-12" type="text" name="compensation_money[]" value="{$elsecompensationList[$i]['compensation_money']|default=''}"></td>
+                                        <input list="payee_{$i}" class="payee" data-num="{$i}" name="payee[]" value="{$elsecompensationList[$i]['payee']|default=''}">
+                                        <datalist id="payee_{$i}">
+                                            {volist name="$compensation_company" id="value" key="key"}
+                                            <option value="{$value}"></option>
+                                            {/volist}
+                                        </datalist>
+                                    </td>
+                                    <td>
+                                        <select class="col-xs-12" name="license_type[]" id="elselicense_type_{$i}">
+                                            <option value="-1">请选择</option>
+                                            {volist name="$license_type" id="value" key="key"}
+                                            <option value="{$key-1}" {if isset($elsecompensationList[$i]) && $elsecompensationList[$i]['license_type'] == $key-1} selected {/if}>{$value}</option>
+                                            {/volist}
+                                        </select>
+                                    </td>
+                                    <td><input class="col-xs-12" type="text" id="elselicense_number_{$i}" name="license_number[]" value="{$elsecompensationList[$i]['license_number']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" id="elsecompensation_phone_{$i}" name="compensation_phone[]" value="{$elsecompensationList[$i]['compensation_phone']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" id="elsecompensation_relationship_{$i}" name="compensation_relationship[]" value="{$elsecompensationList[$i]['compensation_relationship']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" id="elsecompensation_bank_{$i}" name="compensation_bank[]" value="{$elsecompensationList[$i]['compensation_bank']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" id="elsecompensation_account_{$i}" name="compensation_account[]" value="{$elsecompensationList[$i]['compensation_account']|default=''}"></td>
+                                    <td><input class="col-xs-12" type="text" id="elsecompensation_money_{$i}" name="compensation_money[]" value="{$elsecompensationList[$i]['compensation_money']|default=''}"></td>
                                 </tr>
                                 {/for}
                                 </tbody>
@@ -2699,8 +2706,10 @@ jQuery(function($) {
                 elem: '#upload' + i //绑定元素
                 , multiple: true
                 , url: '/admin/ajax/upload/index' //上传接口
-                , acceptMime: 'image/*'
-                , size: 5120
+                // , acceptMime: 'image/*'
+                ,accept: 'file'
+                ,acceptMime: 'video/*,images/*'
+                , size: 10240
                 , data: {
                     related_id: function () {
                         return $("#report_id").val();
@@ -2746,12 +2755,21 @@ jQuery(function($) {
                                 html += '<div class="widget-body" '+style+' id="file_show_'+k+'" >  <div style="display: flex;flex-direction:row;flex-wrap:wrap;">';
                                 for (var j = 0; j < urlArr[k].url.length; j++) {
                                     if(urlArr[k].id[j] != undefined) {
-                                        html += '<div id="img' + urlArr[k].id[j] + '"= style="height:100px;width:10%;margin-top:2rem;">'
-                                        html += '<a data-magnify="gallery" data-src="" data-group="default' + i + '" href="' + urlArr[k].url[j] + '">';
-                                        html += '<img src="' + urlArr[k].url[j] + '"  style="padding:2px;" width="100%" height="100%">';
-                                        html += '</a>';
-                                        html += '<div class="del-icon" data-class1="'+k+'" data-class2="'+j+'" data-id="' + urlArr[k].id[j] + '" ></div>';
-                                        html += '</div>';
+                                        if(urlArr[k].url[j].slice(-4) == '.jpg' || urlArr[k].url[j].slice(-4) == '.png' || urlArr[k].url[j].slice(-4) == 'jpeg') {
+                                            html += '<div id="img' + urlArr[k].id[j] + '" style="height:100px;width:10%;margin-top:2rem;">'
+                                            html += '<a data-magnify="gallery" data-src="" data-group="default' + i + '" href="' + urlArr[k].url[j] + '">';
+                                            html += '<img src="' + urlArr[k].url[j] + '"  style="padding:2px;" width="100%" height="100%">';
+                                            html += '</a>';
+                                            html += '<div class="del-icon" data-class1="'+k+'" data-class2="'+j+'" data-id="' + urlArr[k].id[j] + '" ></div>';
+                                            html += '</div>';
+                                        }else{
+                                            html += '<div id="img' + urlArr[k].id[j] + '" style="height:100px;width:10%;">';
+                                            html += '<video style="height:100px;width:100%;margin-top:2rem;" controls>';
+                                            html += '<source src="' + urlArr[k].url[j] + '" type="video/mp4">';
+                                            html += '</video>';
+                                            html += '<div class="del-icon" data-class1="'+k+'" data-class2="'+j+'" data-id="' + urlArr[k].id[j] + '" ></div>';
+                                            html += '</div>';
+                                        }
                                     }
                                 }
                                 html += '</div>';
@@ -3446,6 +3464,32 @@ jQuery(function($) {
         var redidual = $(this).val();
         var accessories_total = $("#Elsefinance_total").val();
         $("#Elsefinance_all").val(accessories_total*1 - redidual*1);
+    })
+    //其他费用信息
+    $(".payee").on('change',function() {
+        var val = $(this).val();
+        var num = $(this).attr("data-num");
+        if(val == '') {
+            return false;
+        }
+        var url = "/admin/ajax/overallcompensation/survey/getPayee";
+        $.ajax(url, {
+            dataType: 'json', // type of response data
+            timeout: 500,     // timeout milliseconds
+            method: "post",
+            data: {name:val},
+            success: function (data, status, xhr) {   // success callback function
+                if (data.code == 100000) {
+                    var msg = data.data;
+                    $("#elselicense_type_"+num).val(msg.license_type);
+                    $("#elselicense_number_"+num).val(msg.license_number);
+                    $("#elsecompensation_phone_"+num).val(msg.phone);
+                    $("#elsecompensation_bank_"+num).val(msg.compensation_bank);
+                    $("#elsecompensation_account_"+num).val(msg.compensation_account);
+                }
+            },
+        });
+        return false;
     })
     //保存车损数据
     $(".saveTable").on('click',function() {

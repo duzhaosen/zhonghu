@@ -2,83 +2,50 @@
 <link rel="stylesheet" href="/static/ace1.4/assets/css/chosen.min.css">
 <script src="/static/ace1.4/assets/js/chosen.jquery.min.js"></script>
 <button class="btn btn-success pull-right " onclick="javascript:window.location.href = '/admin/user/user/index'">返回列表</button>
-<div class="col-xs-12">
     <input type="hidden" id="id" value="{$userlist.id|default=''}" />
-    <form class="form-horizontal col-lg-offset-2" role="form" name="addUserForm" id="addUserForm">
-        <div class="space-4"></div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">登录名</label>
-
-            <div class="col-sm-9">
-                <input type="text" placeholder="登录名" name="username" value="{$userlist.username|default=''}" />
+    <form role="form" name="addUserForm" id="addUserForm">
+        <div class="form-inline form-group col-xs-12">
+            <div class=" search-item-div col-xs-3">
+                <label class="text-center search-item-label">登录名:</label>
+                <input type="text" placeholder="登录名" style="width:100%" name="username" value="{$userlist.username|default=''}" />
+            </div>
+            <div class=" search-item-div col-xs-3">
+                <label class="text-center search-item-label">身份证号:</label>
+                <input type="text" name="identity" style="width:100%" placeholder="身份证号" value="{$userlist.identity|default=''}" />
+            </div>
+            <div class=" search-item-div col-xs-3">
+                <label class="text-center search-item-label">手机号:</label>
+                <input type="number" name="phone" style="width:100%" placeholder="手机号" value="{$userlist.phone|default=''}" />
             </div>
         </div>
 
 
         {if $Request.get.id eq ""}
-            <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right">密码</label>
-
-                <div class="col-sm-9">
-                    <input type="password"  placeholder="密码" name="passwd" value="{$userlist.passwd|default=''}" />
-                </div>
+        <div class="form-inline form-group col-xs-12">
+            <div class=" search-item-div col-xs-3">
+                <label class="text-center search-item-label">密码:</label>
+                <input type="text" placeholder="密码" name="passwd" style="width:100%" value="{$userlist.passwd|default=''}" />
             </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right">确认密码</label>
-
-                <div class="col-sm-9">
-                    <input type="password" name="confirmPasswd"  placeholder="再次确认密码" value="{$userlist.passwd|default=''}" />
-                </div>
+            <div class=" search-item-div col-xs-3">
+                <label class="text-center search-item-label">确认密码:</label>
+                <input type="password" name="confirmPasswd" style="width:100%"  placeholder="再次确认密码" value="{$userlist.passwd|default=''}" />
             </div>
+        </div>
         {/if}
 
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="form-field-5">身份证号</label>
-
-            <div class="col-sm-9">
-                <div class="clearfix">
-                    <input type="text" id="form-field-5" name="identity" placeholder="身份证号" value="{$userlist.identity|default=''}" />
-                </div>
-
-                <div class="space-2"></div>
-
-                <div class="help-block" id="input-span-slider"></div>
+        <div class="form-inline form-group col-xs-12">
+            <div class=" search-item-div col-xs-3">
+                <label class="text-center search-item-label">姓名:</label>
+                <input type="text" name="name" style="width:100%" placeholder="姓名" value="{$userlist.name|default=''}" />
+            </div>
+            <div class=" search-item-div col-xs-3">
+                <label class="text-center search-item-label">姓名英文:</label>
+                <input type="text" name="pinyin_name" style="width:100%" placeholder="姓名英文" value="{$userlist.pinyin_name|default=''}" />
             </div>
         </div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="form-field-tags">手机号</label>
-
-            <div class="col-sm-9">
-                <div class="inline">
-                    <input type="number" id="form-field-tags" name="phone" placeholder="手机号" value="{$userlist.phone|default=''}" />
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="form-field-tags">姓名</label>
-
-            <div class="col-sm-9">
-                <div class="inline">
-                    <input type="text" name="name" placeholder="姓名" value="{$userlist.name|default=''}" />
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="form-field-tags">姓名英文</label>
-
-            <div class="col-sm-9">
-                <div class="inline">
-                    <input type="text" name="pinyin_name" placeholder="姓名英文" value="{$userlist.pinyin_name|default=''}" />
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="form-field-tags">性别</label>
-
-            <div class="col-sm-9">
+        <div class="form-inline form-group col-xs-12">
+            <div class=" search-item-div col-xs-3">
+                <label class="text-center search-item-label">性别:</label>
                 <label class="radio-inline">
                     <input type="radio" name="sex" checked value="1" {if isset($userlist.sex)} {if $userlist.sex eq 1} checked{/if} {/if}>男
                 </label>
@@ -86,12 +53,8 @@
                     <input type="radio" name="sex" value="2" {if isset($userlist.sex)} {if $userlist.sex eq 2} checked{/if} {/if}> 女
                 </label>
             </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="form-field-tags">业务员</label>
-
-            <div class="col-sm-9">
+            <div class=" search-item-div col-xs-3">
+                <label class="text-center search-item-label">业务员:</label>
                 <label class="radio-inline">
                     <input type="radio" name="salesman" checked value="1" {if isset($userlist.salesman)} {if $userlist.salesman eq 1} checked{/if} {/if}> 是
                 </label>
@@ -99,12 +62,8 @@
                     <input type="radio" name="salesman" value="2" {if isset($userlist.salesman)} {if $userlist.salesman eq 2} checked{/if} {/if}> 否
                 </label>
             </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="form-field-tags">经办人</label>
-
-            <div class="col-sm-9">
+            <div class=" search-item-div col-xs-3">
+                <label class="text-center search-item-label">经办人:</label>
                 <label class="radio-inline">
                     <input type="radio" name="manager" checked value="1" {if isset($userlist.manager)} {if $userlist.manager eq 1} checked{/if} {/if}> 是
                 </label>
@@ -114,28 +73,27 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">组织</label>
-            <div class="col-sm-6 form-inline" id="structure">
+        <div class="form-inline form-group col-xs-12">
+            <div class="search-item-div col-xs-3">
+                <label class="control-label no-padding-right">组织</label>
+                <div class="form-inline" id="structure" style="width:100%"></div>
+            </div>
+            <div class="search-item-div col-xs-3">
+                <label class="control-label no-padding-right">角色</label>
+                <div class="form-inline" id="roles" style="width:100%"></div>
+            </div>
+            <div class="search-item-div col-xs-3">
+                <label class="=control-label no-padding-right">地区</label>
+                <div class="form-inline" id="city" style="width:100%">
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">角色</label>
-            <div class="col-sm-6 form-inline" id="roles">
-            </div>
-        </div>
 
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">地区</label>
-            <div class="col-sm-6 form-inline" id="city">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">经办人</label>
-            <div class="col-sm-6 form-inline" id="">
-                <select name="manager_id" class="chosen-select " id="manager_id">
+        <div class="form-inline form-group col-xs-12">
+            <div class=" search-item-div col-xs-3">
+                <label class="control-label no-padding-right">经办人</label>
+                <select name="manager_id" id="manager_id" style="width:100%">
                     <option value="0">请选择经办人</option>
                     {volist name="managerList" id="value" key="key"}
                     <option value="{$value.id}" {if isset($userlist.manager_id) } {if $userlist.manager_id eq $value.id} selected{/if} {/if}>{$value.all_name}</option>
@@ -146,17 +104,14 @@
     </form>
     <!-- PAGE CONTENT BEGINS -->
 
-    <div class="clearfix form-actions">
-        <div class="col-md-offset-4 col-md-9">
-            <button class="btn btn-info" type="button" id="addUser">
-                <i class="ace-icon fa fa-check bigger-110"></i>
-                提交
-            </button>
+    <div class="clearfix">
+        <div class="col-md-9">
+            <button class="layui-btn layui-btn-normal layui-btn-radius" id="addUser">保存</button>
         </div>
     </div>
-</div>
 
-<script>
+
+    <script>
     const structure_data = {$structureList};
     const role_data = {$rolesList};
     const cityList_data = {$cityList};

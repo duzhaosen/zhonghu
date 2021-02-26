@@ -633,4 +633,29 @@ class Survey extends Common {
         $data['msg'] = '理算保存失败';
         return json($data);
     }
+
+    /** 其他费用收款人信息获取
+     *
+     */
+    public function getPayee(Request $request) {
+        $this->param = $request->param();
+        if(!isset($this->param['name'])) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '名称不可为空';
+            return json($data);
+        }
+        $res = Config::parse(APP_PATH.'/admin/config/survey.ini','ini');
+        if(!empty($res[$this->param['name']])) {
+            $data = array();
+            $data['code'] = 100000;
+            $data['msg'] = '数据获取成功';
+            $data['data'] = $res[$this->param['name']];
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100001;
+        $data['msg'] = '获取数据失败';
+        return json($data);
+    }
 }

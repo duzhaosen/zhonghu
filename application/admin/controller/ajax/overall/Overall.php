@@ -48,7 +48,7 @@ class Overall extends Common {
         //格式化数据
         //判断是否有
         $old_list = Model('Overall')->getList(['overall.type'=>1,'overall.temporary_id'=>$this->param['temporary_id']]);
-        $this->param['overall_id'] = Model('Overall')->generateOverallId();
+//        $this->param['overall_id'] = Model('Overall')->generateOverallId();
         $this->param['status'] = 3;
         if($old_list->total() > 0) {
             $res = Model('Overall')->editOverall($this->param);

@@ -69,6 +69,7 @@ function getAcrTree($list, $ids=[]) {
         if(!empty($ids)) {
             if(in_array($value['id'],$ids)) {
                 $items[$value['id']]['additionalParameters']['item-selected'] = true;
+                $items[$value['id']]['additionalParameters']['tree-open'] = true;
             }
         }
         $islast = Model('Menu')->search(['pid'=>$value['id']]);

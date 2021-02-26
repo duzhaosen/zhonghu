@@ -140,4 +140,18 @@ class Overall extends Common {
         $this->assign('users',$users);
         $this->fetch();
     }
+    /** 统筹单查询
+     * @param Request $request
+     */
+    public function view(Request $request) {
+        $this->param = $request->param();
+        if(isset($this->param['id'])) {
+            $this->param['overall.id'] = $this->param['id'];
+            unset($this->param['id']);
+        }
+        $res = Model('Overall')->getList($this->param);
+        $this->assign('list',$res[0]);
+
+        $this->fetch();
+    }
 }
