@@ -271,7 +271,7 @@ class Overall extends Common {
             $data['msg'] = '请输入统筹单ID';
             return json($data);
         }
-        $res = Model('Overall')->getList(['overall.temporary_id'=>$this->param['id']]);
+        $res = Model('Overall')->getList(['overall.id'=>$this->param['id']]);
         if(empty($res)) {
             $data = array();
             $data['code'] = 100001;
