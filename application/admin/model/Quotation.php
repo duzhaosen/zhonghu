@@ -39,7 +39,7 @@ class Quotation extends Model {
         }
         //车辆配置文件
         Config::parse(APP_PATH.'/admin/config/car.ini','ini');
-        $commont = Config::parse(APP_PATH.'/admin/config/Structure.ini','ini');
+        $commont = Config::parse(APP_PATH.'/admin/config/structure.ini','ini');
         $result = Db($this->db)->field($field)->where($condition)->order('quotation.create_time desc')->alias('quotation')
             ->join($this->car_db.' car','quotation.id=car.related_id')
             ->join($this->overall_db." overall",'quotation.id=overall.related_id')

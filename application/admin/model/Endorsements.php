@@ -46,7 +46,7 @@ class Endorsements extends Model {
         //车辆配置文件
         Config::parse(APP_PATH.'/admin/config/car.ini','ini');
         Config::parse(APP_PATH.'/admin/config/endorsements.ini','ini');
-        $commont = Config::parse(APP_PATH.'/admin/config/Structure.ini','ini');
+        $commont = Config::parse(APP_PATH.'/admin/config/structure.ini','ini');
         $result = Db($this->db)->field($field)->where($condition)->order('endorsements.endorsements_time desc')->alias('endorsements')
             ->join($this->car_db.' car','endorsements.p_temporary_id=car.related_id')
             ->join($this->overall_db." overall_planning",'endorsements.p_temporary_id=overall_planning.related_id')

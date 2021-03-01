@@ -30,7 +30,7 @@ class Logs extends Model {
      *
      */
     public function getList($condition,$field='*',$page,$paginate=[]){
-        $commont = Config::parse(APP_PATH.'/admin/config/Logs.ini','ini');
+        $commont = Config::parse(APP_PATH.'/admin/config/logs.ini','ini');
         $result = db($this->db)->where($condition)->field($field)->order('id','desc')
             ->paginate($page,false,$paginate)->each(function($item) use($commont) {
                 $item['log_typeStr'] = $commont['log_type'][$item['log_type']];
