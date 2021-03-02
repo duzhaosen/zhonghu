@@ -21,7 +21,7 @@ class Quotation extends Common {
     public function addQuotation(Request $request) {
         $res = Config::parse(APP_PATH.'/admin/config/formValidator/addQuotation.ini','ini');
         foreach($res['addquotation'] as $key => $value) {
-            $request->param($key) ? $this->param[$key] = $request->param($key) : "";
+            $request->param($key) !== '' ? $this->param[$key] = $request->param($key) : "";
             if($value && empty($this->param[$key])) {
                 $data = array();
                 $data['code'] = 100001;
@@ -43,6 +43,21 @@ class Quotation extends Common {
                     return json($data);
                 }
             }
+        }
+        //统筹起期是否大于当前时间
+        $start_time = strtotime($this->param['start_time']);
+        if($start_time < time()) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '统筹起期必须大于当前时间';
+            return json($data);
+        }
+        $end_time = strtotime($this->param['end_time']);
+        if($end_time < $start_time) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '统筹起期必须小于统筹止期';
+            return json($data);
         }
         //格式化数据
         $res = Model('Quotation')->addQuotation($this->param);
@@ -187,5 +202,28 @@ class Quotation extends Common {
             $line .= "\n";
         }
         return $line;
+    }
+
+    /** 添加备注
+     *
+     */
+    public function addRemarks(Request $request) {
+        $this->param = $request->param();
+        if(empty($this->param['id'])) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '报价单id不可为空';
+            return json($data);
+        }
+        $res = Model('Quotation')->addRemarks($this->param);
+        if($res == false) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '备注添加失败';
+            return json($data);
+        }
+        $data['code'] = 100000;
+        $data['msg'] = '备注添加成功';
+        return json($data);
     }
 }

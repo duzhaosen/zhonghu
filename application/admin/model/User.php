@@ -67,7 +67,6 @@ class User extends Model {
                     $res[$key]['rolesStr'] = $roles[0]['name'];
                     $all_roles = '&nbsp('.$res[$key]['rolesStr'].')';
                 }else{
-//                    $res[$key]['roles'] = '';
                     $res[$key]['rolesStr'] = '';
                     $all_roles = '';
                 }
@@ -81,7 +80,7 @@ class User extends Model {
 
                 //详细信息字段
 
-                $res[$key]['all_name'] = $value['name'].'&nbsp('.$value['username'].')'.$all_structure.$all_roles;
+                $res[$key]['all_name'] = $value['name'].$all_structure.$all_roles;
 
                 //经办人信息
                 $res[$key]['managerInfo'] = $value['manager'] == 2 ? Db($this->db)->where(['id'=>$value['manager_id']])->select() : [];

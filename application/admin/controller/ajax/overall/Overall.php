@@ -85,19 +85,19 @@ class Overall extends Common {
         }
 
         //验证车架号/车牌号是否在系统内且在统筹期间内
-        $car_frame = $this->param['frame'];
-        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1,'overall.id'=>['<>',$this->param['overall_id']]]);
-        if($car_list->total() > 0) {
-            $list = $car_list->all();
-            foreach($list as $key => $value) {
-                if($value['end_time'] < strtotime($this->param['start_time'])) {
-                    $data = array();
-                    $data['code'] = 100001;
-                    $data['msg'] = '车架号已在其他单子的统筹期内'.$value['overall_id'];
-                    return json($data);
-                }
-            }
-        }
+//        $car_frame = $this->param['frame'];
+//        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1,'overall.temporary_id'=>['<>',$this->param['temporary_id']]]);
+//        if($car_list->total() > 0) {
+//            $list = $car_list->all();
+//            foreach($list as $key => $value) {
+//                if($value['end_time'] < strtotime($this->param['start_time'])) {
+//                    $data = array();
+//                    $data['code'] = 100001;
+//                    $data['msg'] = '车架号已在其他单子的统筹期内'.$value['overall_id'];
+//                    return json($data);
+//                }
+//            }
+//        }
         //格式化数据
         $this->param['status'] = 3;
         $res = Model('Overall')->editOverall($this->param);
@@ -177,7 +177,7 @@ class Overall extends Common {
                     <tbody>';
             foreach($res as $key=>$value) {
                 $html .= '<tr>
-                            <td><input type="checkbox" class="carId" name="carId" value="'.$value['id'].'"></td>
+                            <td><input type="checkbox" class="carId" name="carId" value="'.$value['temporary_id'].'"></td>
                             <td>'.$value['overall_id'].'</td>
                             <td>'.$value['frame'].'</td>
                             <td>'.$value['plate'].'</td>
@@ -271,7 +271,7 @@ class Overall extends Common {
             $data['msg'] = '请输入统筹单ID';
             return json($data);
         }
-        $res = Model('Overall')->getList(['overall.id'=>$this->param['id']]);
+        $res = Model('Overall')->getList(['overall.temporary_id'=>$this->param['id']]);
         if(empty($res)) {
             $data = array();
             $data['code'] = 100001;

@@ -17,9 +17,9 @@ return [
     // 数据库名
     'database'        => 'zhonghujiaotong',
     // 用户名
-    'username'        => 'zhonghujiaotong',
+    'username'        => 'root',
     // 密码
-    'password'        => 'Tr256apkPWrwXXHT',
+    'password'        => 'panXmkwhyDeSphZ7',
     // 端口
     'hostport'        => '3306',
     // 连接dsn

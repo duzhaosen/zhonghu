@@ -742,7 +742,6 @@ class Overall extends Model {
             $pay = array();
             $pay['overall_type'] = 1;
             $pay['pay_money'] = $condition['total_planning'];
-            $pay['pay_time'] = strtotime($condition['create_time']);
             $pay['op_user'] = getAdminInfo();
             $pay['op_time'] = time();
             db($this->pay_db)->where(['related_id' => $condition['temporary_id']])->update($pay);

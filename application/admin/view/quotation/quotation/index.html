@@ -54,19 +54,19 @@
                     <div class="form-inline form-group col-xs-11">
                         <div class=" search-item-div col-xs-3">
                             <label for="create_time_start" class="text-center search-item-label">录入日期起:</label>
-                            <input type="text" class="form-control" id="create_time_start" readonly name="create_time_start"  style="width:100%" value="{:input('param.create_time_start')}">
+                            <input type="text" class="form-control" id="create_time_start" autocomplete="off" name="create_time_start"  style="width:100%" value="{:input('param.create_time_start')}">
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="create_time_end" class="text-center search-item-label">录入日期止:</label>
-                            <input type="text" class="form-control" id="create_time_end" readonly name="create_time_end" style="width:100%" value="{:input('param.create_time_end')}">
+                            <input type="text" class="form-control" id="create_time_end" autocomplete="off" name="create_time_end" style="width:100%" value="{:input('param.create_time_end')}">
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="start_time" class="text-center search-item-label">生效日期起:</label>
-                            <input type="text" class="form-control" id="start_time" readonly name="start_time" style="width:100%" value="{:input('param.start_time')}">
+                            <input type="text" class="form-control" id="start_time" autocomplete="off" name="start_time" style="width:100%" value="{:input('param.start_time')}">
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="end_time" class="text-center search-item-label">生效日期止:</label>
-                            <input type="text" class="form-control" id="end_time" readonly name="end_time" style="width:100%" value="{:input('param.end_time')}">
+                            <input type="text" class="form-control" id="end_time" autocomplete="off" name="end_time" style="width:100%" value="{:input('param.end_time')}">
                         </div>
                     </div>
                     <div class="form-inline form-group col-xs-11">
@@ -129,7 +129,7 @@
                         <td>{$value.managerStr}</td>
                         <td>{$value.attribution_userStr}</td>
                         <td>{$value.create_user}</td>
-                        <td>{$value.remarks}</td>
+                        <td><input type="text" class="remarks" readonly data-id="{$value.quotation_id}" value="{$value.remarks_info}"></td>
                         <td>
                             <div class="hidden-sm hidden-xs action-buttons">
                                 <a class="green" href="/admin/Quotation/quotation/edit?id={$value.quotation_id}">
@@ -212,6 +212,26 @@
                 ,format: 'yyyy-MM-dd'
             });
         });
+        //备注
+        $(".remarks").on('click',function() {
+            $(this).attr("readonly",false);
+        })
+        $(".remarks").on('blur',function() {
+            var val = $(this).val();
+            var id = $(this).attr("data-id");
+            $.ajax('/admin/ajax/quotation/addRemarks',{
+                dataType: 'json', // type of response data
+                timeout: 500,     // timeout milliseconds
+                method: "post",
+                data: {id:id,remarks:val},
+                success: function (data,status,xhr) {   // success callback function
+                },
+                error: function() {
+                    layer.msg("系统错误");
+                }
+            });
+            $(this).attr("readonly",true);
+        })
         //转出单
         $(".overall").on('click',function () {
             var total = 0;

@@ -40,7 +40,7 @@ class Quotation extends Model {
         //车辆配置文件
         Config::parse(APP_PATH.'/admin/config/car.ini','ini');
         $commont = Config::parse(APP_PATH.'/admin/config/structure.ini','ini');
-        $result = Db($this->db)->field($field)->where($condition)->order('quotation.create_time desc')->alias('quotation')
+        $result = Db($this->db)->field($field)->where($condition)->order('quotation.id desc')->alias('quotation')
             ->join($this->car_db.' car','quotation.id=car.related_id')
             ->join($this->overall_db." overall",'quotation.id=overall.related_id')
             ->paginate($page,false,$paginate)->each(function($item,$key) use($commont) {
@@ -95,10 +95,10 @@ class Quotation extends Model {
             $param['frame'] = $condition['frame'];
             $param['start_time'] = strtotime($condition['start_time']);
             $param['end_time'] = strtotime($condition['end_time']);
-            $param['remarks'] = $condition['remarks'];
             $param['car_name'] = $condition['car_name'];
             $param['date_time'] = $condition['date_time'];
             $param['short_term_coefficient'] = $condition['short_term_coefficient'];
+            $param = array_filter($param);
             DB::table($this->db)->insert($param);
             //车辆信息
             $car = array();
@@ -111,10 +111,9 @@ class Quotation extends Model {
             $car['engine'] = $condition['engine'];
             $car['label_signal'] = $condition['label_signal'];
             $car['registered_time'] = strtotime($condition['registered_time']);
-            if(isset($condition['age'])) {
+            if(!empty($condition['age'])) {
                 $car['age'] = $condition['age'];
             }
-            $car['transfer'] = $condition['transfer'];
             $car['transfer'] = $condition['transfer'];
             $car['actual_price'] = $condition['actual_price'];
             $car['use_nature'] = $condition['use_nature'];
@@ -128,16 +127,31 @@ class Quotation extends Model {
             $car['vehicle_inspection'] = $condition['vehicle_inspection'];
             $car['reason'] = $condition['reason'];
             $car['participate_city'] = $condition['participate_city'];
-            $car['last_year_status'] = $condition['last_year_status'];
+            if(!empty($condition['last_year_status'])) {
+                $car['last_year_status'] = $condition['last_year_status'];
+            }
             $car['new_price'] = $condition['new_price'];
-            $car['year_indemnity'] = $condition['year_indemnity'];
-            $car['continuous_non_risk'] = $condition['continuous_non_risk'];
-            $car['continuous_year'] = $condition['continuous_year'];
-            $car['danger_total'] = $condition['danger_total'];
+            if(!empty($condition['year_indemnity'])) {
+                $car['year_indemnity'] = $condition['year_indemnity'];
+            }
+            if(!empty($condition['continuous_non_risk'])) {
+                $car['continuous_non_risk'] = $condition['continuous_non_risk'];
+            }
+            if(!empty($condition['continuous_year'])) {
+                $car['continuous_year'] = $condition['continuous_year'];
+            }
+            if(!empty($condition['danger_total'])) {
+                $car['danger_total'] = $condition['danger_total'];
+            }
             $car['discount'] = $condition['discount'];
             $car['coefficient'] = $condition['coefficient'];
-            $car['remarks'] = $condition['remarks'];
-            $car['rating'] = $condition['rating'];
+            if(!empty($condition['remarks'])) {
+                $car['remarks'] = $condition['remarks'];
+            }
+            if(!empty($condition['rating'])) {
+                $car['rating'] = $condition['rating'];
+            }
+            $car = array_filter($car);
             DB::table($this->car_db)->insert($car);
             //统筹项目
             $overall = array();
@@ -224,6 +238,7 @@ class Quotation extends Model {
             $overall['create_user'] = $condition['create_user'];
             $overall['create_time'] = strtotime(($condition['create_time']));
             $overall['related_id'] = $quotationId;
+            $overall = array_filter($overall);
             db($this->overall_db)->insert($overall);
             // 提交事务
             Db::commit();
@@ -266,7 +281,6 @@ class Quotation extends Model {
             $param['frame'] = $condition['frame'];
             $param['start_time'] = strtotime($condition['start_time']);
             $param['end_time'] = strtotime($condition['end_time']);
-            $param['remarks'] = $condition['remarks'];
             $param['car_name'] = $condition['car_name'];
             $param['date_time'] = $condition['date_time'];
             $param['short_term_coefficient'] = $condition['short_term_coefficient'];
@@ -438,5 +452,12 @@ class Quotation extends Model {
         }
         return false;
 
+    }
+
+    /** 修改备注
+     *
+     */
+    public function addRemarks($condition) {
+        return db($this->db)->where(['id'=>$condition['id']])->update(['remarks_info'=>$condition['remarks']]);
     }
 }
