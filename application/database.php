@@ -19,7 +19,7 @@ return [
     // 用户名
     'username'        => 'zhonghujiaotong',
     // 密码
-    'password'        => 'zhonghujiaotong',
+    'password'        => 'Tr256apkPWrwXXHT',
     // 端口
     'hostport'        => '3306',
     // 连接dsn
