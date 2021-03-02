@@ -140,14 +140,6 @@ class User extends Common {
             return json($data);
         }
 
-        //验证登录名是否唯一
-        $loginName = Model('user')->getList(['username' => $this->param['username']]);
-        if(!empty($loginName) && $loginName[0]['id'] != $id) {
-            $data['code'] = 100001;
-            $data['msg'] = '登录名已有重复';
-            return json($data);
-        }
-
         //验证身份证是否唯一
         $identity = Model('user')->getList(['identity' => $this->param['identity']]);
         if(!empty($identity) && $identity[0]['id'] != $id) {

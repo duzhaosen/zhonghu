@@ -82,8 +82,7 @@ class Login extends Controller {
     public function getSession($res) {
         //存入session
         session('user_id', $res[0]['id']);
-        session('username', $res[0]['username']);
-        session('name', $res[0]['name']);
+        session('username', $res[0]['name']);
         session('structure', $res[0]['structure']);
         session('structureStr', $res[0]['structureStr']);
         session('rolesStr', $res[0]['rolesStr']);
