@@ -6,6 +6,14 @@
     <form role="form" name="addUserForm" id="addUserForm">
         <div class="form-inline form-group col-xs-12">
             <div class=" search-item-div col-xs-3">
+                <label class="text-center search-item-label">姓名:</label>
+                <input type="text" name="name" style="width:100%" placeholder="姓名" value="{$userlist.name|default=''}" />
+            </div>
+            <div class=" search-item-div col-xs-3">
+                <label class="text-center search-item-label">姓名拼音:</label>
+                <input type="text" name="pinyin_name" style="width:100%" placeholder="姓名拼音" value="{$userlist.pinyin_name|default=''}" />
+            </div>
+            <div class=" search-item-div col-xs-3">
                 <label class="text-center search-item-label">身份证号:</label>
                 <input type="text" name="identity" style="width:100%" placeholder="身份证号" value="{$userlist.identity|default=''}" />
             </div>
@@ -30,14 +38,6 @@
         {/if}
 
         <div class="form-inline form-group col-xs-12">
-            <div class=" search-item-div col-xs-3">
-                <label class="text-center search-item-label">姓名:</label>
-                <input type="text" name="name" style="width:100%" placeholder="姓名" value="{$userlist.name|default=''}" />
-            </div>
-            <div class=" search-item-div col-xs-3">
-                <label class="text-center search-item-label">姓名拼音::</label>
-                <input type="text" name="pinyin_name" style="width:100%" placeholder="姓名拼音" value="{$userlist.pinyin_name|default=''}" />
-            </div>
             <div class=" search-item-div col-xs-3">
                 <label class="text-center search-item-label">推荐人:</label>
                 <input type="text" name="referrer" style="width:100%" placeholder="推荐人" value="{$userlist.referrer|default=''}" />
