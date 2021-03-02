@@ -64,7 +64,7 @@ class Quotation extends Common {
         $this->assign('vehicle_inspectionList',$res['vehicle_inspection']);
         $this->assign('transferList',$res['transfer']);
         $this->assign('participate_cityList', json_decode($res['city']['province'], true));
-        $res = Config::parse(APP_PATH.'/admin/config/Quotation.ini','ini');
+        $res = Config::parse(APP_PATH.'/admin/config/quotation.ini','ini');
         $this->assign('reasonList',$res['reason']);
 
         $this->fetch();
@@ -96,7 +96,7 @@ class Quotation extends Common {
         $this->assign('vehicle_inspectionList',$res['vehicle_inspection']);
         $this->assign('transferList',$res['transfer']);
         $this->assign('participate_cityList', json_decode($res['city']['province'], true));
-        $res = Config::parse(APP_PATH.'/admin/config/Quotation.ini','ini');
+        $res = Config::parse(APP_PATH.'/admin/config/quotation.ini','ini');
         $this->assign('reasonList',$res['reason']);
 
         //报价单查询
@@ -148,7 +148,7 @@ class Quotation extends Common {
             $quotationInfo = $quotationInfo[0];
         }
         $this->assign('list',$quotationInfo);
-        $res = Config::parse(APP_PATH.'/admin/config/Quotation.ini','ini');
+        $res = Config::parse(APP_PATH.'/admin/config/quotation.ini','ini');
         $this->assign('reasonList',$res['reason']);
 
         $this->fetch();
