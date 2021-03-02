@@ -192,7 +192,7 @@ function cityName($id) {
  *
  */
 function getAdminInfo() {
-    $admin = Session::get('name');
+    $admin = Session::get('username');
     return $admin;
 }
 
