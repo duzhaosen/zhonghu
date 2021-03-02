@@ -52,11 +52,17 @@ class User extends Model {
                 //组织
                 if(!empty($value['structure'])) {
                     $structure = Model('Structure')->getList(['id'=>$value['structure']],'*');
-                    $res[$key]['structureStr'] = $structure[0]['name'];
+                    if(!empty($structure)) {
+                        $res[$key]['structureStr'] = $structure[0]['name'];
+                        $res[$key]['sourceStr'] = $structure[0]['source'];
+                        $res[$key]['source'] = $structure[0]['source'];
+                    }else{
+                        $res[$key]['structureStr'] = '';
+                        $res[$key]['sourceStr'] = '';
+                        $res[$key]['source'] = 0;
+                    }
                     //来源
-                    $res[$key]['sourceStr'] = $structure[0]['source'];
                     $all_structure = '&nbsp('.$res[$key]['structureStr'].')';
-                    $res[$key]['source'] = $structure[0]['source'];
                 }else{
                     $res[$key]['structureStr'] = '';
                     $all_structure = '';

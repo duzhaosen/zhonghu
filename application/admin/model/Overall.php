@@ -92,13 +92,23 @@ class Overall extends Model {
 
                     //组织
                     $users = Model('User')->getList(['id'=> $item['attribution_user']]);
-                    $item['structure'] = $users[0]['structure'];
-                    $item['structureStr'] = $users[0]['structureStr'];
+                    if(!empty($users)) {
+                        $item['structure'] = $users[0]['structure'];
+                        $item['structureStr'] = $users[0]['structureStr'];
 //                来源
-                    $item['source'] = $users[0]['source'];
-                    $item['sourceStr'] = $commont['source'][$users[0]['source']];
+                        $item['source'] = $users[0]['source'];
+                        $item['sourceStr'] = $commont['source'][$users[0]['source']];
 //                用户地区
-                    $item['cityStr'] = $users[0]['cityName'];
+                        $item['cityStr'] = $users[0]['cityName'];
+                    }else{
+                        $item['structure'] = '';
+                        $item['structureStr'] = '';
+//                来源
+                        $item['source'] = '';
+                        $item['sourceStr'] = '';
+//                用户地区
+                        $item['cityStr'] = '';
+                    }
 
 
                 }

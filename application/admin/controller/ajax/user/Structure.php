@@ -91,7 +91,7 @@ class Structure extends Common {
         $params['id'] = $id;
         $params['type'] = 2;
         $res = Model('Structure')->editStructure($params);
-        writLog("删除组织".http_build_query($params)."结果：".$res == true? '成功': '失败',"del_structure",'del');
+        writLog("删除组织".http_build_query($params)."结果：".$res == true? '成功': '失败',DEL_LOGS,'del');
         if($res == false) {
             $data = array();
             $data['code'] = 100001;

@@ -92,13 +92,23 @@ class Endorsements extends Model {
 
                     //组织
                     $users = Model('User')->getList(['id'=> $item['attribution_user']]);
-                    $item['structure'] = $users[0]['structure'];
-                    $item['structureStr'] = $users[0]['structureStr'];
-                    //来源
-                    $item['source'] = $users[0]['source'];
-                    $item['sourceStr'] = $commont['source'][$users[0]['source']];
-                    //用户地区
-                    $item['cityStr'] = $users[0]['cityName'];
+                    if(!empty($users)) {
+                        $item['structure'] = $users[0]['structure'];
+                        $item['structureStr'] = $users[0]['structureStr'];
+                        //来源
+                        $item['source'] = $users[0]['source'];
+                        $item['sourceStr'] = $commont['source'][$users[0]['source']];
+                        //用户地区
+                        $item['cityStr'] = $users[0]['cityName'];
+                    }else{
+                        $item['structure'] = '';
+                        $item['structureStr'] = '';
+                        //来源
+                        $item['source'] = '';
+                        $item['sourceStr'] = '';
+                        //用户地区
+                        $item['cityStr'] = '';
+                    }
                 }
                 //缴费信息
                 $item['pay'] = db($this->pay_db)->where(['related_id'=>$item['p_temporary_id'],'overall_type'=>2])->select();
