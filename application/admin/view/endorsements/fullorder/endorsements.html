@@ -602,7 +602,7 @@
 
                         <tbody>
                         <tr>
-                            <td class="center"><input type="checkbox" name="combustion" class="all_check_attch" value="combustion" {if isset($list.combustion)} {if $list.vehicle_loss eq 2} checked {/if} {/if}></td>
+                            <td class="center"><input type="checkbox" name="combustion" class="all_check_attch" value="combustion" {if isset($list.combustion)} {if $list.combustion eq 2} checked {/if} {/if}></td>
                             <td class="center">自燃损失统筹</td>
                             <td><input type="text" value="{$list.combustion_money|default=''}" id="combustion_money" name="combustion_money"  {if isset($list.combustion)} {if $list.combustion eq 1} readonly {/if} {else} readonly {/if}  style="width: 100%"></td>
                             <td><input type="text" value="{$list.combustion_standard|default=''}" id="combustion_standard" name="combustion_standard" class="standard" data-name="combustion"   {if isset($list.combustion)} {if $list.combustion eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
@@ -610,7 +610,7 @@
                             <td><input type="text" value="{$list.combustion_payable|default=''}" id="combustion_payable" name="combustion_payable"  readonly style="width: 100%"></td>
                         </tr>
                         <tr>
-                            <td class="center"><input type="checkbox" name="engine_wading" class="all_check_attch"  value="engine_wading" {if isset($list.engine_wading)} {if $list.vehicle_third eq 2} checked {/if} {/if}></td>
+                            <td class="center"><input type="checkbox" name="engine_wading" class="all_check_attch"  value="engine_wading" {if isset($list.engine_wading)} {if $list.engine_wading eq 2} checked {/if} {/if}></td>
                             <td class="center">发动机涉水损失统筹</td>
                             <td><input type="text" value="{$list.engine_wading_money|default=''}" id="engine_wading_money" name="engine_wading_money"   {if isset($list.engine_wading)} {if $list.engine_wading eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
                             <td><input type="text" value="{$list.engine_wading_standard|default=''}" id="engine_wading_standard" name="engine_wading_standard" class="standard" data-name="engine_wading"  {if isset($list.engine_wading)} {if $list.engine_wading eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>

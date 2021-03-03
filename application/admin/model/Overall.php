@@ -877,7 +877,7 @@ class Overall extends Model {
         $condition = array();
         $condition['overall_id'] = ['like',$result."%"];
         $condition['type'] = 1;
-        $res = db($this->db)->where($condition)->order('id','desc')->select();
+        $res = db($this->db)->where($condition)->order('overall_id','desc')->select();
         if(empty($res)) {
            return $result.'000000001';
         }else{
