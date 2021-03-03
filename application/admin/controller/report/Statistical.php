@@ -195,8 +195,8 @@ class Statistical extends Common {
                     $price_data[$value]['return_money'] += $item['return_money'];//返还金额=佣金
                     $price_data[$value]['commission'] = $price_data[$value]['benchmarking'] - $price_data[$value]['return_money'];//实收
                     $price_data[$value]['num'] ++;
-                    $price_data[$value]['commission_rate'] = ceil($price_data[$value]['commission']/$price_data[$value]['total_planning']);
-                    $price_data[$value]['discount_rate'] = ceil($price_data[$value]['total_planning']/$price_data[$value]['benchmarking']);
+                    $price_data[$value]['commission_rate'] = $price_data[$value]['total_planning'] == 0?0:ceil($price_data[$value]['commission']/$price_data[$value]['total_planning']);
+                    $price_data[$value]['discount_rate'] = $price_data[$value]['benchmarking'] == 0?0:ceil($price_data[$value]['total_planning']/$price_data[$value]['benchmarking']);
 
                     $all['benchmarking'] += $item['benchmarking'];
                     $all['total_planning'] += $item['total_planning'];
