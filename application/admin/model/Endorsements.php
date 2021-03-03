@@ -82,8 +82,12 @@ class Endorsements extends Model {
                     $item['invoice'] = Model('Invoice')->getlist(['related_id'=>$item['p_temporary_id']]);
 
                     //统筹单暂存号
-                    $overall = Model('Overall')->getList(['overall.overall_id'=>$item['overall_id']]);;
-                    $item['temporary_id'] = $overall[0]['temporary_id'];
+                    $overall = Model('Overall')->getList(['overall.overall_id'=>$item['overall_id']]);
+                    if(!empty($overall[0])) {
+                        $item['temporary_id'] = $overall[0]['temporary_id'];
+                    }else{
+                        $item['temporary_id'] = '';
+                    }
 
 
 

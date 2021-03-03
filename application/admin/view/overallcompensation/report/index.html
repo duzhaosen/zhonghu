@@ -101,7 +101,7 @@
                         <td>{$value.plate}</td>
                         <td>{$value.frame}</td>
                         <td>{$value.coordinated_name}</td>
-                        <td>{:date('Y-m-d H:i:s',$value.financial_review_time)}</td>
+                        <td>{if !empty($value.financial_review_time)} {:date('Y-m-d H:i:s',$value.financial_review_time)}{/if}</td>
                         <td>{:date('Y-m-d H:i:s',$value.end_time)}</td>
                         <td>{$value.survey_userStr}</td>
                         <td></td>
