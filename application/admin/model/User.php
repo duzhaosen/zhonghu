@@ -89,7 +89,7 @@ class User extends Model {
                 $res[$key]['all_name'] = $value['name'].$all_structure.$all_roles;
 
                 //经办人信息
-                $res[$key]['managerInfo'] = $value['manager'] == 2 ? Db($this->db)->where(['id'=>$value['manager_id']])->select() : [];
+                $res[$key]['managerInfo'] = Db($this->db)->where(['id'=>$value['manager_id']])->select();
 
                 //用户地区
                 $res[$key]['cityName'] = cityName($value['city']);
@@ -125,6 +125,7 @@ class User extends Model {
     public function editUser($param) {
         $param['op_time'] = time();
         $param['op_user'] = getAdminInfo();
+        print_r($param);die;
         return Db($this->db)->update($param);
     }
 

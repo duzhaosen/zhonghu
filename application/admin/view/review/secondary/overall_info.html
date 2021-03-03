@@ -870,9 +870,14 @@
                     <tr>
                         <td class="center">{:date('Y-m-d H:i:s',$value.create_time)}</td>
                         <td class="center">{$value.create_user}</td>
-                        <td class="center">{$value.typeStr}</td>
+                        <td class="center">{$value.typeStr}:{$value.content}</td>
                     </tr>
                     {/volist}
+                    <tr>
+                        <td class="center">{:date('Y-m-d H:i:s')}</td>
+                        <td class="center">{:session('username')}</td>
+                        <td class="center"><input type="text" id="content"></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -905,11 +910,12 @@
             var but = $(this);
             but.attr("disabled","disabled");
             var id = $(this).attr("data-id");
+            var content = $("#content").val();
             $.ajax('/admin/ajax/review/primary/review',{
                 dataType: 'json', // type of response data
                 timeout: 500,     // timeout milliseconds
                 method: "post",
-                data: {related_id:id,type:1,status:2,log_type:2},
+                data: {related_id:id,type:1,status:2,log_type:2,content:content},
                 success: function (data,status,xhr) {   // success callback function
                     but.removeAttr("disabled");
                     if(data.code == 100000) {
@@ -931,11 +937,12 @@
             var but = $(this);
             but.attr("disabled","disabled");
             var id = $(this).attr("data-id");
+            var content = $("#content").val();
             $.ajax('/admin/ajax/review/primary/review',{
                 dataType: 'json', // type of response data
                 timeout: 500,     // timeout milliseconds
                 method: "post",
-                data: {related_id:id,type:1,status:5,log_type:3},
+                data: {related_id:id,type:1,status:5,log_type:3,content:content},
                 success: function (data,status,xhr) {   // success callback function
                     but.removeAttr("disabled");
                     if(data.code == 100000) {

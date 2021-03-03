@@ -67,6 +67,8 @@ class Overall extends Common {
         $this->assign('license_typeList',$res['license_type']);
         $this->assign('relationshipList',$res['relationship']);
         $this->assign('last_year_dangerList',$res['last_year_danger']);
+        $res = Config::parse(APP_PATH.'/admin/config/quotation.ini','ini');
+        $this->assign('reasonList',$res['reason']);
 
         //特别约定
         $res = Config::parse(APP_PATH.'/admin/config/overall.ini','ini');
@@ -142,6 +144,8 @@ class Overall extends Common {
         $this->assign('license_typeList',$res['license_type']);
         $this->assign('relationshipList',$res['relationship']);
         $this->assign('last_year_dangerList',$res['last_year_danger']);
+        $res = Config::parse(APP_PATH.'/admin/config/quotation.ini','ini');
+        $this->assign('reasonList',$res['reason']);
 
         //特别约定
         $res = Config::parse(APP_PATH.'/admin/config/overall.ini','ini');
@@ -217,6 +221,8 @@ class Overall extends Common {
         $this->assign('license_typeList',$res['license_type']);
         $this->assign('relationshipList',$res['relationship']);
         $this->assign('last_year_dangerList',$res['last_year_danger']);
+        $res = Config::parse(APP_PATH.'/admin/config/quotation.ini','ini');
+        $this->assign('reasonList',$res['reason']);
 
         //特别约定
         $res = Config::parse(APP_PATH.'/admin/config/overall.ini','ini');

@@ -26,6 +26,7 @@ class Overall extends Model {
     private $endorsements_db = "zh_endorsements";
     private $documents_issued_db = "zh_documents_issued";
     private $sales_db = "zh_sales";
+    private $review_los = "zh_review_log";
 
 
     /** 查询统筹单单查询
@@ -51,7 +52,7 @@ class Overall extends Model {
         Config::parse(APP_PATH.'/admin/config/car.ini','ini');
         Config::parse(APP_PATH.'/admin/config/overall.ini','ini');
         $commont = Config::parse(APP_PATH.'/admin/config/structure.ini','ini');
-        $result = Db($this->db)->field($field)->where($condition)->order('overall.create_time desc')->alias('overall')
+        $result = Db($this->db)->field($field)->where($condition)->order('overall.temporary_id desc')->alias('overall')
             ->join($this->car_db.' car','overall.temporary_id=car.related_id')
             ->join($this->overall_db." overall_planning",'overall.temporary_id=overall_planning.related_id')
             ->join($this->traffic_db." traffic", "overall.temporary_id=traffic.related_id")
@@ -95,6 +96,7 @@ class Overall extends Model {
                     if(!empty($users)) {
                         $item['structure'] = $users[0]['structure'];
                         $item['structureStr'] = $users[0]['structureStr'];
+                        $item['all_name'] = $users[0]['all_name'];
 //                来源
                         $item['source'] = $users[0]['source'];
                         $item['sourceStr'] = $commont['source'][$users[0]['source']];
@@ -103,6 +105,7 @@ class Overall extends Model {
                     }else{
                         $item['structure'] = '';
                         $item['structureStr'] = '';
+                        $item['all_name'] ='';
 //                来源
                         $item['source'] = '';
                         $item['sourceStr'] = '';
@@ -198,14 +201,33 @@ class Overall extends Model {
                 $car['curb_quality'] = $condition['curb_quality'];
             }
             $car['approved_load'] = $condition['approved_load'];
-            $car['displacement'] = $condition['displacement'];
-            if(isset($condition['power'])) {
-                $car['power'] = $condition['power'];
-            }
             $car['vehicle_inspection'] = $condition['vehicle_inspection'];
             $car['reason'] = $condition['reason'];
-            $car['last_year_danger'] = $condition['last_year_danger'];
             $car['participate_city'] = $condition['participate_city'];
+            if(!empty($condition['last_year_status'])) {
+                $car['last_year_status'] = $condition['last_year_status'];
+            }
+            $car['new_price'] = $condition['new_price'];
+            if(!empty($condition['year_indemnity'])) {
+                $car['year_indemnity'] = $condition['year_indemnity'];
+            }
+            if(!empty($condition['continuous_non_risk'])) {
+                $car['continuous_non_risk'] = $condition['continuous_non_risk'];
+            }
+            if(!empty($condition['continuous_year'])) {
+                $car['continuous_year'] = $condition['continuous_year'];
+            }
+            if(!empty($condition['danger_total'])) {
+                $car['danger_total'] = $condition['danger_total'];
+            }
+            $car['discount'] = $condition['discount'];
+            $car['coefficient'] = $condition['coefficient'];
+            if(!empty($condition['remarks'])) {
+                $car['remarks'] = $condition['remarks'];
+            }
+            if(!empty($condition['rating'])) {
+                $car['rating'] = $condition['rating'];
+            }
             $car['create_user'] = getAdminInfo();
             $car['create_time'] = time();
             db($this->car_db)->insert($car);
@@ -413,7 +435,7 @@ class Overall extends Model {
             //缴费信息
             $pay = array();
             $pay['overall_type'] = 1;
-            $pay['pay_money'] = $condition['total_planning'];
+            $pay['pay_money'] = isset($condition['total_planning'])?$condition['total_planning']:0;
             $pay['related_id'] = $condition['temporary_id'];
             if(isset($condition['create_user'])) {
                 $pay['create_user'] = $condition['create_user'];
@@ -421,9 +443,14 @@ class Overall extends Model {
             $pay['create_time'] = time();
             db($this->pay_db)->insert($pay);
             //开票信息
-            if(isset($condition['invoice_type'])) {
+            if(isset($condition['invoice_type']) || isset($condition['invoice_type_man'])) {
                 $invoice = array();
-                $invoice['invoice_type'] = $condition['invoice_type'];
+                if(isset($condition['invoice_type'])) {
+                    $invoice['invoice_type'] = $condition['invoice_type'];
+                }
+                if(isset($condition['invoice_type_man'])) {
+                    $invoice['invoice_type_man'] = $condition['invoice_type_man'];
+                }
                 if(isset($condition['invoice_name'])) {
                     $invoice['invoice_name'] = $condition['invoice_name'];
                 }
@@ -452,6 +479,13 @@ class Overall extends Model {
                 $invoice['create_time'] = time();
                 db($this->invoice_db)->insert($invoice);
             }
+            //审核日志
+            $logs = [];
+            $logs['related_id'] = $condition['temporary_id'];
+            $logs['create_user'] = getAdminInfo();
+            $logs['create_time'] = time();
+            $logs['type'] = 0;
+            db($this->review_los)->insert($logs);
             // 提交事务
             Db::commit();
         } catch (\Exception $e) {
@@ -542,14 +576,33 @@ class Overall extends Model {
                 $car['curb_quality'] = $condition['curb_quality'];
             }
             $car['approved_load'] = $condition['approved_load'];
-            $car['displacement'] = $condition['displacement'];
-            if(isset($condition['power'])) {
-                $car['power'] = $condition['power'];
-            }
             $car['vehicle_inspection'] = $condition['vehicle_inspection'];
             $car['reason'] = $condition['reason'];
-            $car['last_year_danger'] = $condition['last_year_danger'];
             $car['participate_city'] = $condition['participate_city'];
+            if(!empty($condition['last_year_status'])) {
+                $car['last_year_status'] = $condition['last_year_status'];
+            }
+            $car['new_price'] = $condition['new_price'];
+            if(!empty($condition['year_indemnity'])) {
+                $car['year_indemnity'] = $condition['year_indemnity'];
+            }
+            if(!empty($condition['continuous_non_risk'])) {
+                $car['continuous_non_risk'] = $condition['continuous_non_risk'];
+            }
+            if(!empty($condition['continuous_year'])) {
+                $car['continuous_year'] = $condition['continuous_year'];
+            }
+            if(!empty($condition['danger_total'])) {
+                $car['danger_total'] = $condition['danger_total'];
+            }
+            $car['discount'] = $condition['discount'];
+            $car['coefficient'] = $condition['coefficient'];
+            if(!empty($condition['remarks'])) {
+                $car['remarks'] = $condition['remarks'];
+            }
+            if(!empty($condition['rating'])) {
+                $car['rating'] = $condition['rating'];
+            }
             $car['op_user'] = getAdminInfo();
             $car['op_time'] = time();
             db($this->car_db)->where(['related_id' => $condition['temporary_id']])->update($car);
@@ -751,14 +804,20 @@ class Overall extends Model {
             //缴费信息
             $pay = array();
             $pay['overall_type'] = 1;
-            $pay['pay_money'] = $condition['total_planning'];
+            $pay['pay_money'] = isset($condition['total_planning'])?$condition['total_planning']:0;
             $pay['op_user'] = getAdminInfo();
             $pay['op_time'] = time();
             db($this->pay_db)->where(['related_id' => $condition['temporary_id']])->update($pay);
             //开票信息
-            if(isset($condition['invoice_type'])) {
+            //开票信息
+            if(isset($condition['invoice_type']) || isset($condition['invoice_type_man'])) {
                 $invoice = array();
-                $invoice['invoice_type'] = $condition['invoice_type'];
+                if(isset($condition['invoice_type'])) {
+                    $invoice['invoice_type'] = $condition['invoice_type'];
+                }
+                if(isset($condition['invoice_type_man'])) {
+                    $invoice['invoice_type_man'] = $condition['invoice_type_man'];
+                }
                 if(isset($condition['invoice_name'])) {
                     $invoice['invoice_name'] = $condition['invoice_name'];
                 }
@@ -792,6 +851,7 @@ class Overall extends Model {
         } catch (\Exception $e) {
             // 回滚事务
             Db::rollback();
+            print_r($e);die;
             return false;
         }
         return true;
@@ -821,7 +881,7 @@ class Overall extends Model {
         $condition['new_id'] = 1;
         $res = db($this->db)->where($condition)->select();
         if(!empty($res)) {
-            return $res[0]['id'];
+            return $res[0]['overall_id'];
         }else{
             $condition = array();
             $condition['overall_id'] = ['like',$result."%"];

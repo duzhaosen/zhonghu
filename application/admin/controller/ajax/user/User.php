@@ -124,14 +124,6 @@ class User extends Common {
             unset($this->param['confirmPasswd']);
         }
 
-        //身份证号码位数
-        if(strlen($this->param['identity']) != 18) {
-            $data = array();
-            $data['code'] = 100001;
-            $data['msg'] = '身份证号码位数不对';
-            return json($data);
-        }
-
         //手机号验证
         if(!preg_match("/^1[345789]\d{9}$/", $this->param['phone'])){
             $data = array();
@@ -140,16 +132,8 @@ class User extends Common {
             return json($data);
         }
 
-        //验证身份证是否唯一
-        $identity = Model('user')->getList(['identity' => $this->param['identity']]);
-        if(!empty($identity) && $identity[0]['id'] != $id) {
-            $data['code'] = 100001;
-            $data['msg'] = '身份证已有重复';
-            return json($data);
-        }
-
         //如果是不是经办人，经办人必填
-        if($this->param['manager'] == 2) {
+        if($this->param['salesman'] == 1) {
             if(!isset($this->param['manager_id']) || empty($this->param['manager_id'])) {
                 $data['code'] = 100001;
                 $data['msg'] = '经办人为必填项';

@@ -206,8 +206,16 @@ class Statistical extends Common {
             }
         }
         $all['commission'] = $all['benchmarking'] - $all['return_money'];
-        $all['commission_rate'] = ceil($all['commission']/$all['total_planning']);
-        $all['discount_rate'] = ceil($all['total_planning']/$all['benchmarking']);
+        if($all['total_planning'] != 0) {
+            $all['commission_rate'] = ceil($all['commission']/$all['total_planning']);
+        }else{
+            $all['commission_rate'] = '';
+        }
+        if($all['benchmarking'] != 0) {
+            $all['discount_rate'] = ceil($all['total_planning']/$all['benchmarking']);
+        }else{
+            $all['discount_rate'] = '';
+        }
         $price_data['合计'] = $all;
         $this->assign('list',$price_data);
 

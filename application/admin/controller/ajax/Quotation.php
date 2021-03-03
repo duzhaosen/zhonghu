@@ -29,21 +29,20 @@ class Quotation extends Common {
                 return json($data);
             }
         }
-
         //验证车架号/车牌号是否在系统内且在统筹期间内
-        $car_frame = $this->param['frame'];
-        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1]);
-        if($car_list->total() > 0) {
-            $list = $car_list->all();
-            foreach($list as $key => $value) {
-                if($value['end_time']+86400 > strtotime($this->param['start_time'])) {
-                    $data = array();
-                    $data['code'] = 100002;
-                    $data['msg'] = '车架号已在其他单子的统筹期内'.$value['id'];
-                    return json($data);
-                }
-            }
-        }
+//        $car_frame = $this->param['frame'];
+//        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1]);
+//        if($car_list->total() > 0) {
+//            $list = $car_list->all();
+//            foreach($list as $key => $value) {
+//                if($value['end_time']+86400 > strtotime($this->param['start_time'])) {
+//                    $data = array();
+//                    $data['code'] = 100002;
+//                    $data['msg'] = '车架号已在其他单子的统筹期内'.$value['overall_id'];
+//                    return json($data);
+//                }
+//            }
+//        }
         //统筹起期是否大于当前时间
         $start_time = strtotime($this->param['start_time']);
         if($start_time < time()) {
@@ -116,18 +115,33 @@ class Quotation extends Common {
         }
 
         //验证车架号/车牌号是否在系统内且在统筹期间内
-        $car_frame = $this->param['frame'];
-        $car_list = Model('Quotation')->getList(['quotation.frame'=>$car_frame,'quotation.type'=>1,'quotation.id'=>['<>',$this->param['id']]]);
-        if($car_list->total() > 0) {
-            $list = $car_list->all();
-            foreach($list as $key => $value) {
-                if($value['end_time'] < strtotime($this->param['start_time'])) {
-                    $data = array();
-                    $data['code'] = 100001;
-                    $data['msg'] = '车架号已在其他单子的统筹期内'.$value['id'];
-                    return json($data);
-                }
-            }
+//        $car_frame = $this->param['frame'];
+//        $car_list = Model('Quotation')->getList(['quotation.frame'=>$car_frame,'quotation.type'=>1,'quotation.id'=>['<>',$this->param['id']]]);
+//        if($car_list->total() > 0) {
+//            $list = $car_list->all();
+//            foreach($list as $key => $value) {
+//                if($value['end_time'] < strtotime($this->param['start_time'])) {
+//                    $data = array();
+//                    $data['code'] = 100001;
+//                    $data['msg'] = '车架号已在其他单子的统筹期内'.$value['overall_id'];
+//                    return json($data);
+//                }
+//            }
+//        }
+        //统筹起期是否大于当前时间
+        $start_time = strtotime($this->param['start_time']);
+        if($start_time < time()) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '统筹起期必须大于当前时间';
+            return json($data);
+        }
+        $end_time = strtotime($this->param['end_time']);
+        if($end_time < $start_time) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '统筹起期必须小于统筹止期';
+            return json($data);
         }
         //格式化数据
         $res = Model('Quotation')->editQuotation($this->param);

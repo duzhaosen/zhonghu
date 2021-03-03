@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="/static/ace1.4/assets/css/chosen.min.css">
-<script src="/static/ace1.4/assets/js/chosen.jquery.min.js"></script>
 <style>
     .baojia{
         width: 750px;
@@ -58,7 +56,7 @@
                 <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
                     <div class=" search-item-div col-xs-3">
                         <label for="source" class="text-center search-item-label">业务来源:</label>
-                        <select name="source" id="source" style="width:100%">
+                        <select name="source" disabled id="source" style="width:100%">
                             {volist name="sourceList" id="value" key="key"}
                             <option value="{$key-1}" {if isset($list.source) } {if $list.source eq $key-1} selected {/if}{/if} >{$value}</option>
                             {/volist}
@@ -66,7 +64,7 @@
                     </div>
                     <div class="search-item-div col-xs-3">
                         <label for="structure" class="text-center search-item-label">归属部门:</label>
-                        <select name="structure" id="structure" style="width:100%">
+                        <select name="structure" disabled id="structure" style="width:100%">
                             <option value="0">请选择归属部门</option>
                             {if isset($list)}
                                 {volist name="$structureList" id="value"}
@@ -77,25 +75,21 @@
                     </div>
                     <div class="search-item-div col-xs-3">
                         <label for="attribution_user" class="text-center search-item-label">归属人:</label>
-                        <div id="chose_salesman">
-                            <select class="chosen-select form-control" id="attribution_user" name="attribution_user" style="width:100%" data-placeholder="选择归属人">
-                                <option value="0">请选择归属人</option>
-                                {volist name="users" id="value"}
-                                <option value="{$value.id}" {if isset($list.attribution_user)} {if $list.attribution_user eq $value.id} selected {/if} {/if} data-manager="{$value.manager_id}">{$value.all_name}</option>
-                                {/volist}
-                            </select>
-                        </div>
+                        <input type="text" class="form-control" id="attribution_user" autocomplete="off" list="users" placeholder="请输入归属人" name="attribution_user" style="width:100%" value="{$list.all_name|default=''}">
+                        <datalist id="users">
+                            {volist name="users" id="value"}
+                            <option data-value="{$value.id}">{$value.all_name}</option>
+                            {/volist}
+                        </datalist>
                     </div>
                     <div class="search-item-div col-xs-3">
                         <label for="manager" class="text-center search-item-label">经办人:</label>
-                        <div id="chose_manager">
-                            <select class="chosen-select form-control" id="manager" name="manager" style="width:100%" data-placeholder="选择经办人">
-                                <option value="0">请选择经办人</option>
-                                {volist name="managerList" id="value"}
-                                <option value="{$value.id}" {if isset($list.manager)}  {if $list.manager eq $value.id} selected {/if}{/if}>{$value.name}</option>
-                                {/volist}
-                            </select>
-                        </div>
+                        <select name="manager" id="manager" style="width: 100%">
+                            <option value="0">请选择经办人</option>
+                            {volist name="managerList" id="value"}
+                            <option value="{$value.id}" {if isset($list.manager)}  {if $list.manager eq $value.id} selected {/if}{/if}>{$value.name}</option>
+                            {/volist}
+                        </select>
                     </div>
                 </div>
 
@@ -407,7 +401,7 @@
                         <td class="center"><input type="checkbox" id="vehicle_third" name="vehicle_third" class="all_check"  value="vehicle_third" {if isset($list.vehicle_third)} {if $list.vehicle_third eq 2} checked {/if} {/if}></td>
                         <td class="center">机动车第三者责任统筹</td>
                         <td><input type="text" value="{$list.vehicle_third_money|default=''}" id="vehicle_third_money" name="vehicle_third_money"   {if isset($list.vehicle_third)} {if $list.vehicle_third eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
-                        <td><input type="text" value="{$list.vehicle_third_standarddefault=''}" id="vehicle_third_standard" name="vehicle_third_standard" class="standard" data-name="vehicle_third"  {if isset($list.vehicle_third)} {if $list.vehicle_third eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
+                        <td><input type="text" value="{$list.vehicle_third_standard|default=''}" id="vehicle_third_standard" name="vehicle_third_standard" class="standard" data-name="vehicle_third"  {if isset($list.vehicle_third)} {if $list.vehicle_third eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
                         <td><input type="text" value="{$list.vehicle_third_discount|default=''}" readonly id="vehicle_third_discount" name="vehicle_third_discount" style="width: 100%"></td>
                         <td><input type="text" value="{$list.vehicle_third_payable|default=''}" id="vehicle_third_payable" name="vehicle_third_payable" readonly style="width: 100%"></td>
                     </tr>
@@ -962,58 +956,15 @@
             $("#quotationModal").modal();
             return false;
         });
-        $('.chosen-select').chosen({allow_single_deselect:true});
-        //业务来源联动
-        $("#source").on('change',function() {
-           var source = $(this).val();
-            $.ajax('/admin/ajax/user/structure/getStructure',{
-                dataType: 'json',
-                timeout: 500,
-                method: "get",
-                data: {source:source},
-                success: function (data) {
-                    if(data.code == 100000) {
-                        $("#structure").html("");
-                        var html = '<option value="0">请选择归属部门</option>';
-                        var data = data.data;
-                        for (var i=0;i<data.length;i++) {
-                            html += '<option value="'+data[i].id+'">'+data[i].name+"</option>";
-                        }
-                        $("#structure").append(html);
-                    }else{
-                        layer.msg(data.msg);
-                    }
-                }
-            });
-        });
-        //归属部门联动
-        $("#structure").on('change',function() {
-            var structure = $(this).val();
-            $.ajax('/admin/ajax/user/user/getUserInfo',{
-                dataType: 'json',
-                timeout: 500,
-                method: "get",
-                data: {structure:structure},
-                success: function (data) {
-                    if(data.code == 100000) {
-                        var html = '<select class="chosen-select form-control" id="salesman" name="salesman" style="width:100%" data-placeholder="选择归属人">';
-                        html += '<option value="0">请选择归属人</option>';
-                        var data = data.data;
-                        for (var i=0;i<data.length;i++) {
-                            html += '<option value="'+data[i].id+'" data-manager="'+data[i].manager_id+'">'+data[i].all_name+"</option>";
-                        }
-                        html += '<select>';
-                        $("#chose_salesman").html(html);
-                        $('.chosen-select').chosen({allow_single_deselect:true});
-                    }else{
-                        layer.msg(data.msg);
-                    }
-                }
-            });
-        });
         //归属人联动
         $("#attribution_user").on('change',function() {
-            var userId = $(this).val();
+            var $options=$("#users").children();
+            for(var i=0;i<$options.length;i++) {
+                if ($options.eq(i).val().trim() == $("#attribution_user").val().trim()) {
+                    var userId = $options.eq(i).attr("data-value");
+                    break;
+                }
+            }
             $.ajax('/admin/ajax/user/user/getUserInfo',{
                 dataType: 'json',
                 timeout: 500,
@@ -1022,12 +973,9 @@
                 success: function (data) {
                     if(data.code == 100000) {
                         //同步经办人
-                        var html = '<select class="chosen-select form-control" id="manager" name="manager" style="width:100%" data-placeholder="选择经办人">';
                         var data = data.data;
-                        console.log(data);
-                        html += '<option value="'+data[0].managerInfo[0].id+'">'+data[0].managerInfo[0].name+"</option>";
-                        $("#chose_manager").html(html);
-                        $('.chosen-select').chosen({allow_single_deselect:true});
+                        html = '<option value="'+data[0].managerInfo[0].id+'">'+data[0].managerInfo[0].name+"</option>";
+                        $("#manager").html(html);
                         //城市
                         $("#city").val(data[0].cityName);
                         //来源
@@ -1052,7 +1000,6 @@
                             }
                             structure += '<option value="'+data.structureList[i].id+'" '+selected+'>'+data.structureList[i].name+'</option>';
                         }
-                        console.log(structure);
                         $("#structure").append(structure);
 
                     }else{
@@ -1148,6 +1095,8 @@
 
             $("#benchmarking").val(0);
             $("#total_planning").val(0);
+            var benchmarking = 0;
+            var total_planning = 0;
             $(".all_check").each(function() {
                 if($(this).val() != 'all') {
                     if(this.checked) {
@@ -1165,21 +1114,15 @@
                         var payable = standard * short_term_coefficient * discount;
                         //应缴统筹费
                         $("#"+value+"_payable").val(payable.toFixed(2));
-                        //基准统筹费
-                        var benchmarking = $("#benchmarking").val();
-                        if(benchmarking == '') {
-                            benchmarking = 0;
-                        }
-                        $("#benchmarking").val(parseInt(benchmarking) + parseInt(standard));
-                        //统筹费（合计）
-                        var total_planning = $("#total_planning").val();
-                        if(total_planning == '') {
-                            total_planning = 0;
-                        }
-                        $("#total_planning").val(parseInt(total_planning) + parseInt(payable));
+                        benchmarking = parseFloat(benchmarking)*1 + parseFloat(standard).toFixed(2)*1;
+                        total_planning = parseFloat(total_planning)*1 + parseFloat(payable).toFixed(2)*1;
                     }
                 }
             })
+            //基准统筹费
+            $("#benchmarking").val(parseFloat(benchmarking).toFixed(2));
+            //统筹费（合计）
+            $("#total_planning").val(parseFloat(total_planning).toFixed(2));
 
         })
         //元联动
@@ -1211,6 +1154,8 @@
 
             $("#benchmarking").val(0);
             $("#total_planning").val(0);
+            var benchmarking = 0;
+            var total_planning = 0;
             $(".all_check").each(function() {
                 if($(this).val() != 'all') {
                     if(this.checked) {
@@ -1228,21 +1173,15 @@
                         var payable = standard * short_term_coefficient * discount;
                         //应缴统筹费
                         $("#"+value+"_payable").val(payable.toFixed(2));
-                        //基准统筹费
-                        var benchmarking = $("#benchmarking").val();
-                        if(benchmarking == '') {
-                            benchmarking = 0;
-                        }
-                        $("#benchmarking").val(parseInt(benchmarking) + parseInt(standard));
-                        //统筹费（合计）
-                        var total_planning = $("#total_planning").val();
-                        if(total_planning == '') {
-                            total_planning = 0;
-                        }
-                        $("#total_planning").val(parseInt(total_planning) + parseInt(payable));
+                        benchmarking = parseFloat(benchmarking)*1 + parseFloat(standard).toFixed(2)*1;
+                        total_planning = parseFloat(total_planning)*1 + parseFloat(payable).toFixed(2)*1;
                     }
                 }
             })
+            //基准统筹费
+            $("#benchmarking").val(parseFloat(benchmarking).toFixed(2));
+            //统筹费（合计）
+            $("#total_planning").val(parseFloat(total_planning).toFixed(2));
         });
         Date.prototype.format = function(fmt) {
             var o = {
@@ -1276,6 +1215,13 @@
         $("#addQuotation").on('click',function() {
             var but = $(this);
             but.attr("disabled", "disabled");
+            var $options=$("#users").children();
+            for(var i=0;i<$options.length;i++) {
+                if ($options.eq(i).val().trim() == $("#attribution_user").val().trim()) {
+                    $("#attribution_user").val($options.eq(i).attr("data-value"));
+                    break;
+                }
+            }
             var form = $("form[name=addQuotationForm]").serializeArray();
             var url = '/admin/ajax/quotation/addQuotation';
             $.ajax(url, {
@@ -1292,11 +1238,25 @@
                             window.location.href="/admin/Quotation/quotation/index";
                         }, 300);
                     } else {
+                        var $options=$("#users").children();
+                        for(var i=0;i<$options.length;i++) {
+                            if ($options.eq(i).attr("data-value").trim() == $("#attribution_user").val().trim()) {
+                                $("#attribution_user").val($options.eq(i).text());
+                                break;
+                            }
+                        }
                         layer.msg(data.msg);
                     }
                 },
                 error: function () {
                     but.removeAttr("disabled");
+                    var $options=$("#users").children();
+                    for(var i=0;i<$options.length;i++) {
+                        if ($options.eq(i).attr("data-value").trim() == $("#attribution_user").val().trim()) {
+                            $("#attribution_user").val($options.eq(i).text());
+                            break;
+                        }
+                    }
                     layer.msg("系统错误");
                 }
             });

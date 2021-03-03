@@ -923,7 +923,7 @@
                         <tr>
                             <td class="center">{:date('Y-m-d H:i:s',$value.create_time)}</td>
                             <td class="center">{$value.create_user}</td>
-                            <td class="center">{$value.typeStr}</td>
+                            <td class="center">{$value.typeStr}:{$value.content}</td>
                         </tr>
                         {/volist}
                     {/if}

@@ -112,6 +112,9 @@ class ReviewLog extends Model {
                 $review['create_time'] = time();
                 $review['create_user'] = getAdminInfo();
                 $review['type'] = $condition['log_type'];
+                if(isset($condition['content'])) {
+                    $review['content'] = $condition['content'];
+                }
                 db($this->db)->insert($review);
                 // 提交事务
                 Db::commit();

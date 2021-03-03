@@ -47,12 +47,12 @@ class Login extends Controller {
                 return json($data);
             }
             //判断状态是否只是经办人
-            if($res[0]['salesman'] == 2 && $res[0]['manager'] == 1) {
-                $data = array();
-                $data['code'] = 100001;
-                $data['msg'] = '经办人不可登陆';
-                return json($data);
-            }
+//            if($res[0]['salesman'] == 2 && $res[0]['manager'] == 1) {
+//                $data = array();
+//                $data['code'] = 100001;
+//                $data['msg'] = '经办人不可登陆';
+//                return json($data);
+//            }
             $this->getSession($res);
 
             writLog("登陆成功",LOGIN_LOGS,80);

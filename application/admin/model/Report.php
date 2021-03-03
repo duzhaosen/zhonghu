@@ -26,7 +26,11 @@ class Report extends Model {
             ->paginate($page,false,$paginate)->each(function($item,$key) use($comment) {
             $item['accident_situationStr'] = $comment['accident_situation'][$item['accident_situation']];
             $overall = Model('Overall')->getList(['overall_id'=>$item['overall_id']]);
-            $item['financial_review_time'] = $overall[0]['financial_review_time'];
+            if(!empty($overall[0])) {
+                $item['financial_review_time'] = $overall[0]['financial_review_time'];
+            }else{
+                $item['financial_review_time'] ='';
+            }
             $item['survey_agencyStr'] = $comment['survey_agency'][$item['survey_agency']];
             $item['survey_userStr'] = $comment['survey_userstr'][$item['survey_user']];
             $item['report_typeStr'] = $comment['report_type'][$item['report_type']];

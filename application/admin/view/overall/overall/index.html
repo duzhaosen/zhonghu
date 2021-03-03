@@ -391,8 +391,8 @@
                 but.removeAttr("disabled");
                 return false;
             }
-            if(status != 6) {
-                layer.msg("该统筹单不是审核通过状态");
+            if(status == 6) {
+                layer.msg("审核通过禁止取消");
                 but.removeAttr("disabled");
                 return false;
             }
