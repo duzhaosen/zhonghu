@@ -160,6 +160,15 @@ class Quotation extends Common {
     public function index() {
         $param = input('get.');
         $param = array_filter($param);
+        //查询归属人
+        if(isset($param['attribution_user']) && !empty($param['attribution_user'])) {
+            $users = Model('User')->getList(['id'=>$param['attribution_user']]);
+            if(!empty($users[0])) {
+                $this->assign('attribution_user',$users[0]['all_name']);
+            }else{
+                $this->assign('attribution_user','');
+            }
+        }
         $condition = [];
         if(isset($param['create_time_start'])) {
             if(!empty($param['create_time_end'])) {

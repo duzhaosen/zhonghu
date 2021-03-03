@@ -17,6 +17,7 @@ class ReviewLog extends Model {
     private $overall_db = 'zh_overall';
     private $endorsements_db = 'zh_endorsements';
     private $sale_db = 'zh_sales';
+    private $pay_db = 'zh_pay';
 
     /** 添加审核情况
      * @param $condition
@@ -61,6 +62,8 @@ class ReviewLog extends Model {
                 //财务审核通过，同步财务审核人和财务审核日期
                 if($condition['status'] == 6) {
                     $overall['overall_id'] = Model('Overall')->generateOverallId();
+                    //更新表中已有数据
+                    db($this->overall_db)->where(['overall_id'=>$overall['overall_id']])->update(['new_id'=>2]);
                     $overall['financial_review_user'] = getAdminInfo();
                     $overall['financial_review_time'] = time();
                     //销售费用管理
@@ -105,6 +108,19 @@ class ReviewLog extends Model {
                             db($this->sale_db)->where(['related_id'=>$condition['related_id']])->update($sales);
                         }
                     }
+                    //缴费信息
+                    $pay = array();
+                    $pay['overall_type'] = 1;
+                    $pay['pay_money'] = isset($condition['total_planning'])?$condition['total_planning']:0;
+                    $pay['related_id'] = $condition['related_id'];
+                    $overall_list = db($this->overall_db)->where(['temporary_id'=>$condition['related_id']])->select();
+                    if(!empty($overall_list)) {
+                        $pay['create_user'] = $overall_list[0]['create_user'];
+                        $pay['overall_id'] = $overall['overall_id'];
+                        $pay['number_id'] = $overall['overall_id'];
+                    }
+                    $pay['create_time'] = time();
+                    db($this->pay_db)->insert($pay);
                 }
                 db($this->overall_db)->where(['temporary_id'=>$condition['related_id']])->update($overall);
                 $review = array();
@@ -121,6 +137,7 @@ class ReviewLog extends Model {
             } catch (\Exception $e) {
                 // 回滚事务
                 Db::rollback();
+                print_r($e);die;
                 return false;
             }
             return true;

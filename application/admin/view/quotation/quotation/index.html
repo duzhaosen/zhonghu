@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="/static/ace1.4/assets/css/chosen.min.css">
-<script src="/static/ace1.4/assets/js/chosen.jquery.min.js"></script>
 <div class="row">
     <form style="" class="exportForm" name="addQuotationForm">
         <div class="col-xs-12 col-sm-12">
@@ -34,12 +32,12 @@
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="attribution_user" class="text-center search-item-label">归属人:</label>
-                            <select class="chosen-select form-control" id="attribution_user" name="attribution_user" style="width:100%" data-placeholder="选择归属人">
-                                <option value="0">请选择归属人</option>
+                            <input type="text" class="form-control" id="attribution_user" autocomplete="off" list="users" placeholder="请输入归属人" name="attribution_user" style="width:100%" value="{$attribution_user|default=''}">
+                            <datalist id="users">
                                 {volist name="users" id="value"}
-                                <option value="{$value.id}" {if input('param.attribution_user') eq $value.id} selected {/if} data-manager="{$value.manager_id}">{$value.all_name}</option>
+                                <option data-value="{$value.id}" data-manager="{$value.manager_id}">{$value.all_name}</option>
                                 {/volist}
-                            </select>
+                            </datalist>
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="create_user" class="text-center search-item-label">报价人:</label>
@@ -186,7 +184,6 @@
 {include file="public/export" /}
 <script>
     $(function() {
-        $('.chosen-select').chosen({allow_single_deselect:true});
         //初始化日期
         layui.use('laydate', function(){
             var laydate = layui.laydate;
@@ -300,6 +297,16 @@
                 layer.close(index);
             });
             return false;
+        })
+        //查询
+        $("#search").on('click',function () {
+            var $options=$("#users").children();
+            for(var i=0;i<$options.length;i++) {
+                if ($options.eq(i).val().trim() == $("#attribution_user").val().trim()) {
+                    $("#attribution_user").val($options.eq(i).attr("data-value"));
+                    break;
+                }
+            }
         })
     })
 </script>

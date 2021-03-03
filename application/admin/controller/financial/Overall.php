@@ -34,6 +34,15 @@ class Overall extends Common {
      */
     public function review(Request $request) {
         $this->param = $request->param();
+        //查询归属人
+        if(isset($this->param['attribution_user']) && !empty($this->param['attribution_user'])) {
+            $users = Model('User')->getList(['id'=>$this->param['attribution_user']]);
+            if(!empty($users[0])) {
+                $this->assign('attribution_user',$users[0]['all_name']);
+            }else{
+                $this->assign('attribution_user','');
+            }
+        }
         if(isset($this->param['plate'])){
             $this->param['overall.plate'] = $this->param['plate'];
             unset($this->param['plate']);

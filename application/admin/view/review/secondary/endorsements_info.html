@@ -153,7 +153,7 @@
                     </div>
                     <div class=" search-item-div col-xs-3">
                         <label class="text-center search-item-label">核统日期:</label>
-                        <input type="text" class="form-control" readonly  style="width:100%" value="{if $list.nuclear_system_time neq 0}{:date('Y/m/d',$list.nuclear_system_time)}{/if}">
+                        <input type="text" class="form-control" readonly  style="width:100%" value="{if $list.nuclear_system_time neq 0}{:date('Y-m-d',$list.nuclear_system_time)}{/if}">
                     </div>
                 </div>
 
@@ -165,7 +165,7 @@
                     </div>
                     <div class=" search-item-div col-xs-3">
                         <label class="text-center search-item-label">审核日期:</label>
-                        <input type="text" class="form-control" readonly  style="width:100%" value="{if $list.financial_review_time neq 0}{:date('Y/m/d',$list.financial_review_time)}{/if}">
+                        <input type="text" class="form-control" readonly  style="width:100%" value="{if $list.financial_review_time neq 0}{:date('Y-m-d',$list.financial_review_time)}{/if}">
 
                     </div>
                 </div>
@@ -212,11 +212,11 @@
                     </div>
                     <div class="search-item-div col-xs-3">
                         <label class="text-center search-item-label">交强起期</label>
-                        <input type="text" class="form-control" readonly  style="width:100%" value="{if isset($list.traffic_start_time)}{:date('Y/m/d',$list.traffic_start_time)}{/if}">
+                        <input type="text" class="form-control" readonly  style="width:100%" value="{if isset($list.traffic_start_time)}{:date('Y-m-d',$list.traffic_start_time)}{/if}">
                     </div>
                     <div class="search-item-div col-xs-3">
                         <label class="text-center search-item-label">交强止期</label>
-                        <input type="text" class="form-control" readonly  style="width:100%" value="{if isset($list.traffic_end_time)}{:date('Y/m/d',$list.traffic_end_time)}{/if}">
+                        <input type="text" class="form-control" readonly  style="width:100%" value="{if isset($list.traffic_end_time)}{:date('Y-m-d',$list.traffic_end_time)}{/if}">
                     </div>
                 </div>
 
@@ -285,11 +285,11 @@
                 <div class="form-inline form-group col-xs-12">
                     <div class="search-item-div col-xs-3">
                         <label class="text-center search-item-label">注册日期(例:2019-01-01)<span style="color:red">*</span>:</label>
-                        <input type="text" class="form-control" readonly style="width:100%" value="{if isset($list.registered_time)}{:date('Y/m/d',$list.registered_time)}{/if}">
+                        <input type="text" class="form-control" readonly style="width:100%" value="{if isset($list.registered_time)}{:date('Y-m-d',$list.registered_time)}{/if}">
                     </div>
                     <div class="search-item-div col-xs-3">
                         <label class="text-center search-item-label">发证日期(例:2019-01-01)<span style="color:red">*</span>:</label>
-                        <input type="text" class="form-control" readonly style="width:100%" value="{if isset($list.issuance_time)}{:date('Y/m/d',$list.registered_time)}{/if}">
+                        <input type="text" class="form-control" readonly style="width:100%" value="{if isset($list.issuance_time)}{:date('Y-m-d',$list.registered_time)}{/if}">
                     </div>
                     <div class=" search-item-div col-xs-3">
                         <label class="text-center search-item-label">车龄:</label>
@@ -381,13 +381,13 @@
                     <div class="search-item-div col-xs-3">
                         <label for="" class="text-center search-item-label">统筹起期:</label>
                         <input type="text" class="form-control input-sm" readonly name="start_time" id="start_time"
-                               value="{if isset($list.start_time)}{:date('Y/m/d',$list.start_time)}{else}{:date('Y/m/d',strtotime('+1 day'))}{/if}" autocomplete="off">（0时）
+                               value="{if isset($list.start_time)}{:date('Y-m-d',$list.start_time)}{else}{:date('Y-m-d',strtotime('+1 day'))}{/if}" autocomplete="off">（0时）
 
                     </div>
                     <div class="search-item-div col-xs-3">
                         <label for="" class="text-center search-item-label">统筹止期:</label>
                         <input type="text" class="form-control input-sm" readonly name="end_time" id="end_time"
-                               value="{if isset($list.end_time)}{:date('Y/m/d',$list.end_time)}{else}{:date('Y/m/d',strtotime('+1 year'))}{/if}" autocomplete="off">（24时）
+                               value="{if isset($list.end_time)}{:date('Y-m-d',$list.end_time)}{else}{:date('Y-m-d',strtotime('+1 year'))}{/if}" autocomplete="off">（24时）
                     </div>
                     <div class="search-item-div col-xs-3">
                         <label for="" class="text-center search-item-label">共（<input type="text" readonly name="date_time" style="width:20%" id="date_time" value="{$list.date_time|default='365'}">）天</label>
@@ -436,7 +436,7 @@
                         <td class="center"><input type="checkbox" name="vehicle_third" class="all_check"  value="vehicle_third"></td>
                         <td class="center">机动车第三者责任统筹</td>
                         <td><input type="text" value="{$list.vehicle_third_money|default=''}" id="vehicle_third_money" name="vehicle_third_money" readonly style="width: 100%"></td>
-                        <td><input type="text" value="{$list.vehicle_third_standarddefault=''}" id="vehicle_third_standard" name="vehicle_third_standard" class="standard" data-name="vehicle_third"   readonly style="width: 100%"></td>
+                        <td><input type="text" value="{$list.vehicle_third_standard|default=''}" id="vehicle_third_standard" name="vehicle_third_standard" class="standard" data-name="vehicle_third"   readonly style="width: 100%"></td>
                         <td><input type="text" value="{$list.vehicle_third_discount|default=''}" readonly id="vehicle_third_discount" name="vehicle_third_discount" style="width: 100%"></td>
                         <td><input type="text" value="{$list.vehicle_third_payable|default=''}" id="vehicle_third_payable" name="vehicle_third_payable" readonly style="width: 100%"></td>
                     </tr>

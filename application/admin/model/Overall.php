@@ -76,6 +76,7 @@ class Overall extends Model {
                     $item['last_year_dangerStr'] = $commont['last_year_danger'][$item['last_year_danger']];
                     $item['participate_license_typeStr'] = $commont['license_type'][$item['participate_license_type']];
                     $item['coordinated_license_typeStr'] = $commont['license_type'][$item['coordinated_license_type']];
+                    $item['transferStr'] = $commont['transfer'][$item['transfer']];
 
                     //影响资料
                     $item['attach'] = Model('Upload')->getlist(['related_id'=>$item['temporary_id'],'type'=>1]);
@@ -358,10 +359,10 @@ class Overall extends Model {
                 $overall['car_driver_discount'] = $condition['car_driver_discount'];
                 $overall['car_passenger_discount'] = $condition['car_passenger_discount'];
                 $overall['car_goods_discount'] = $condition['car_goods_discount'];
-                $overall['combustion_discount'] = $condition['combustion_discount'];
-                $overall['engine_wading_discount'] = $condition['engine_wading_discount'];
-                $overall['designated_repai_discount'] = $condition['designated_repai_discount'];
-                $overall['broken_glass_discount'] = $condition['broken_glass_discount'];
+                $overall['combustion_discount'] = isset($condition['combustion_discount'])?$condition['combustion_discount']:0;
+                $overall['engine_wading_discount'] = isset($condition['engine_wading_discount'])?$condition['engine_wading_discount']:0;
+                $overall['designated_repai_discount'] = isset($condition['designated_repai_discount'])?$condition['designated_repai_discount']:0;
+                $overall['broken_glass_discount'] = isset($condition['broken_glass_discount'])?$condition['broken_glass_discount']:0;
             }
             if(isset($condition['total_planning'])) {
                 $overall['total_planning'] = $condition['total_planning'];
@@ -432,16 +433,6 @@ class Overall extends Model {
             }
             $coordinated['create_time'] = time();
             db($this->coordinator_db)->insert($coordinated);
-            //缴费信息
-            $pay = array();
-            $pay['overall_type'] = 1;
-            $pay['pay_money'] = isset($condition['total_planning'])?$condition['total_planning']:0;
-            $pay['related_id'] = $condition['temporary_id'];
-            if(isset($condition['create_user'])) {
-                $pay['create_user'] = $condition['create_user'];
-            }
-            $pay['create_time'] = time();
-            db($this->pay_db)->insert($pay);
             //开票信息
             if(isset($condition['invoice_type']) || isset($condition['invoice_type_man'])) {
                 $invoice = array();
@@ -882,17 +873,16 @@ class Overall extends Model {
         $res = db($this->db)->where($condition)->select();
         if(!empty($res)) {
             return $res[0]['overall_id'];
+        }
+        $condition = array();
+        $condition['overall_id'] = ['like',$result."%"];
+        $condition['type'] = 1;
+        $res = db($this->db)->where($condition)->order('id','desc')->select();
+        if(empty($res)) {
+           return $result.'000000001';
         }else{
-            $condition = array();
-            $condition['overall_id'] = ['like',$result."%"];
-            $condition['type'] = 1;
-            $res = db($this->db)->where($condition)->order('id','desc')->select();
-            if(empty($res)) {
-               return $result.'000000001';
-            }else{
-                $str = substr($res[0]['overall_id'],-13) + 1;
-                return 'ZH'.$str;
-            }
+            $str = substr($res[0]['overall_id'],-13) + 1;
+            return 'ZH'.$str;
         }
         return false;
 

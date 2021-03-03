@@ -278,7 +278,17 @@ class Overall extends Common {
         $this->assign('export_url','/admin/ajax/overall/overall/export');
         $this->assign('export_name','统筹单'.date('Ymd').'.csv');
 
+
         $this->param = array_filter($request->param());
+        //查询归属人
+        if(isset($this->param['attribution_user']) && !empty($this->param['attribution_user'])) {
+            $users = Model('User')->getList(['id'=>$this->param['attribution_user']]);
+            if(!empty($users[0])) {
+                $this->assign('attribution_user',$users[0]['all_name']);
+            }else{
+                $this->assign('attribution_user','');
+            }
+        }
         $condition = [];
 
         if(isset($this->param['status']) && $this->param['status'] != -1){

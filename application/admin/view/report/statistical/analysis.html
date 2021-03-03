@@ -10,11 +10,11 @@
         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
             <div class=" search-item-div col-xs-3">
                 <label for="start_time" class="text-center search-item-label">统筹起期:</label>
-                <input type="text" class="form-control" readonly id="start_time" name="start_time" style="width:100%" value="{:date('Y/m/d',$param.start_time)}">
+                <input type="text" class="form-control" readonly id="start_time" name="start_time" style="width:100%" value="{:date('Y-m-d',$param.start_time)}">
             </div>
             <div class="search-item-div col-xs-3">
                 <label for="end_time" class="text-center search-item-label">统筹止期:</label>
-                <input type="text" readonly class="form-control" id="end_time" name="end_time"  style="width:100%" value="{:date('Y/m/d',$param.end_time)}">
+                <input type="text" readonly class="form-control" id="end_time" name="end_time"  style="width:100%" value="{:date('Y-m-d',$param.end_time)}">
             </div>
             <div class="search-item-div col-xs-3">
                 <label for="plate" class="text-center search-item-label">分公司:</label>
@@ -200,7 +200,7 @@
             //执行一个laydate实例
             laydate.render({
                 elem: '#start_time' //核统起
-                , format: 'yyyy/MM/dd'
+                , format: 'yyyy-MM-dd'
                 , done: function (value, date, endDate) {
                     $("#start_time").val(value);
                 }
@@ -208,7 +208,7 @@
             //执行一个laydate实例
             laydate.render({
                 elem: '#end_time' //核统起
-                , format: 'yyyy/MM/dd'
+                , format: 'yyyy-MM-dd'
                 , done: function (value, date, endDate) {
                     $("#end_time").val(value);
                 }

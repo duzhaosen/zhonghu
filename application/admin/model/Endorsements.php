@@ -22,6 +22,7 @@ class Endorsements extends Model {
     private $coordinator_db = "zh_coordinator";
     private $pay_db = "zh_pay";
     private $invoice_db = "zh_invoice";
+    private $review_los = "zh_review_log";
 
 
     /** 查询批单单查询
@@ -104,18 +105,20 @@ class Endorsements extends Model {
                         $item['sourceStr'] = $commont['source'][$users[0]['source']];
                         //用户地区
                         $item['cityStr'] = $users[0]['cityName'];
+                        $item['all_name'] = $users[0]['all_name'];
                     }else{
                         $item['structure'] = '';
                         $item['structureStr'] = '';
                         //来源
                         $item['source'] = '';
                         $item['sourceStr'] = '';
+                        $item['all_name'] = '';
                         //用户地区
                         $item['cityStr'] = '';
                     }
                 }
                 //缴费信息
-                $item['pay'] = db($this->pay_db)->where(['related_id'=>$item['p_temporary_id'],'overall_type'=>2])->select();
+                $item['pay'] = db($this->pay_db)->where(['overall_id'=>$item['overall_id']])->select();
 
                 return $item;
         });
@@ -204,10 +207,6 @@ class Endorsements extends Model {
                 $car['curb_quality'] = $condition['curb_quality'];
             }
             $car['approved_load'] = $condition['approved_load'];
-            $car['displacement'] = $condition['displacement'];
-            if(isset($condition['power'])) {
-                $car['power'] = $condition['power'];
-            }
             $car['vehicle_inspection'] = $condition['vehicle_inspection'];
             $car['reason'] = $condition['reason'];
             $car['last_year_danger'] = $condition['last_year_danger'];
@@ -480,6 +479,13 @@ class Endorsements extends Model {
                     }
                 }
             }
+            //审核日志
+            $logs = [];
+            $logs['related_id'] = $condition['p_temporary_id'];
+            $logs['create_user'] = getAdminInfo();
+            $logs['create_time'] = time();
+            $logs['type'] = 0;
+            db($this->review_los)->insert($logs);
             // 提交事务
             Db::commit();
         } catch (\Exception $e) {
@@ -569,10 +575,6 @@ class Endorsements extends Model {
                 $car['curb_quality'] = $condition['curb_quality'];
             }
             $car['approved_load'] = $condition['approved_load'];
-            $car['displacement'] = $condition['displacement'];
-            if(isset($condition['power'])) {
-                $car['power'] = $condition['power'];
-            }
             $car['vehicle_inspection'] = $condition['vehicle_inspection'];
             $car['reason'] = $condition['reason'];
             $car['last_year_danger'] = $condition['last_year_danger'];
@@ -891,7 +893,13 @@ class Endorsements extends Model {
         $result = db($this->pay_db)->where(['related_id'=>$condition['related_id'],'overall_type'=>$condition['overall_type']])->select();
         if(empty($result)) {
             $condition['create_time'] = time();
-            $condition['create_user'] = getAdminInfo();
+
+            $overall_list = db($this->db)->where(['p_temporary_id'=>$condition['related_id']])->select();
+            if(!empty($overall_list)) {
+                $pay['create_user'] = $overall_list[0]['create_user'];
+                $pay['overall_id'] = $overall_list[0]['overall_id'];
+                $pay['number_id'] = $overall_list[0]['endorsements_id'];
+            }
             return db($this->pay_db)->insert($condition);
         }else{
             $condition['op_user'] = getAdminInfo();

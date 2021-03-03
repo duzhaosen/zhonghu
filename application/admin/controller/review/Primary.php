@@ -58,6 +58,7 @@ class Primary extends Common {
         }
         $this->param['status'] = 3;
         $res = Model('Overall')->getList($this->param);
+//        print_r($res);die;
         if($res->total() == 0) {
             $this->error("未查询到统筹单号");
         }

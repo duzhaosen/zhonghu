@@ -399,7 +399,7 @@
                         <td class="center"><input type="checkbox" id="vehicle_third" name="vehicle_third" class="all_check"  value="vehicle_third" {if isset($list.vehicle_third)} {if $list.vehicle_third eq 2} checked {/if} {/if}></td>
                         <td class="center">机动车第三者责任统筹</td>
                         <td><input type="text" value="{$list.vehicle_third_money|default=''}" id="vehicle_third_money" name="vehicle_third_money"   {if isset($list.vehicle_third)} {if $list.vehicle_third eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
-                        <td><input type="text" value="{$list.vehicle_third_standarddefault=''}" id="vehicle_third_standard" name="vehicle_third_standard" class="standard" data-name="vehicle_third"  {if isset($list.vehicle_third)} {if $list.vehicle_third eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
+                        <td><input type="text" value="{$list.vehicle_third_standard|default=''}" id="vehicle_third_standard" name="vehicle_third_standard" class="standard" data-name="vehicle_third"  {if isset($list.vehicle_third)} {if $list.vehicle_third eq 1} readonly {/if} {else} readonly {/if} style="width: 100%"></td>
                         <td><input type="text" value="{$list.vehicle_third_discount|default=''}" readonly id="vehicle_third_discount" name="vehicle_third_discount" style="width: 100%"></td>
                         <td><input type="text" value="{$list.vehicle_third_payable|default=''}" id="vehicle_third_payable" name="vehicle_third_payable" readonly style="width: 100%"></td>
                     </tr>

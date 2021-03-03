@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="/static/ace1.4/assets/css/chosen.min.css">
-<script src="/static/ace1.4/assets/js/chosen.jquery.min.js"></script>
 <div class="row">
     <form style="" class="exportForm" name="searchOverall">
         <div class="col-xs-12 col-sm-12">
@@ -34,13 +32,13 @@
                             <input type="text" class="form-control" id="coordinated_name" name="coordinated_name" style="width:100%" value="{:input('param.coordinated_name')}">
                         </div>
                         <div class="search-item-div col-xs-3">
-                            <label for="attribution_user" class="text-center search-item-label">业务归属:</label>
-                            <select class="chosen-select form-control" id="attribution_user" name="attribution_user" style="width:100%" data-placeholder="选择归属人">
-                                <option value="0">请选择归属人</option>
+                            <label for="attribution_user" class="text-center search-item-label">归属人:</label>
+                            <input type="text" class="form-control" id="attribution_user" autocomplete="off" list="users" placeholder="请输入归属人" name="attribution_user" style="width:100%" value="{$attribution_user|default=''}">
+                            <datalist id="users">
                                 {volist name="users" id="value"}
-                                <option value="{$value.id}" {if input('param.attribution_user') eq $value.id} selected {/if} data-manager="{$value.manager_id}">{$value.all_name}</option>
+                                <option data-value="{$value.id}" data-manager="{$value.manager_id}">{$value.all_name}</option>
                                 {/volist}
-                            </select>
+                            </datalist>
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="plate" class="text-center search-item-label">车牌号:</label>
@@ -223,7 +221,7 @@
             //执行一个laydate实例
             laydate.render({
                 elem: '#start_time_start' //核统起
-                , format: 'yyyy/MM/dd'
+                , format: 'yyyy-MM-dd'
                 , done: function (value, date, endDate) {
                     $("#start_time_start").val(value);
                 }
@@ -231,7 +229,7 @@
             //执行一个laydate实例
             laydate.render({
                 elem: '#end_time_end' //核统止
-                , format: 'yyyy/MM/dd'
+                , format: 'yyyy-MM-dd'
                 , done: function (value, date, endDate) {
                     $("#end_time_end").val(value);
                 }
@@ -239,7 +237,7 @@
             //执行一个laydate实例
             laydate.render({
                 elem: '#financial_review_time_start' //财务审核起
-                , format: 'yyyy/MM/dd'
+                , format: 'yyyy-MM-dd'
                 , done: function (value, date, endDate) {
                     $("#financial_review_time_start").val(value);
                 }
@@ -247,13 +245,12 @@
             //执行一个laydate实例
             laydate.render({
                 elem: '#financial_review_time_end' //财务审核止
-                , format: 'yyyy/MM/dd'
+                , format: 'yyyy-MM-dd'
                 , done: function (value, date, endDate) {
                     $("#financial_review_time_end").val(value);
                 }
             });
         });
-        $('.chosen-select').chosen({allow_single_deselect:true});
         //删除
         $(".delOverall").on('click',function() {
             var overall = $(this).parents('tr').attr("data-id");
@@ -417,6 +414,16 @@
                     layer.msg("系统错误");
                 }
             });
+        })
+        //查询
+        $("#search").on('click',function () {
+            var $options=$("#users").children();
+            for(var i=0;i<$options.length;i++) {
+                if ($options.eq(i).val().trim() == $("#attribution_user").val().trim()) {
+                    $("#attribution_user").val($options.eq(i).attr("data-value"));
+                    break;
+                }
+            }
         })
     });
 </script>

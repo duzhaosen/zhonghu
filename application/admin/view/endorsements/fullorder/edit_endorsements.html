@@ -1,6 +1,4 @@
-<link rel="stylesheet" href="/static/ace1.4/assets/css/chosen.min.css">
 <link rel="stylesheet" href="/static/ace1.4/assets/css/jquery.magnify.css">
-<script src="/static/ace1.4/assets/js/chosen.jquery.min.js"></script>
 <script src="/static/ace1.4/assets/js/jquery.magnify.js"></script>
 <style>
     .baojia{
@@ -169,9 +167,9 @@
                         <div class=" search-item-div col-xs-3">
                             <label for="create_time" class="text-center search-item-label">参统日期:</label>
                             {if isset($list.create_time)}
-                            <input type="text" class="form-control" id="create_time" name="create_time" readonly  style="width:100%" value="{if isset($list.create_time)}{:date('Y/m/d',$list.create_time)}{/if}">
+                            <input type="text" class="form-control" id="create_time" name="create_time" readonly  style="width:100%" value="{if isset($list.create_time)}{:date('Y-m-d',$list.create_time)}{/if}">
                             {else}
-                            <input type="text" class="form-control" id="create_time" name="create_time" readonly  style="width:100%" value="{:date('Y/m/d')}">
+                            <input type="text" class="form-control" id="create_time" name="create_time" readonly  style="width:100%" value="{:date('Y-m-d')}">
                             {/if}
                         </div>
                         <div class="search-item-div col-xs-3">
@@ -189,7 +187,7 @@
                         <div class=" search-item-div col-xs-3">
                             <label for="nuclear_system_time" class="text-center search-item-label">核统日期:</label>
                             {if isset($list.nuclear_system_time)}
-                            <input type="text" class="form-control" id="nuclear_system_time" name="nuclear_system_time" readonly  style="width:100%" value="{if isset($list.nuclear_system_time)}{:date('Y/m/d',$list.create_time)}{/if}">
+                            <input type="text" class="form-control" id="nuclear_system_time" name="nuclear_system_time" readonly  style="width:100%" value="{if !empty($list.nuclear_system_time)}{:date('Y-m-d',$list.nuclear_system_time)}{/if}">
                             {else}
                             <input type="text" class="form-control" id="nuclear_system_time" name="nuclear_system_time" readonly  style="width:100%" value="">
                             {/if}
@@ -208,8 +206,8 @@
                         </div>
                         <div class=" search-item-div col-xs-3">
                             <label for="financial_review_time" class="text-center search-item-label">审核日期:</label>
-                            {if isset($list.review_time)}
-                            <input type="text" class="form-control" id="financial_review_time" name="financial_review_time" readonly  style="width:100%" value="{if isset($list.financial_review_time)}{:date('Y/m/d',$list.review_time)}{/if}">
+                            {if isset($list.financial_review_time)}
+                            <input type="text" class="form-control" id="financial_review_time" name="financial_review_time" readonly  style="width:100%" value="{if !empty($list.financial_review_time)}{:date('Y-m-d',$list.financial_review_time)}{/if}">
                             {else}
                             <input type="text" class="form-control" id="financial_review_time" name="financial_review_time" readonly  style="width:100%" value="">
                             {/if}
@@ -258,11 +256,11 @@
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="traffic_start_time" class="text-center search-item-label">交强起期</label>
-                            <input type="text" class="form-control" id="traffic_start_time" name="traffic_start_time" readonly  style="width:100%" value="{if isset($list.traffic_start_time)} {:date('Y/m/d',$list.traffic_start_time)}{else}{:date('Y/m/d')}{/if}">
+                            <input type="text" class="form-control" id="traffic_start_time" name="traffic_start_time" readonly  style="width:100%" value="{if isset($list.traffic_start_time)} {:date('Y-m-d',$list.traffic_start_time)}{else}{:date('Y-m-d')}{/if}">
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="traffic_end_time" class="text-center search-item-label">交强止期</label>
-                            <input type="text" class="form-control" id="traffic_end_time" name="traffic_end_time" readonly  style="width:100%" value="{if isset($list.traffic_end_time)} {:date('Y/m/d',$list.traffic_end_time)}{else}{:date('Y/m/d')}{/if}">
+                            <input type="text" class="form-control" id="traffic_end_time" name="traffic_end_time" readonly  style="width:100%" value="{if isset($list.traffic_end_time)} {:date('Y-m-d',$list.traffic_end_time)}{else}{:date('Y-m-d')}{/if}">
                         </div>
                     </div>
 
@@ -374,11 +372,11 @@
                     <div class="form-inline form-group col-xs-12">
                         <div class="search-item-div col-xs-3">
                             <label for="registered_time" class="text-center search-item-label">注册日期(例:2019-01-01)<span style="color:red">*</span>:</label>
-                            <input type="text" class="form-control" id="registered_time" placeholder="请输入注册日期" name="registered_time" style="width:100%" value="{if isset($list.registered_time)}{:date('Y/m/d',$list.registered_time)}{/if}">
+                            <input type="text" class="form-control" id="registered_time" placeholder="请输入注册日期" name="registered_time" style="width:100%" value="{if isset($list.registered_time)}{:date('Y-m-d',$list.registered_time)}{/if}">
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="issuance_time" class="text-center search-item-label">发证日期(例:2019-01-01)<span style="color:red">*</span>:</label>
-                            <input type="text" class="form-control" id="issuance_time" placeholder="请输入发证日期" name="issuance_time" style="width:100%" value="{if isset($list.issuance_time)}{:date('Y/m/d',$list.registered_time)}{/if}">
+                            <input type="text" class="form-control" id="issuance_time" placeholder="请输入发证日期" name="issuance_time" style="width:100%" value="{if isset($list.issuance_time)}{:date('Y-m-d',$list.registered_time)}{/if}">
                         </div>
                         <div class=" search-item-div col-xs-3">
                             <label for="age" class="text-center search-item-label">车龄:</label>
@@ -443,14 +441,6 @@
                     </div>
 
                     <div class="form-inline form-group col-xs-12">
-                        <div class=" search-item-div col-xs-3">
-                            <label for="displacement" class="text-center search-item-label">排量<span style="color:red">*</span>:</label>
-                            <input type="text" class="form-control" id="displacement" name="displacement" placeholder="请输入排量" style="width:100%" value="{$list.displacement|default=''}">
-                        </div>
-                        <div class="search-item-div col-xs-3">
-                            <label for="power" class="text-center search-item-label">功率:</label>
-                            <input type="text" class="form-control" id="power" placeholder="请输入功率" name="power" style="width:100%" value="{$list.power|default=''}">
-                        </div>
                         <div class="search-item-div col-xs-3">
                             <label for="vehicle_inspection" class="text-center search-item-label">验车情况:</label>
                             <select name="vehicle_inspection" id="vehicle_inspection" style="width:100%">
@@ -504,13 +494,13 @@
                         <div class="search-item-div col-xs-3">
                             <label for="" class="text-center search-item-label">统筹起期:</label>
                             <input type="text" class="form-control input-sm" name="start_time" id="start_time"
-                                   value="{if isset($list.start_time)}{:date('Y/m/d',$list.start_time)}{else}{:date('Y/m/d',strtotime('+1 day'))}{/if}" autocomplete="off">（0时）
+                                   value="{if isset($list.start_time)}{:date('Y-m-d',$list.start_time)}{else}{:date('Y-m-d',strtotime('+1 day'))}{/if}" autocomplete="off">（0时）
 
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="" class="text-center search-item-label">统筹止期:</label>
                             <input type="text" class="form-control input-sm" name="end_time" id="end_time"
-                                   value="{if isset($list.end_time)}{:date('Y/m/d',$list.end_time)}{else}{:date('Y/m/d',strtotime('+1 year'))}{/if}" autocomplete="off">（24时）
+                                   value="{if isset($list.end_time)}{:date('Y-m-d',$list.end_time)}{else}{:date('Y-m-d',strtotime('+1 year'))}{/if}" autocomplete="off">（24时）
                         </div>
                         <div class="search-item-div col-xs-3">
                             <label for="" class="text-center search-item-label">共（<input type="text" name="date_time" style="width:20%" id="date_time" readonly value="{$list.date_time|default='365'}">）天</label>
@@ -1064,7 +1054,7 @@
             //执行一个laydate实例
             laydate.render({
                 elem: '#traffic_start_time' //交强起期
-                ,format: 'yyyy/MM/dd'
+                ,format: 'yyyy-MM-dd'
                 ,done: function(value, date, endDate){
                     $("#registered_time").val(value);
                 }
@@ -1072,7 +1062,7 @@
             //执行一个laydate实例
             laydate.render({
                 elem: '#traffic_end_time' //交强止期
-                ,format: 'yyyy/MM/dd'
+                ,format: 'yyyy-MM-dd'
                 ,done: function(value, date, endDate){
                     $("#traffic_end_time").val(value);
                 }
@@ -1080,7 +1070,7 @@
             //执行一个laydate实例
             laydate.render({
                 elem: '#issuance_time' //发证日期
-                ,format: 'yyyy/MM/dd'
+                ,format: 'yyyy-MM-dd'
                 ,done: function(value, date, endDate){
                     $("#issuance_time").val(value);
                 }
@@ -1088,7 +1078,7 @@
             //执行一个laydate实例
             laydate.render({
                 elem: '#registered_time' //注册日期
-                ,format: 'yyyy/MM/dd'
+                ,format: 'yyyy-MM-dd'
                 ,done: function(value, date, endDate){
                     $("#registered_time").val(value);
                 }
@@ -1096,7 +1086,7 @@
             //执行一个laydate实例
             laydate.render({
                 elem: '#start_time' //统筹起期
-                ,format: 'yyyy/MM/dd'
+                ,format: 'yyyy-MM-dd'
                 ,done: function(value, date, endDate){
                     console.log(endDate);
                     //计算结束日期
@@ -1121,7 +1111,7 @@
             //执行一个laydate实例
             laydate.render({
                 elem: '#end_time' //统筹止期
-                ,format: 'yyyy/MM/dd'
+                ,format: 'yyyy-MM-dd'
                 ,done: function(value, date, endDate){
                     $("#end_time").val(value);
                     //止期日期加一天
