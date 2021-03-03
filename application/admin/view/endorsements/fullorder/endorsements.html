@@ -1041,14 +1041,14 @@
                 <table id="agreementTable">
                     <thead>
                     <tr>
-                        <td><input type="checkbox" id="all_check_agreement" name="check_agreement"></td>
-                        <td>特别约定</td>
+                        <td style="text-align: center"><input type="checkbox" id="all_check_agreement" name="check_agreement"></td>
+                        <td style="text-align: center">特别约定</td>
                     </tr>
                     </thead>
                     <tbody>
                     {volist name="$agreement" id="value" key="key"}
                     <tr>
-                        <td style="width:5%"><input type="checkbox" name="check_agreement" data-value="{$value}" value="{$key-1}" {if $key eq 25 || $key eq 26} disabled checked {/if}></td>
+                        <td style="width:5%;text-align: center"><input type="checkbox" name="check_agreement" data-value="{$value}" value="{$key-1}" {if $key eq 25 || $key eq 26} disabled checked {/if}></td>
                         <td>{$key-1}、{$value}</td>
                     </tr>
                     {/volist}
