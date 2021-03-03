@@ -375,11 +375,12 @@ class Overall extends Model {
             db($this->overall_db)->insert($overall);
             //交强险公司
             $traffic = array();
-            $traffic['traffic_company'] = $condition['traffic_company'];
+            if(isset($condition['traffic_company']) && !empty($condition['traffic_company'])) {
+                $traffic['traffic_company'] = $condition['traffic_company'];
+            }
             $traffic['traffic_start_time'] = strtotime($condition['traffic_start_time']);
             $traffic['traffic_end_time'] = strtotime($condition['traffic_end_time']);
             $traffic['related_id'] = $condition['temporary_id'];
-            $traffic['traffic_company'] = $condition['traffic_company'];
             if(isset($condition['create_user'])) {
                 $traffic['create_user'] = $condition['create_user'];
             }
@@ -737,10 +738,11 @@ class Overall extends Model {
             db($this->overall_db)->where(['related_id'=>$condition['temporary_id']])->update($overall);
             //交强险公司
             $traffic = array();
-            $traffic['traffic_company'] = $condition['traffic_company'];
+            if(isset($condition['traffic_company']) && !empty($condition['traffic_company'])) {
+                $traffic['traffic_company'] = $condition['traffic_company'];
+            }
             $traffic['traffic_start_time'] = strtotime($condition['traffic_start_time']);
             $traffic['traffic_end_time'] = strtotime($condition['traffic_end_time']);
-            $traffic['traffic_company'] = $condition['traffic_company'];
             if(isset($condition['create_user'])) {
                 $traffic['create_user'] = $condition['create_user'];
             }

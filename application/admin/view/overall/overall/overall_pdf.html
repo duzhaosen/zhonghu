@@ -45,40 +45,36 @@
             </tr>
             <tr>
                 <td rowspan="5" style="font-size:16px;width:10px;">统<br>筹<br>车<br>辆<br>情<br>况</td>
+                <td>车主</td>
+                <td colspan="5">{$res.car_name}</td>
+            </tr>
+            <tr>
                 <td>号码号牌</td>
-                <td>{$res.plate}</td>
+                <td colspan="1">{$res.plate}</td>
                 <td colspan="1">厂牌型号</td>
                 <td colspan="3">{$res.label_signal}</td>
             </tr>
             <tr>
-                <td>VIN码/车架号</td>
-                <td colspan="2">{$res.frame}</td>
                 <td>发动机号</td>
-                <td colspan="2">{$res.engine}</td>
+                <td colspan="1">{$res.engine}</td>
+                <td>车架号</td>
+                <td colspan="3">{$res.frame}</td>
             </tr>
             <tr>
                 <td>初次登记日期</td>
                 <td>{$res.registered_time|date='Y-m-d',###}</td>
-                <td>排量/功率</td>
-                <td>{$res.displacement}/{$res.power}</td>
+                <td>核定载客</td>
+                <td>{$res.approved_user}人</td>
                 <td>核定载质量</td>
                 <td>{$res.approved_load}千克</td>
             </tr>
             <tr>
-                <td>车辆种类</td>
-                <td>{$res.speciesStr}</td>
                 <td>使用性质</td>
                 <td>{$res.use_natureStr}</td>
-                <td>核定载客</td>
-                <td>{$res.approved_user}人</td>
-            </tr>
-            <tr>
-                <td>新车购置价格</td>
-                <td>{$res.new_price}元</td>
-                <td>行驶区域</td>
-                <td>——</td>
-                <td>已使用年限</td>
-                <td>{$res.age}年</td>
+                <td>车辆种类</td>
+                <td>{$res.speciesStr}</td>
+                <td>车辆类型</td>
+                <td>{$res.speciesStr}人</td>
             </tr>
             <tr>
                 <td colspan="3">统筹项目</td>

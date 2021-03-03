@@ -108,7 +108,7 @@
     }
 
     #agreementTable,#agreementTable tr th, #agreementTable tr td { border:1px solid #0094ff; }
-    #agreementTable { min-height: 25px; line-height: 25px; text-align: center; border-collapse: collapse;}
+    #agreementTable { min-height: 25px; line-height: 25px;  border-collapse: collapse;}
 </style>
 <div class="row">
     <div class="col-xs-12 col-sm-12">
@@ -417,7 +417,7 @@
 
                     <tbody>
                     <tr>
-                        <td class="center"><input type="checkbox" name="vehicle_loss" class="all_check" value="vehicle_loss"></td>
+                        <td class="center"><input type="checkbox" name="vehicle_loss" class="all_check" {if isset($list.vehicle_loss)} {if $list.vehicle_loss eq 2} checked {/if} {/if} value="vehicle_loss"></td>
                         <td class="center">机动车损失统筹</td>
                         <td><input type="text" value="{$list.vehicle_loss_money|default=''}" id="vehicle_loss_money" name="vehicle_loss_money" readonly  style="width: 100%"></td>
                         <td><input type="text" value="{$list.vehicle_loss_standard|default=''}" id="vehicle_loss_standard" name="vehicle_loss_standard" class="standard" data-name="vehicle_loss" readonly style="width: 100%"></td>
@@ -425,7 +425,7 @@
                         <td><input type="text" value="{$list.vehicle_loss_payable|default=''}" id="vehicle_loss_payable" name="vehicle_loss_payable"  readonly style="width: 100%"></td>
                     </tr>
                     <tr>
-                        <td class="center"><input type="checkbox" name="vehicle_third" class="all_check"  value="vehicle_third"></td>
+                        <td class="center"><input type="checkbox" name="vehicle_third" class="all_check" {if isset($list.vehicle_third)} {if $list.vehicle_third eq 2} checked {/if} {/if}  value="vehicle_third"></td>
                         <td class="center">机动车第三者责任统筹</td>
                         <td><input type="text" value="{$list.vehicle_third_money|default=''}" id="vehicle_third_money" name="vehicle_third_money" readonly style="width: 100%"></td>
                         <td><input type="text" value="{$list.vehicle_third_standard|default=''}" id="vehicle_third_standard" name="vehicle_third_standard" class="standard" data-name="vehicle_third"   readonly style="width: 100%"></td>
@@ -433,7 +433,7 @@
                         <td><input type="text" value="{$list.vehicle_third_payable|default=''}" id="vehicle_third_payable" name="vehicle_third_payable" readonly style="width: 100%"></td>
                     </tr>
                     <tr>
-                        <td class="center"><input type="checkbox" name="car_driver" class="all_check"  value="car_driver" ></td>
+                        <td class="center"><input type="checkbox" name="car_driver" class="all_check" {if isset($list.car_driver)} {if $list.car_driver eq 2} checked {/if} {/if}  value="car_driver" ></td>
                         <td class="center">车上人员责任统筹(司机)</td>
                         <td><input type="text" value="{$list.car_driver_money|default=''}" id="car_driver_money" name="car_driver_money"  readonly style="width: 100%"></td>
                         <td><input type="text" value="{$list.car_driver_standard|default=''}" id="car_driver_standard" name="car_driver_standard" class="standard" data-name="car_driver"  readonly style="width: 100%"></td>
@@ -441,7 +441,7 @@
                         <td><input type="text" value="{$list.car_driver_payable|default=''}" id="car_driver_payable" name="car_driver_payable"  readonly style="width: 100%"></td>
                     </tr>
                     <tr>
-                        <td class="center"><input type="checkbox" name="car_passenger" class="all_check" value="car_passenger"></td>
+                        <td class="center"><input type="checkbox" name="car_passenger" class="all_check" {if isset($list.car_passenger)} {if $list.car_passenger eq 2} checked {/if} {/if} value="car_passenger"></td>
                         <td class="center">车上人员责任统筹(乘客)</td>
                         <td class="center"><input type="text" name="yuan" id="yuan" value="{$list.yuan|default=''}"  readonly  style="width:20%"> 元/座
                             <input type="text"   readonlyname="seat" style="width:10%" id="seat" value="{$list.seat|default=''}"> 座
@@ -451,7 +451,7 @@
                         <td><input type="text" value="{$list.car_passenger_payable|default=''}" id="car_passenger_payable" name="car_passenger_payable" readonly style="width: 100%"></td>
                     </tr>
                     <tr>
-                        <td class="center"><input type="checkbox" name="car_goods" class="all_check" value="car_goods" readonly></td>
+                        <td class="center"><input type="checkbox" name="car_goods" class="all_check" {if isset($list.car_goods)} {if $list.car_goods eq 2} checked {/if} {/if} value="car_goods" readonly></td>
                         <td class="center">车上货物责任统筹</td>
                         <td><input type="text" value="{$list.car_goods_money|default=''}" name="car_goods_money" id="car_goods_money" readonly style="width: 100%"></td>
                         <td><input type="text" value="{$list.car_goods_standard|default=''}" name="car_goods_standard" id="car_goods_standard" class="standard" data-name="car_goods"  readonly style="width: 100%"></td>
@@ -486,7 +486,7 @@
 
                     <tbody>
                     <tr>
-                        <td class="center"><input type="checkbox" name="combustion" class="all_check_attch" value="combustion" readonly></td>
+                        <td class="center"><input type="checkbox" name="combustion" class="all_check_attch" {if isset($list.combustion)} {if $list.combustion eq 2} checked {/if} {/if} value="combustion" readonly></td>
                         <td class="center">自燃损失统筹</td>
                         <td><input type="text" value="{$list.combustion_money|default=''}" id="combustion_money" name="combustion_money" readonly  style="width: 100%"></td>
                         <td><input type="text" value="{$list.combustion_standard|default=''}" id="combustion_standard" name="combustion_standard" class="standard" data-name="combustion" readonly style="width: 100%"></td>
@@ -494,7 +494,7 @@
                         <td><input type="text" value="{$list.combustion_payable|default=''}" id="combustion_payable" name="combustion_payable"  readonly style="width: 100%"></td>
                     </tr>
                     <tr>
-                        <td class="center"><input type="checkbox" name="engine_wading" class="all_check_attch"  value="engine_wading" readonly></td>
+                        <td class="center"><input type="checkbox" name="engine_wading" class="all_check_attch" {if isset($list.engine_wading)} {if $list.engine_wading eq 2} checked {/if} {/if}  value="engine_wading" readonly></td>
                         <td class="center">发动机涉水损失统筹</td>
                         <td><input type="text" value="{$list.engine_wading_money|default=''}" id="engine_wading_money" name="engine_wading_money" readonly style="width: 100%"></td>
                         <td><input type="text" value="{$list.engine_wading_standard|default=''}" id="engine_wading_standard" name="engine_wading_standard" class="standard" data-name="engine_wading" readonly style="width: 100%"></td>
@@ -502,7 +502,7 @@
                         <td><input type="text" value="{$list.engine_wading_payable|default=''}" id="engine_wading_payable" name="engine_wading_payable" readonly style="width: 100%"></td>
                     </tr>
                     <tr>
-                        <td class="center"><input type="checkbox" name="designated_repai" class="all_check_attch"  value="designated_repai" readonly></td>
+                        <td class="center"><input type="checkbox" name="designated_repai" class="all_check_attch" {if isset($list.designated_repai)} {if $list.designated_repai eq 2} checked {/if} {/if}  value="designated_repai" readonly></td>
                         <td class="center">指定修理厂统筹</td>
                         <td><input type="text" value="{$list.designated_repai_money|default=''}" id="designated_repai_money" name="designated_repai_money" readonly style="width: 100%"></td>
                         <td><input type="text" value="{$list.designated_repai_standard|default=''}" id="designated_repai_standard" name="designated_repai_standard" class="standard" data-name="designated_repai" readonly style="width: 100%"></td>
@@ -510,7 +510,7 @@
                         <td><input type="text" value="{$list.designated_repai_payable|default=''}" id="designated_repai_payable" name="designated_repai_payable"  readonly style="width: 100%"></td>
                     </tr>
                     <tr>
-                        <td class="center"><input type="checkbox" name="broken_glass" class="all_check_attch" value="broken_glass" readonly></td>
+                        <td class="center"><input type="checkbox" name="broken_glass" class="all_check_attch" {if isset($list.broken_glass)} {if $list.broken_glass eq 2} checked {/if} {/if} value="broken_glass" readonly></td>
                         <td class="center">玻璃单独破碎统筹</td>
                         <td><input type="text" value="{$list.broken_glass_money|default=''}" name="broken_glass_money" id="broken_glass_money" readonly style="width: 100%"></td>
                         <td><input type="text" value="{$list.broken_glass_standard|default=''}" name="broken_glass_standard" id="broken_glass_standard" class="standard" data-name="broken_glass" readonly style="width: 100%"></td>
@@ -807,9 +807,9 @@
                         专用发票
                         <input type="radio" disabled {if isset($list.invoice_type) && $list.invoice_type eq 2} checked {/if} name="invoice_type" value="2">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                         同参统人
-                        <input type="radio" disabled {if isset($list.invoice_type) && $list.invoice_type eq 3} checked {/if} name="invoice_type" value="3">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        <input type="radio" disabled {if isset($list.invoice_type_man) && $list.invoice_type_man eq 1} checked {/if} name="invoice_type" value="3">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                         同被参统人
-                        <input type="radio" disabled {if isset($list.invoice_type) && $list.invoice_type eq 4} checked {/if} name="invoice_type" value="4">
+                        <input type="radio" disabled {if isset($list.invoice_type_man) && $list.invoice_type_man eq 2} checked {/if} name="invoice_type" value="4">
 
                     </div>
                 </div>
