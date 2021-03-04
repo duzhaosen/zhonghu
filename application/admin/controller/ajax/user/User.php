@@ -77,24 +77,37 @@ class User extends Common {
      */
     public function delUser(Request $request) {
         $this->param = $request->param();
-        if($this->param['id'] == false) {
+        if($this->param['id'] == false || $this->param['type'] == false) {
             $data = array();
             $data['code'] = 100001;
-            $data['msg'] = 'id不可为空';
+            $data['msg'] = '重要信息不可为空';
             return json($data);
         }
-        $this->param['type'] = 2;
         $res = Model('User')->editUser($this->param);
         $result = $res == true? '成功': '失败';
         writLog("删除用户".http_build_query($this->param)."结果：".$result,DEL_LOGS,28);
         if($res == false) {
             $data = array();
             $data['code'] = 100001;
-            $data['msg'] = '人员删除失败';
+            if($this->param['type'] == 1) {
+                $msg = '人员启用失败';
+            }else if($this->param['type'] == 2) {
+                $msg = '人员禁用失败';
+            }else {
+                $msg = '人员删除失败';
+            }
+            $data['msg'] = $msg;
             return json($data);
         }
         $data['code'] = 100000;
-        $data['msg'] = '人员删除成功';
+        if($this->param['type'] == 1) {
+            $msg = '人员启用成功';
+        }else if($this->param['type'] == 2) {
+            $msg = '人员禁用成功';
+        }else {
+            $msg = '人员删除成功';
+        }
+        $data['msg'] = $msg;
         return json($data);
     }
 

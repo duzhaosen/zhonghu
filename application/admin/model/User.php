@@ -125,7 +125,9 @@ class User extends Model {
     public function editUser($param) {
         $param['op_time'] = time();
         $param['op_user'] = getAdminInfo();
-        print_r($param);die;
+        if($param['type'] == 3) {
+            return db($this->db)->where(['id'=>$param['id']])->delete();
+        }
         return Db($this->db)->update($param);
     }
 

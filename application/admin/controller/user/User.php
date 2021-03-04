@@ -41,7 +41,7 @@ class User extends Common
         }
         $this->assign('param',$this->param);
 
-        $user = Model('user')->getList($this->param);
+        $user = Model('user')->getList($this->param,'*',2);
         $this->assign('userlist',$user);
 
         $structureIds = [];

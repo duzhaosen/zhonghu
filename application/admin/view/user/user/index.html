@@ -110,11 +110,14 @@
                     <td class="center">{$value.op_time}</td>
                     <td class="center">
                         <div class="hidden-sm hidden-xs btn-group">
-
                             <button class="btn btn-xs btn-info editUser">
                                 <i class="ace-icon fa fa-pencil bigger-120"></i>
                             </button>
-
+                            {if $value.type == 1}
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-disabled disabled" data-type="2">禁用</button>
+                            {else}
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-disabled disabled" data-type="1">启用</button>
+                            {/if}
                             <button class="btn btn-xs btn-danger delUser">
                                 <i class="ace-icon fa fa-trash-o bigger-120"></i>
                             </button>
@@ -197,7 +200,37 @@
                     dataType: 'json', // type of response data
                     timeout: 500,     // timeout milliseconds
                     method: "post",
-                    data: {id:id},
+                    data: {id:id,type:3},
+                    success: function (data,status,xhr) {   // success callback function
+                        but.removeAttr("disabled");
+                        if(data.code == 100000) {
+                            layer.msg(data.msg);
+                            setTimeout(function() {
+                                location.reload();
+                            },300);
+                        }else{
+                            layer.msg(data.msg);
+                        }
+                    },
+                    error: function() {
+                        layer.msg("系统错误");
+                    }
+                });
+                layer.close(index);
+            });
+        })
+        //禁用人员
+        $(".disabled").on('click',function() {
+            var but = $(this);
+            but.attr("disabled","disabled");
+            layer.confirm('是否确认禁用?', function(index){
+                var type = but.attr("data-type");
+                var id = but.parents('tr').attr("data-id");
+                $.ajax('/admin/ajax/user/user/delUser',{
+                    dataType: 'json', // type of response data
+                    timeout: 500,     // timeout milliseconds
+                    method: "post",
+                    data: {id:id,type:type},
                     success: function (data,status,xhr) {   // success callback function
                         but.removeAttr("disabled");
                         if(data.code == 100000) {
