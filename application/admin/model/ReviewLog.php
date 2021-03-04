@@ -154,6 +154,49 @@ class ReviewLog extends Model {
                     $endorsements['financial_review_user'] = getAdminInfo();
                     $endorsements['financial_review_time'] = time();
                     $endorsements['endorsements_id'] = Model('Endorsements')->generatePId();
+                    db($this->endorsements_db)->where(['endorsements_id'=>$endorsements['endorsements_id']])->update(['new_id'=>2]);
+                    //销售费用管理
+                    $sales = [];
+                    if(isset($condition['total_planning'])) {
+                        $sales['total_planning'] = $condition['total_planning'];
+                    }
+                    if(isset($condition['coordination'])) {
+                        $sales['coordination'] = $condition['coordination'];
+                    }
+                    if(isset($condition['invoicing_deduction'])) {
+                        $sales['invoicing_deduction'] = $condition['invoicing_deduction'];
+                    }
+                    if(isset($condition['settlement_type'])) {
+                        $sales['settlement_type'] = $condition['settlement_type'];
+                    }
+                    if(isset($condition['return_ratio'])) {
+                        $sales['return_ratio'] = $condition['return_ratio'];
+                    }
+                    if(isset($condition['reward'])) {
+                        $sales['reward'] = $condition['reward'];
+                    }
+                    if(isset($condition['return_money'])) {
+                        $sales['return_money'] = $condition['return_money'];
+                    }
+                    if(isset($condition['paid_money'])) {
+                        $sales['paid_money'] = $condition['paid_money'];
+                    }
+                    if(isset($condition['remarks'])) {
+                        $sales['remarks'] = $condition['remarks'];
+                    }
+                    if(!empty($sales)) {
+                        $res = db($this->sale_db)->where(['related_id'=>$condition['related_id']])->select();
+                        if(empty($res)) {
+                            $sales['create_time'] = time();
+                            $sales['create_user'] = getAdminInfo();
+                            $sales['related_id'] = $condition['related_id'];
+                            db($this->sale_db)->insert($sales);
+                        }else{
+                            $sales['op_time'] = time();
+                            $sales['op_user'] = getAdminInfo();
+                            db($this->sale_db)->where(['related_id'=>$condition['related_id']])->update($sales);
+                        }
+                    }
                 }
                 db($this->endorsements_db)->where(['p_temporary_id'=>$condition['related_id']])->update($endorsements);
                 $review = array();
@@ -161,6 +204,9 @@ class ReviewLog extends Model {
                 $review['create_time'] = time();
                 $review['create_user'] = getAdminInfo();
                 $review['type'] = $condition['log_type'];
+                if(isset($condition['content'])) {
+                    $review['content'] = $condition['content'];
+                }
                 db($this->db)->insert($review);
                 // 提交事务
                 Db::commit();

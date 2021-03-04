@@ -150,7 +150,29 @@ class Endorsements extends Common {
 
         $this->fetch();
     }
+
+    /** 批单详情页
+     * @param Request $request
+     */
     public function view(Request $request) {
+        $this->param = $request->param();
+        if(!isset($this->param['p_temporary_id']) || empty($this->param['p_temporary_id'])) {
+            $this->error("批单号不可为空");
+        }
+        $this->param['endorsements.p_temporary_id'] = $this->param['p_temporary_id'];
+        unset($this->param['p_temporary_id']);
+        $res = Model('Endorsements')->getList($this->param);
+        if($res->total() == 0) {
+            $this->error("批单查询失败");
+        }
+        $this->Assign('list',$res[0]);
+        $this->fetch();
+    }
+
+    /** 财务修改
+     * @param Request $request
+     */
+    public function edit(Request $request) {
         $this->param = $request->param();
         if(!isset($this->param['p_temporary_id']) || empty($this->param['p_temporary_id'])) {
             $this->error("批单号不可为空");

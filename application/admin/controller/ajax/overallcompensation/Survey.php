@@ -538,7 +538,7 @@ class Survey extends Common {
         $res = Config::parse(APP_PATH.'/admin/config/formValidator/addSurvey.ini','ini');
         foreach($res['addsurvey'] as $key => $value) {
             $request->param($key) ? $this->param[$key] = $request->param($key) : "";
-            if($value && empty($this->param[$key])) {
+            if($value && (empty($this->param[$key]) || $this->param[$key] == -1)) {
                 $data = array();
                 $data['code'] = 100001;
                 $data['msg'] = $res['addsurveycomment'][$key].'不可为空';

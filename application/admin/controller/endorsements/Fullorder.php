@@ -40,13 +40,20 @@ class Fullorder extends Common {
         if(!isset($this->param['overall_id'])) {
             $this->error("统筹单号不可为空");
         }
+        //判断是否有未审核通过的批单
+        $res = Model('Endorsements')->getList(['endorsements.status'=>['IN',[0,1,2,3]],'endorsements.overall_id'=>$this->param['overall_id']]);
+        if(!empty($res[0])) {
+            $this->error("目前已有未审核完成的批单");
+        }
         //查询是否有最新批单
         $this->param['endorsements.overall_id'] = $this->param['overall_id'];
+        $this->param['endorsements.status'] = 4;
         unset($this->param['overall_id']);
         $res = Model('Endorsements')->getList($this->param);
         if(empty($res[0])) {
             $this->param['overall.overall_id'] = $this->param['endorsements.overall_id'];
             unset($this->param['endorsements.overall_id']);
+            unset($this->param['endorsements.status']);
             $res = Model('Overall')->getList($this->param);
         }
         if(empty($res[0])) {

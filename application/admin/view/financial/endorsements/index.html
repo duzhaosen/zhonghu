@@ -4,6 +4,24 @@
             <div class="widget-box">
                 <div class="widget-header">
                     <h5 class="widget-title">财务查询</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="widget-body">
                     <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
@@ -86,8 +104,26 @@
         <div class="widget-box">
             <div class="widget-header">
                 <h5 class="widget-title">批单列表</h5>
-            </div>
-            <div class="widget-body">
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="widget-body">
                 <div class="clearfix">
                     <div class="pull-right tableTools-container"></div>
                 </div>
@@ -130,7 +166,7 @@
                         <td>{if $value.financial_review_time neq 0}{:date('Y-m-d H:i:s',$value.financial_review_time)}{/if}</td>
                         <td>
                             <div class="hidden-sm hidden-xs action-buttons">
-                                <a class="green" href="/admin/Endorsements/fullorder/editEndorsements?p_temporary_id={$value.p_temporary_id}">
+                                <a class="green edit" data-id="{$value.p_temporary_id}" data-status="{$value.status}" href="javascript:;">
                                     <i class="ace-icon fa fa-pencil bigger-130"></i>
                                 </a>
                             </div>
@@ -142,7 +178,7 @@
 
                                     <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
                                         <li>
-                                            <a class="green" href="/admin/Endorsements/endorsements/edit?p_temporary_id={$value.p_temporary_id}">
+                                            <a class="green edit" data-id="{$value.p_temporary_id}" data-status="{$value.status}" href="javascript:;">
                                                 <i class="ace-icon fa fa-pencil bigger-130"></i>
                                             </a>
                                         </li>
@@ -196,6 +232,16 @@
                 }
             });
         });
+        //修改
+        $(".edit").on('click',function() {
+            var status = $(this).attr("data-status");
+            if(status != 4) {
+                layer.msg("只有审核通过才可以修改");
+                return false;
+            }
+            var id = $(this).attr("data-id");
+            window.location.href="/admin/Financial/endorsements/edit?p_temporary_id="+id;
+        })
         //查询
         $("#search").on('click',function () {
             var $options=$("#users").children();

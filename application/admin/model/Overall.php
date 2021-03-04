@@ -967,4 +967,50 @@ class Overall extends Model {
         }
         return true;
     }
+
+    public function saveSales($condition) {
+        //销售费用管理
+        $sales = [];
+        if(isset($condition['total_planning'])) {
+            $sales['total_planning'] = $condition['total_planning'];
+        }
+        if(isset($condition['coordination'])) {
+            $sales['coordination'] = $condition['coordination'];
+        }
+        if(isset($condition['invoicing_deduction'])) {
+            $sales['invoicing_deduction'] = $condition['invoicing_deduction'];
+        }
+        if(isset($condition['settlement_type'])) {
+            $sales['settlement_type'] = $condition['settlement_type'];
+        }
+        if(isset($condition['return_ratio'])) {
+            $sales['return_ratio'] = $condition['return_ratio'];
+        }
+        if(isset($condition['reward'])) {
+            $sales['reward'] = $condition['reward'];
+        }
+        if(isset($condition['return_money'])) {
+            $sales['return_money'] = $condition['return_money'];
+        }
+        if(isset($condition['paid_money'])) {
+            $sales['paid_money'] = $condition['paid_money'];
+        }
+        if(isset($condition['remarks'])) {
+            $sales['remarks'] = $condition['remarks'];
+        }
+        if(!empty($sales)) {
+            $res = db($this->sales_db)->where(['related_id'=>$condition['related_id']])->select();
+            if(empty($res)) {
+                $sales['create_time'] = time();
+                $sales['create_user'] = getAdminInfo();
+                $sales['related_id'] = $condition['related_id'];
+                return db($this->sales_db)->insert($sales);
+            }else{
+                $sales['op_time'] = time();
+                $sales['op_user'] = getAdminInfo();
+                return db($this->sales_db)->where(['related_id'=>$condition['related_id']])->update($sales);
+            }
+        }
+        return false;
+    }
 }

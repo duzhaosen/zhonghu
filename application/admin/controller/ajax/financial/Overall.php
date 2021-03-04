@@ -87,4 +87,28 @@ class Overall extends Common {
         }
         return $line;
     }
+
+    /** 增加/修改销售费用管理
+     *
+     */
+    public function saveSales(Request $request) {
+        $this->param = $request->param();
+        if(!isset($this->param['related_id']) || empty($this->param['related_id'])) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '关联ID不可为空';
+            return json($data);
+        }
+        $res = Model('Overall')->saveSales($this->param);
+        if($res == false) {
+            $data = array();
+            $data['code'] = 100001;
+            $data['msg'] = '保存失败';
+            return json($data);
+        }
+        $data = array();
+        $data['code'] = 100000;
+        $data['msg'] = '保存成功';
+        return json($data);
+    }
 }

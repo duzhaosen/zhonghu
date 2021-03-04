@@ -78,8 +78,26 @@
                 <div class="widget-box">
                     <div class="widget-header">
                         <h5 class="widget-title">报案信息修改</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class=" search-item-div col-xs-3">
                                 <label class="text-center search-item-label">报案单号:</label>
@@ -105,11 +123,11 @@
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label class="text-center search-item-label">核统日期:</label>
-                                <input type="text" class="form-control" readonly style="width:100%" value="{if isset($report_list.nuclear_system_time)}{:date('Y/m/d H:i:s',$report_list.nuclear_system_time)}{/if}">
+                                <input type="text" class="form-control" readonly style="width:100%" value="{if isset($report_list.nuclear_system_time)}{:date('Y-m-d H:i:s',$report_list.nuclear_system_time)}{/if}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label class="text-center search-item-label">统筹止期:</label>
-                                <input type="text" class="form-control" readonly style="width:100%" value="{if isset($report_list.end_time)}{:date('Y/m/d H:i:s',$report_list.end_time)}{/if}">
+                                <input type="text" class="form-control" readonly style="width:100%" value="{if isset($report_list.end_time)}{:date('Y-m-d H:i:s',$report_list.end_time)}{/if}">
                             </div>
                         </div>
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
@@ -119,11 +137,11 @@
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label class="text-center search-item-label">报案时间:</label>
-                                <input type="text" class="form-control" readonly style="width:100%" value="{if isset($report_list.report_time)}{:date('Y/m/d H:i:s',$report_list.report_time)}{/if}">
+                                <input type="text" class="form-control" readonly style="width:100%" value="{if isset($report_list.report_time)}{:date('Y-m-d H:i:s',$report_list.report_time)}{/if}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label class="text-center search-item-label">出险时间:</label>
-                                <input type="text" class="form-control" readonly style="width:100%" value="{if isset($report_list.out_danger_time)}{:date('Y/m/d H:i:s',$report_list.out_danger_time)}{/if}">
+                                <input type="text" class="form-control" readonly style="width:100%" value="{if isset($report_list.out_danger_time)}{:date('Y-m-d H:i:s',$report_list.out_danger_time)}{/if}">
                             </div>
                             <div class="search-item-div col-xs-3">
                                 <label class="text-center search-item-label">事故情况:</label>
@@ -184,8 +202,26 @@
                 <div class="widget-box">
                     <div class="widget-header">
                         <h5 class="widget-title">委派查勘</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class=" search-item-div col-xs-3">
                                 <label class="text-center search-item-label">查勘机构:</label>
@@ -230,8 +266,26 @@
                 <div class="widget-box">
                     <div class="widget-header">
                         <h5 class="widget-title">查勘录入</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <form name="addSurvey">
                             <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                                 <div class=" search-item-div col-xs-3">
@@ -262,7 +316,7 @@
                                 </div>
                                 <div class="search-item-div col-xs-3">
                                     <label for="out_danger_time" class="text-center search-item-label">出险时间:</label>
-                                    <input type="text" class="form-control"readonly id="out_danger_time" name="out_danger_time" style="width:100%" value="{if isset($report_list.out_danger_time)}{:date('Y/m/d H:i:s',$report_list.out_danger_time)}{/if}">
+                                    <input type="text" class="form-control"readonly id="out_danger_time" name="out_danger_time" style="width:100%" value="{if isset($report_list.out_danger_time)}{:date('Y-m-d H:i:s',$report_list.out_danger_time)}{/if}">
                                 </div>
                                 <div class="search-item-div col-xs-3">
                                     <label for="actual_driver" class="text-center search-item-label">实际驾驶员:</label>
@@ -625,8 +679,26 @@
                 <div class="widget-box">
                     <div class="widget-header">
                         <h5 class="widget-title">业务信息</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class=" search-item-div col-xs-3">
                                 <label  class="text-center search-item-label">业务来源:</label>
@@ -688,8 +760,26 @@
                 <div class="widget-box">
                     <div class="widget-header">
                         <h5 class="widget-title">统筹单信息</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class="search-item-div col-xs-3">
                                 <label class="text-center search-item-label">统筹单暂存号:</label>
@@ -713,8 +803,26 @@
                 <div class="widget-box">
                     <div class="widget-header">
                         <h5 class="widget-title">交强险信息</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class="search-item-div col-xs-3">
                                 <label class="text-center search-item-label">交强险投保公司:</label>
@@ -738,8 +846,26 @@
                 <div class="widget-box">
                     <div class="widget-header">
                         <h5 class="widget-title">车辆信息</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class=" search-item-div col-xs-3">
                                 <label class="text-center search-item-label">号码号牌<span style="color:red">*</span></label>
@@ -885,8 +1011,26 @@
                 <div class="widget-box">
                     <div class="widget-header">
                         <h5 class="widget-title">统筹期间</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class="search-item-div col-xs-3">
                                 <label for="" class="text-center search-item-label">统筹起期:</label>
@@ -917,8 +1061,26 @@
                 <div class="widget-box">
                     <div class="widget-header">
                         <h5 class="widget-title">统筹项目</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <table id="simple-table" class="table  table-bordered table-hover">
                             <thead>
                             <tr style="background-color: #307ECC;color:white">
@@ -986,8 +1148,26 @@
                 <div class="widget-box">
                     <div class="widget-header">
                         <h5 class="widget-title">附加统筹项目</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <table id="attch-table" class="table  table-bordered table-hover">
                             <thead>
                             <tr style="background-color: #307ECC;color:white">
@@ -1068,8 +1248,26 @@
                                 <input type="checkbox" name="car_owner" readonly id="car_owner" {if isset($list.car_owner) && $list.car_owner eq 1} checked {/if}>
                             </div>
                         </h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class="search-item-div col-xs-3">
                                 <label class="text-center search-item-label">姓名<span style="color:red">*</span>:</label>
@@ -1121,8 +1319,26 @@
                             </div>
 
                         </h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class="search-item-div col-xs-3">
                                 <label class="text-center search-item-label">姓名<span style="color:red">*</span>:</label>
@@ -1171,8 +1387,26 @@
                             </div>
 
                         </h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class="search-item-div col-xs-3">
                                 <label class="text-center search-item-label">争议解决方:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
@@ -1198,8 +1432,26 @@
                             </div>
 
                         </h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <textarea style="width:100%" readonly rows="10">{$list.agreement|default=''}</textarea>
                         </div>
@@ -1216,8 +1468,26 @@
                             </div>
 
                         </h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <table class="table  table-bordered table-hover center">
                             <thead>
                             <tr>
@@ -1245,8 +1515,26 @@
                             </div>
 
                         </h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div class="search-item-div col-xs-8">
                                 普通发票
@@ -1254,9 +1542,9 @@
                                 专用发票
                                 <input type="radio" disabled {if isset($list.invoice_type) && $list.invoice_type eq 2} checked {/if} name="invoice_type" value="2">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                 同参统人
-                                <input type="radio" disabled {if isset($list.invoice_type) && $list.invoice_type eq 3} checked {/if} name="invoice_type" value="3">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                <input type="radio" disabled {if isset($list.invoice_type_man) && $list.invoice_type_man eq 1} checked {/if} name="invoice_type_man" value="1">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                 同被参统人
-                                <input type="radio" disabled {if isset($list.invoice_type) && $list.invoice_type eq 4} checked {/if} name="invoice_type" value="4">
+                                <input type="radio" disabled {if isset($list.invoice_type_man) && $list.invoice_type_man eq 2} checked {/if} name="invoice_type_man" value="2">
 
                             </div>
                         </div>
@@ -1310,8 +1598,26 @@
                             </div>
 
                         </h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <div id="overall_showImages">
                                 {if isset($list.attach)}
@@ -1346,8 +1652,26 @@
                             </div>
 
                         </h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <table class="table  table-bordered table-hover">
                             <thead>
                             <tr style="background-color: #307ECC;color:white">
@@ -1382,8 +1706,26 @@
                             </div>
 
                         </h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
                     </div>
-                    <div class="widget-body">
+                </div>
+                <div class="widget-body">
                         <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                             <textarea style="width:100%" readonly rows="10">{$list.description|default=''}</textarea>
                         </div>
@@ -1397,8 +1739,26 @@
     <div class="layui-tab-item">
         <div class="row" style="margin: 0.5rem">
             <div class="widget-box  collapsed">
-                <div class="widget-header">
+                <div class="widget-header widget-header-box">
                     <h5 class="widget-title">本车定损</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="widget-body" style="display:none">
                     <table class="table  table-bordered table-hover">
@@ -1739,6 +2099,24 @@
             <div class="widget-box  collapsed">
                 <div class="widget-header">
                     <h5 class="widget-title">三者车车损失</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="widget-body" style="display:none">
                     <form action="" name="addOtherCarForm" id="addOtherCarForm" style="margin-top:1rem;margin-left:1rem">
@@ -1808,6 +2186,24 @@
             <div class="widget-box  collapsed">
                 <div class="widget-header">
                     <h5 class="widget-title">本车人伤</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="widget-body" style="display:none">
                     <form action="" name="addHuman" id="addHuman" style="margin-top:1rem;margin-left:1rem">
@@ -1923,6 +2319,24 @@
             <div class="widget-box  collapsed">
                 <div class="widget-header">
                     <h5 class="widget-title">三者人伤</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="widget-body" style="display:none">
                     <form action="" name="elseaddHuman" id="elseaddHuman" style="margin-top:1rem;margin-left:1rem">
@@ -2046,6 +2460,24 @@
             <div class="widget-box  collapsed">
                 <div class="widget-header">
                     <h5 class="widget-title">理算</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="widget-body" style="display:none">
                     <form name="addLoss">
@@ -2192,6 +2624,24 @@
             <div class="widget-box  collapsed">
                 <div class="widget-header">
                     <h5 class="widget-title">补偿款信息</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="widget-body" style="display:none">
                     <form action="" name="addCompensation" id="addCompensation" style="margin-top:1rem;margin-left:1rem">
@@ -2261,6 +2711,24 @@
             <div class="widget-box  collapsed">
                 <div class="widget-header">
                     <h5 class="widget-title">其他费用信息</h5>
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="widget-body" style="display:none">
                     <form action="" id="elseaddCompensation" name="elseaddCompensation" style="margin-top:1rem;margin-left:1rem">
@@ -2322,7 +2790,7 @@
 
         <tbody>
         {volist name="logs" id="value"}
-        <tr>
+        <tr class="center">
             <td>{:date("Y-m-d H:i:s",$value.create_time)}</td>
             <td>{$value.create_user}</td>
             <td>{$value.remarks}</td>

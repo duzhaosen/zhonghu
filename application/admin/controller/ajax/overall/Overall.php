@@ -32,23 +32,22 @@ class Overall extends Common {
             }
         }
         //验证车架号/车牌号是否在系统内且在统筹期间内
-//        $car_frame = $this->param['frame'];
-//        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1,'overall.temporary_id'=>['<>',$this->param['temporary_id']]]);
-//        if($car_list->total() > 0) {
-//            $list = $car_list->all();
-//            foreach($list as $key => $value) {
-//                if($value['end_time']+86400 > strtotime($this->param['start_time'])) {
-//                    $data = array();
-//                    $data['code'] = 100001;
-//                    $data['msg'] = '车架号已在其他单子的统筹期内'.$value['overall_id'];
-//                    return json($data);
-//                }
-//            }
-//        }
+        $car_frame = $this->param['frame'];
+        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1,'overall.temporary_id'=>['<>',$this->param['temporary_id']]]);
+        if($car_list->total() > 0) {
+            $list = $car_list->all();
+            foreach($list as $key => $value) {
+                if($value['end_time']+86400 > strtotime($this->param['start_time'])) {
+                    $data = array();
+                    $data['code'] = 100001;
+                    $data['msg'] = '车架号已在其他单子的统筹期内'.$value['overall_id'];
+                    return json($data);
+                }
+            }
+        }
         //格式化数据
         //判断是否有
         $old_list = Model('Overall')->getList(['overall.type'=>1,'overall.temporary_id'=>$this->param['temporary_id']]);
-//        $this->param['overall_id'] = Model('Overall')->generateOverallId();
         $this->param['status'] = 3;
         if($old_list->total() > 0) {
             $res = Model('Overall')->editOverall($this->param);
@@ -85,19 +84,19 @@ class Overall extends Common {
         }
 
         //验证车架号/车牌号是否在系统内且在统筹期间内
-//        $car_frame = $this->param['frame'];
-//        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1,'overall.temporary_id'=>['<>',$this->param['temporary_id']]]);
-//        if($car_list->total() > 0) {
-//            $list = $car_list->all();
-//            foreach($list as $key => $value) {
-//                if($value['end_time'] < strtotime($this->param['start_time'])) {
-//                    $data = array();
-//                    $data['code'] = 100001;
-//                    $data['msg'] = '车架号已在其他单子的统筹期内'.$value['overall_id'];
-//                    return json($data);
-//                }
-//            }
-//        }
+        $car_frame = $this->param['frame'];
+        $car_list = Model('Overall')->getList(['overall.frame'=>$car_frame,'overall.type'=>1,'overall.temporary_id'=>['<>',$this->param['temporary_id']]]);
+        if($car_list->total() > 0) {
+            $list = $car_list->all();
+            foreach($list as $key => $value) {
+                if($value['end_time'] < strtotime($this->param['start_time'])) {
+                    $data = array();
+                    $data['code'] = 100001;
+                    $data['msg'] = '车架号已在其他单子的统筹期内'.$value['overall_id'];
+                    return json($data);
+                }
+            }
+        }
         //格式化数据
         $this->param['status'] = 3;
         $res = Model('Overall')->editOverall($this->param);
@@ -227,6 +226,14 @@ class Overall extends Common {
             $data['msg'] = '未查询到信息';
             return json($data);
         }else{
+            //查询是否有最新批单
+            $endorsements = [];
+            $endorsements['endorsements.status'] = 4;
+            $endorsements['endorsements.overall_id'] = $res[0]['overall_id'];
+            $endorsements = Model('Endorsements')->getList($endorsements);
+            if(!empty($endorsements[0])) {
+                $res = $endorsements;
+            }
             $data = array();
             $data['code'] = 100000;
             $data['msg'] = '查询成功';

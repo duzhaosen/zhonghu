@@ -4,8 +4,26 @@
         <div class="widget-box">
             <div class="widget-header">
                 <h5 class="widget-title">接报案信息</h5>
-            </div>
-            <div class="widget-body">
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="widget-body">
                 <div class="form-inline form-group col-xs-11" style="margin-top:20px;">
                     <div class=" search-item-div col-xs-3">
                         <label for="search_plate" class="text-center search-item-label">车牌号:</label>
@@ -38,8 +56,26 @@
         <div class="widget-box">
             <div class="widget-header">
                 <h5 class="widget-title">接报案信息</h5>
-            </div>
-            <div class="widget-body">
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="widget-body">
                 <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                     <div class=" search-item-div col-xs-3">
                         <label for="report_id" class="text-center search-item-label">报案单号:</label>
@@ -88,7 +124,7 @@
                     <div class="search-item-div col-xs-3">
                         <label for="plate" class="text-center search-item-label">事故情况:</label>
                         <select name="accident_situation" id="accident_situation" style="width:100%">
-                            <option value="-1">请选择事故情况</option>
+                            <option value="0">请选择事故情况</option>
                             {volist name="$accident_situation" id="value" key="key"}
                             <option value="{$key-1}">{$value}</option>
                             {/volist}
@@ -99,7 +135,7 @@
                     <div class=" search-item-div col-xs-3">
                         <label for="human_injury" class="text-center search-item-label">是否有人伤:</label>
                         <select name="human_injury" class="form-control" style="width:100%" id="human_injury">
-                            <option value="-1">请选择是否有人伤</option>
+                            <option value="0">请选择是否有人伤</option>
                             {volist name="$human_injury" id="value" key="key"}
                             <option value="{$key-1}">{$value}</option>
                             {/volist}
@@ -112,7 +148,7 @@
                     <div class="search-item-div col-xs-3">
                         <label for="way_type" class="text-center search-item-label">道路类型:</label>
                         <select name="way_type" class="form-control" style="width:100%" id="way_type">
-                            <option value="-1">请选择道路类型</option>
+                            <option value="0">请选择道路类型</option>
                             {volist name="$way_type" id="value" key="key"}
                             <option value="{$key-1}">{$value}</option>
                             {/volist}
@@ -144,13 +180,31 @@
         <div class="widget-box">
             <div class="widget-header">
                 <h5 class="widget-title">委派查勘</h5>
-            </div>
-            <div class="widget-body">
+                    <div class="widget-toolbar">
+
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa fa-chevron-up"></i>
+                        </a>
+
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="widget-body">
                 <div class="form-inline form-group col-xs-12" style="margin-top:20px;">
                     <div class=" search-item-div col-xs-3">
                         <label for="survey_agency" class="text-center search-item-label">查勘机构:</label>
                         <select name="survey_agency" class="form-control" style="width:100%" id="survey_agency">
-                            <option value="-1">请选择查勘机构</option>
+                            <option value="0">请选择查勘机构</option>
                             {volist name="$survey_agency" id="value" key="key"}
                             <option value="{$key-1}">{$value}</option>
                             {/volist}
@@ -159,7 +213,7 @@
                     <div class="search-item-div col-xs-3">
                         <label for="survey_user" class="text-center search-item-label">查勘人:</label>
                         <select name="survey_user" id="survey_user" style="width:100%">
-                            <option value="-1">请选择查勘人</option>
+                            <option value="0">请选择查勘人</option>
                         </select>
                     </div>
                     <div class="search-item-div col-xs-3">

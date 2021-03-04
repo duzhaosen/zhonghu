@@ -23,6 +23,7 @@ class Endorsements extends Model {
     private $pay_db = "zh_pay";
     private $invoice_db = "zh_invoice";
     private $review_los = "zh_review_log";
+    private $sales_db = "zh_sales";
 
 
     /** 查询批单单查询
@@ -119,6 +120,8 @@ class Endorsements extends Model {
                 }
                 //缴费信息
                 $item['pay'] = db($this->pay_db)->where(['overall_id'=>$item['overall_id']])->select();
+                //销售费用管理
+                $item['sales'] = db($this->sales_db)->where(['related_id'=>$item['p_temporary_id']])->select();
 
                 return $item;
         });
@@ -845,7 +848,7 @@ class Endorsements extends Model {
         $condition['new_id'] = 1;
         $res = db($this->db)->where($condition)->select();
         if(!empty($res)) {
-            return $res[0]['id'];
+            return $res[0]['endorsements_id'];
         }else{
             $condition = array();
             $condition['endorsements_id'] = ['like',$result."%"];

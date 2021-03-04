@@ -22,7 +22,7 @@ class Report extends Model {
      */
     public function getList($condition,$page=10,$paginate=[]) {
         $comment = Config::parse(APP_PATH.'/admin/config/report.ini','ini');
-        $res = db($this->db)->where($condition)->alias('report')
+        $res = db($this->db)->where($condition)->alias('report')->order('report_id desc')
             ->paginate($page,false,$paginate)->each(function($item,$key) use($comment) {
             $item['accident_situationStr'] = $comment['accident_situation'][$item['accident_situation']];
             $overall = Model('Overall')->getList(['overall_id'=>$item['overall_id']]);
@@ -100,7 +100,9 @@ class Report extends Model {
             if(isset($condition['remarks'])) {
                 $logs['remarks'] = $condition['remarks'];
             }
-            $logs['status'] = $condition['log_type'];
+            if(isset($condition['log_type'])) {
+                $logs['log_type'] = $condition['log_type'];
+            }
             db($this->logs_db)->insert($logs);
             //如果是补偿款信息审核，则修改补偿款信息财务付款时间
             if($condition['report_type'] == 6) {

@@ -154,7 +154,15 @@ class Survey extends Common {
         $this->assign('uploadTotal',11);
 
         //统筹单情况
-        $list = Model('Overall')->getList(['overall_id'=>$list[0]['overall_id']]);
+        $endorsements = Model('Endorsements')->getList(['endorsements.overall_id'=>$list[0]['overall_id'],'endorsements.status'=>4]);
+        if(empty($endorsements[0])) {
+            $list = Model('Overall')->getList(['overall.overall_id'=>$list[0]['overall_id'],'overall.status'=>6]);
+        }else{
+            $list = $endorsements;
+        }
+        if(empty($list[0])) {
+            $this->error("统筹单不存在");
+        }
         $this->assign('list',$list[0]);
 
         //车损
